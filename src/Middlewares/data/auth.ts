@@ -13,15 +13,10 @@ export const RegisterData: ValidationChain[] = [
 		.isStrongPassword({ minLength: 6, minNumbers: 1, minLowercase: 1, minUppercase: 1, minSymbols: 1 })
 		.custom(NoSQL),
 	//
-	check('id_ident_type', 'el tipo de documento de identidad no es valido')
-		.exists({ checkFalsy: true, checkNull: true })
-		.isNumeric({ no_symbols: true })
-		.custom(NoSQL),
-	//
 	check('nro_ident', 'el numero de documento de identidad no es valido')
 		.exists({ checkFalsy: true, checkNull: true })
 		.isLength({ min: 6, max: 10 })
-		.isNumeric({ no_symbols: true })
+		.isString()
 		.custom(NoSQL),
 	//
 	check('email', 'el correo no es valido').exists({ checkFalsy: true, checkNull: true }).isEmail().custom(NoSQL),
