@@ -15,11 +15,11 @@ const force = false;
 // se inicia la db
 sequelize.sync({ force }).then((resp: any) => {
 	if (resp) {
-		if (force) {
-			keys(sequelize);
-		}
+		// if (force) {
+		keys(sequelize);
+		// }
 
-		pre_into();
+		// pre_into();
 
 		console.log('Init DB SUCCESS');
 	} else console.log('Init DB err');

@@ -21,10 +21,10 @@ export default (sql: any) => {
 			dad: 'fm_commerce',
 			fks: [
 				{ boy: 'fm_ident_type', key: 'id_ident_type' },
-				// { boy: 'fm_activity', key: 'id_activity' },
-				// { boy: 'fm_worker', key: 'id_aci' },
-				// { boy: 'fm_location', key: 'id_location' },
-				// { boy: 'fm_client', key: 'id_client' },
+				{ boy: 'fm_activity', key: 'id_activity' },
+				{ boy: 'fm_worker', key: 'id_aci' },
+				{ boy: 'fm_location', key: 'id_location' },
+				{ boy: 'fm_client', key: 'id_client' },
 			],
 		},
 		{
