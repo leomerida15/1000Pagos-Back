@@ -15,7 +15,7 @@ export default (config: any) => {
 			password: { type: STRING() },
 			id_ident_type: { type: INTEGER({ length: 11 }) },
 			nro_ident: { type: STRING({ length: 11 }) },
-			email: { type: STRING({ length: 128 }) },
+			email: { type: STRING({ length: 128 }), unique: true },
 		},
 		config
 	);

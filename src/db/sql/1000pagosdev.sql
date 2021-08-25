@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 24-08-2021 a las 17:05:33
+-- Tiempo de generación: 25-08-2021 a las 18:48:45
 -- Versión del servidor: 10.4.20-MariaDB
 -- Versión de PHP: 8.0.9
 
@@ -86,6 +86,13 @@ CREATE TABLE `fm_client` (
   `nro_ident` varchar(11) DEFAULT NULL,
   `email` varchar(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Volcado de datos para la tabla `fm_client`
+--
+
+INSERT INTO `fm_client` (`id`, `name`, `last_name`, `id_roles`, `password`, `id_ident_type`, `nro_ident`, `email`) VALUES
+(2, 'test', 'test', 1, '$2b$10$9kpcl4VUWPJcx6n.vKmZJuuARqHgcPP0VmiGtaJXywqIheaaKTxwS', NULL, '12345678', 'dimasmerida15@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -361,6 +368,7 @@ ALTER TABLE `fm_ciudades`
 --
 ALTER TABLE `fm_client`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`),
   ADD KEY `id_ident_type` (`id_ident_type`),
   ADD KEY `id_roles` (`id_roles`);
 
@@ -515,7 +523,7 @@ ALTER TABLE `fm_ciudades`
 -- AUTO_INCREMENT de la tabla `fm_client`
 --
 ALTER TABLE `fm_client`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `fm_cod_postal`

@@ -50,12 +50,10 @@ export const login = async (
 		// encript password
 
 		const clinet: DB.Clinet | any = await Clinet.findOne<Model<DB.Clinet, DB.Clinet>>({ where: { email } });
-		if (!clinet) throw { message: 'correo o contraseña incorreto', code: 400 };
-
-		const salt: string = await bcrypt.genSalt(10);
+		if (!clinet) throw { message: 'correo incorreto o contraseña incorreta', code: 400 };
 
 		const validPassword = await bcrypt.compare(password, clinet.password);
-		if (!validPassword) throw { message: 'correo o contraseña incorreto', code: 400 };
+		if (!validPassword) throw { message: 'correo incorreto o contraseña incorreta', code: 400 };
 
 		const token = jwt.sign({ id: clinet.id }, key);
 
