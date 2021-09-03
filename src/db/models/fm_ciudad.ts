@@ -8,6 +8,7 @@ import {
 	UpdateDateColumn,
 } from 'typeorm';
 import fm_estado from './fm_estado';
+import fm_municipio from './fm_municipio';
 
 @Entity()
 export default class fm_ciudad {
@@ -22,7 +23,7 @@ export default class fm_ciudad {
 	ciudad!: string;
 
 	@Column()
-	capital!: string;
+	capital!: boolean;
 
 	@CreateDateColumn()
 	createdAt?: string;
