@@ -6,7 +6,11 @@ const phone = async (): Promise<void> => {
 	const data: fm_phone[] = [
 		{
 			phone: '+5841811161',
-			id_client: 4,
+			id_client: 1,
+		},
+		{
+			phone: '+5841811161',
+			id_client: 1,
 		},
 	];
 	//

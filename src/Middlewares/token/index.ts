@@ -16,8 +16,6 @@ export default (req: Request, res: Response, next: NextFunction) => {
 		// use
 		if (result) {
 			if (req.headers.token) {
-				// console.log('header', req.headers.token);
-
 				const { token }: any = req.headers;
 				const resp: any = jwt.verify(token, Key);
 
@@ -25,15 +23,14 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
 				req.headers.token = resp;
 
-				console.log('header', req.headers.token);
-
 				next();
 				//
-			} else throw { status: false, message: 'the JWT in require', code: 400 };
+			} else throw { status: false, message: 'JWT es requerido', code: 400 };
 		} else {
 			next();
 		}
 	} catch (err) {
+		err.code = 403;
 		next(err);
 	}
 };

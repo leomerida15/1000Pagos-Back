@@ -29,7 +29,7 @@ export default class fm_client {
 	@Column({ default: 1 })
 	@ManyToMany(() => fm_roles)
 	@JoinTable()
-	id_roles!: number;
+	id_roles?: number;
 
 	@Column()
 	password!: string;
@@ -46,9 +46,9 @@ export default class fm_client {
 
 	@OneToMany(() => fm_phone, (fm_phone) => fm_phone.id_client)
 	@JoinColumn({ name: 'phones' })
-	phones!: fm_phone[];
+	phones?: fm_phone[];
 
 	@OneToMany(() => fm_request, (fm_request) => fm_request.id_client)
 	@JoinColumn({ name: 'requests' })
-	requests!: fm_request[];
+	requests?: fm_request[];
 }

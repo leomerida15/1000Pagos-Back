@@ -199,6 +199,103 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "data del usuario",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMwMzUzMTI1LCJleHAiOjE2MzAzNjM5MjV9.5LlY7ofqUhV5wjr9rF8jdUVseLsGFSEotFdbvTWn4Ao",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5050/auth/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"auth",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "commerces",
+			"item": [
+				{
+					"name": "create commerce",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMwMjkzMTIxLCJleHAiOjE2MzAzMDM5MjF9.vkl0kOvy37Bcxeb0fQA4Xi8WV00vBVvGIlSYa7wcPrE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"test\",\r\n    \"id_ident_type\":1,\r\n    \"nro_ident\":\"test\",\r\n    \"special_contributor\":0,\r\n    \"id_activity\":1,\r\n    \"id_location\":1 \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5050/client/commerce",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"client",
+								"commerce"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "products",
+			"item": [
+				{
+					"name": "getProduct",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjMwMzUzMTI1LCJleHAiOjE2MzAzNjM5MjV9.5LlY7ofqUhV5wjr9rF8jdUVseLsGFSEotFdbvTWn4Ao",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5050/clinet/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"clinet",
+								"product"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		}

@@ -7,19 +7,19 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
-import fm_municipio from './fm_municipio';
+import fm_worker from './fm_worker';
 
 @Entity()
-export default class fm_parroquia {
+export default class fm_company {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@ManyToOne(() => fm_municipio, (fm_municipio) => fm_municipio.parroquias)
-	@JoinColumn({ name: 'id_municipio' })
-	id_municipio!: number;
-
 	@Column()
-	parroquia!: string;
+	name!: string;
+
+	@ManyToOne(() => fm_worker, (fm_worker) => fm_worker.id_company)
+	@JoinColumn({ name: 'id_commerce' })
+	workers?: fm_worker[];
 
 	@CreateDateColumn()
 	createdAt?: string;

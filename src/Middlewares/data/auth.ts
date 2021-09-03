@@ -5,10 +5,9 @@ export const RegisterData: ValidationChain[] = [
 	//
 	check('name', 'nombre invalido').exists({ checkFalsy: true, checkNull: true }).isAlpha().custom(NoSQL),
 	//
-	check(
-		'password',
-		'la contraseña debe tener 1 numero, 1 minuscula, 1 mayuscula, 1 simbolo y un minimo de 6 caracteres',
-	)
+	check('last_name', 'nombre invalido').exists({ checkFalsy: true, checkNull: true }).isAlpha().custom(NoSQL),
+	//
+	check('password', 'la contraseña debe tener 1 numero, 1 mayuscula, 1 simbolo y un minimo de 6 caracteres')
 		.exists({ checkFalsy: true, checkNull: false })
 		.isStrongPassword({ minLength: 6, minNumbers: 1, minUppercase: 1, minSymbols: 1 })
 		.custom(NoSQL),
@@ -24,11 +23,14 @@ export const RegisterData: ValidationChain[] = [
 		.isNumeric({ no_symbols: true })
 		.custom(NoSQL),
 	//
-	check('phone1', 'telefono 1 invalido').isString().custom(NoSQL),
-	//
-	check('phone2', 'telefono 2 invalido').isString().custom(NoSQL),
+	check('phone', 'telefono invalido').isString().custom(NoSQL),
 	//
 	check('email', 'el correo no es valido').exists({ checkFalsy: true, checkNull: true }).isEmail().custom(NoSQL),
+	//
+	check('id_depart', 'el departamento no es correcto')
+		.exists({ checkFalsy: true, checkNull: true })
+		.isNumeric()
+		.custom(NoSQL),
 ];
 
 export const RegisterData1: ValidationChain[] = [
@@ -52,4 +54,17 @@ export const RegisterData2: ValidationChain[] = [
 		.isLength({ min: 6, max: 20 })
 		.isNumeric()
 		.custom(NoSQL),
+];
+
+export const LoginData: ValidationChain[] = [
+	check('password', 'la contraseña debe tener 1 numero, 1 mayuscula, 1 simbolo y un minimo de 6 caracteres')
+		.exists({ checkFalsy: true, checkNull: false })
+		.isStrongPassword({ minLength: 6, minNumbers: 1, minUppercase: 1, minSymbols: 1 })
+		.custom(NoSQL),
+	//
+	check('email', 'el correo no es valido').exists({ checkFalsy: true, checkNull: true }).isEmail().custom(NoSQL),
+];
+
+export const PassMailData: ValidationChain[] = [
+	check('email', 'el correo no es valido').exists({ checkFalsy: true, checkNull: true }).isEmail().custom(NoSQL),
 ];

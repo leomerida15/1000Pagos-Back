@@ -50,6 +50,7 @@ export interface worker extends id {
 	id_ident_type?: number;
 	nro_ident?: string;
 	id_depart?: number;
+	phone?: string;
 	email?: string;
 }
 export interface workerInit extends worker, Model {}
