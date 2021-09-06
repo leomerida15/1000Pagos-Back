@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
-export class fm_type_request {
+export default class fm_type_request {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
