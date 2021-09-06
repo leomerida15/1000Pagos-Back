@@ -2,3 +2,5 @@
 /node_modules
 /dist
 /client
+
+/src/db/base
