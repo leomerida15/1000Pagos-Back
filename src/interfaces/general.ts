@@ -6,5 +6,4 @@ export interface resp<info = any> {
 
 export interface params {
 	id: string | number;
-
 }

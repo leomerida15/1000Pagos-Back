@@ -11,7 +11,7 @@ import {
 import fm_Client from './fm_client';
 import fm_way_pay from './fm_payment_method';
 import fm_commerce from './fm_commerce';
-import { fm_type_request } from './fm_type_request';
+import fm_type_request from './fm_type_request';
 import fm_status_request from './fm_status_request';
 import fm_photo from './fm_photo';
 
