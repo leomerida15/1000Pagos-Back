@@ -1,9 +1,9 @@
 import { Application } from 'express';
 
 // rputers
-import client from './client';
+import Milpagos from './1000pagos';
 
 //
 export default (app: Application) => {
-	client(app);
+	Milpagos(app);
 };

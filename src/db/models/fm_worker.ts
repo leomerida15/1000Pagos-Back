@@ -28,10 +28,9 @@ export default class fm_worker {
 	@Column()
 	last_name!: string;
 
-	@Column({ default: 2 })
 	@ManyToMany(() => fm_roles)
 	@JoinTable()
-	id_roles?: number;
+	roles?: fm_roles[];
 
 	@Column()
 	password!: string;

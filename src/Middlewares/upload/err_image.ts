@@ -11,7 +11,11 @@ export const file_files_err = async (err: any, req: Request, res: Response, next
 		if (valid.length === 0 || !err.model) await fs.unlink(path);
 	} else if (req.files && req.files.length) {
 		let valid: any = 0;
-		const images = err.files.map((file: any) => ({ image: file.filename }));
+		const files: any = req.files;
+
+		console.log('files', files);
+
+		const images = files.map((file: any) => ({ image: file.filename }));
 		if (err.model) valid = err.model.find({ $or: images });
 
 		if (valid.length === 0) {

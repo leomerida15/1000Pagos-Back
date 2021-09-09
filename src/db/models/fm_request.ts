@@ -25,50 +25,50 @@ export default class fm_request {
 
 	@OneToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_constitutive_act' })
-	rc_constitutive_act!: string;
+	rc_constitutive_act!: number; //acta constitutiva
 
 	@OneToOne(() => fm_photo)
-	@JoinColumn({ name: 'rc_property_document' })
-	rc_property_document!: string;
+	@JoinColumn({ name: 'rc_property_document' }) // documento de propiedad
+	rc_property_document!: number;
 
 	@OneToOne(() => fm_photo)
-	@JoinColumn({ name: 'rc_service_document' })
-	rc_service_document!: string;
+	@JoinColumn({ name: 'rc_service_document' }) // recivo de un servicio publico
+	rc_service_document!: number;
 
 	@OneToOne(() => fm_photo)
-	@JoinColumn({ name: 'rc_special_contributor' })
-	rc_special_contributor!: string;
+	@JoinColumn({ name: 'rc_special_contributor' }) // acta de contribullene especial
+	rc_special_contributor!: number;
 
 	@OneToOne(() => fm_photo)
-	@JoinColumn({ name: 'rc_ref_bank' })
-	rc_ref_bank!: string;
+	@JoinColumn({ name: 'rc_ref_bank' }) // ref bancaria
+	rc_ref_bank!: number;
 
 	@OneToOne(() => fm_photo)
-	@JoinColumn({ name: 'rc_ref_perso' })
-	rc_ref_perso!: string;
+	@JoinColumn({ name: 'rc_ref_perso' }) // ref personal
+	rc_ref_perso!: number;
 
 	@OneToOne(() => fm_photo)
-	@JoinColumn({ name: 'rc_account_number' })
-	rc_account_number!: string;
+	@JoinColumn({ name: 'rc_account_number' }) // foto del  numero de cuenta
+	rc_account_number!: number;
 
 	@Column()
 	text_account_number!: string;
 
 	@OneToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_front_local' })
-	rc_front_local!: string;
+	rc_front_local!: number;
 
 	@OneToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_in_local' })
-	rc_in_local!: string;
+	rc_in_local!: number;
 
 	@OneToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_rif' })
-	rc_rif!: string;
+	rc_rif!: number;
 
 	@OneToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_ident_card' })
-	rc_ident_card!: string;
+	rc_ident_card!: number;
 
 	@OneToOne(() => fm_way_pay)
 	@JoinColumn({ name: 'id_payment_method' })
@@ -86,9 +86,10 @@ export default class fm_request {
 	@JoinColumn({ name: 'id_type_request' })
 	id_type_request!: number;
 
+	@Column({ default: 0 })
 	@OneToOne(() => fm_status_request)
 	@JoinColumn({ name: 'fm_status_request' })
-	fm_status_request!: number;
+	fm_status_request?: number;
 
 	@CreateDateColumn()
 	createdAt?: string;

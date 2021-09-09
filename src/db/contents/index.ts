@@ -11,9 +11,12 @@ import ciudad from './ciudad';
 import company from './company';
 import department from './department';
 import client from './client';
-
+import status_request from './status_request';
+import type_request from './type_request';
 
 export default async () => {
+	await status_request();
+	await type_request();
 	await ident_type();
 	await roles();
 	await payment_method();
@@ -27,5 +30,4 @@ export default async () => {
 	await municipio();
 	await parroquia();
 	await ciudad();
-
 };
