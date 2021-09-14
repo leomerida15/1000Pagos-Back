@@ -7,12 +7,12 @@ import { createConnection, getRepository } from 'typeorm';
 import contents from '../db/contents';
 import log from '../hooks/logs/index';
 import { Doc } from '../hooks/docs';
+import path from 'path';
 
 //database
 
 createConnection()
 	.then(async () => {
-
 		await contents();
 		log.text.OK('DB OK');
 	})
@@ -28,9 +28,10 @@ app.use(express.json());
 Routes(app);
 
 //
-app.use('/static/*', express.static(Doc.base + '*'));
+app.use('/static', express.static(path.resolve('static')));
 
 // meddleware posRutes
+
 posRoutes(app);
 
 // Settings
