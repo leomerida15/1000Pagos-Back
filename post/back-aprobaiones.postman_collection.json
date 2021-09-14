@@ -1,0 +1,693 @@
+{
+	"info": {
+		"_postman_id": "e10f1c6b-703d-41b4-aeec-265515c8c392",
+		"name": "back-aprobaiones",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "kndnlks",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"test\",\r\n    \"last_name\":\"test\",\r\n    \"password\":\"Test123.\",\r\n    \"id_ident_type\":1,\r\n    \"ident_num\":\"1234548\",\r\n    \"email\":\"test3@gmail.com\",\r\n    \"phone\":\"+5841811161\",\r\n    \"id_department\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5051/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "validar email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"dimasmerida15@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5050/auth/register/valid/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"auth",
+								"register",
+								"valid",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register documento de identidad",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_ident_type\" : \"1\",\r\n    \"ident_num\" : \"12345678\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5050/auth/register/valid/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"auth",
+								"register",
+								"valid",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\":\"Test123.\",\r\n    \"email\":\"leomerida15@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5051/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "passMail",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\":\"dimasmerida15@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5050/auth/passMail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"auth",
+								"passMail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editPass",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjI5MjMxNzQ1LCJleHAiOjE2MjkzMTgxNDV9.f1mLotFiWuOYhVKHZ2mK2PdEv1x4s26NXGPKlRhzSQI",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\":\"test2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5050/auth/log/editPass",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"auth",
+								"log",
+								"editPass"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "worker",
+			"item": [
+				{
+					"name": "worker usuario ya logeado",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwidHlwZSI6MiwiaWF0IjoxNjMxMDI2MTAzLCJleHAiOjE2MzEwMjc5MDN9.5lsGl1Hf60Sb3ANoRMfC1XsqHDmWH4FrQa8Pkkzmplc",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5051/worker",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"worker"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "worker all usar",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6MiwiaWF0IjoxNjMxMTMwNjIzLCJleHAiOjE2MzExMzI0MjN9.pZo_p6yWJSolcdt6TKUn8Hbkf-d7p2FgqtsQgZswtEo",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5051/worker/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"worker",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "worker user by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6MiwiaWF0IjoxNjMxMTMwNjIzLCJleHAiOjE2MzExMzI0MjN9.pZo_p6yWJSolcdt6TKUn8Hbkf-d7p2FgqtsQgZswtEo",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5051/worker/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"worker",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "roles",
+			"item": [
+				{
+					"name": "roles all",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6eyJ0b2tlbiI6eyJpZCI6NCwidHlwZSI6MiwiaWF0IjoxNjMxMDMwMDY4LCJleHAiOjE2MzEwMzE4Njh9LCJ1c2VyLWFnZW50IjoiUG9zdG1hblJ1bnRpbWUvNy4yOC40IiwiYWNjZXB0IjoiKi8qIiwiY2FjaGUtY29udHJvbCI6Im5vLWNhY2hlIiwicG9zdG1hbi10b2tlbiI6IjQ1NzU0Y2UxLTk4OTgtNDdjMy04ZWYzLTcxMjVhYjk2ZTk3ZSIsImhvc3QiOiJsb2NhbGhvc3Q6NTA1MSIsImFjY2VwdC1lbmNvZGluZyI6Imd6aXAsIGRlZmxhdGUsIGJyIiwiY29ubmVjdGlvbiI6ImtlZXAtYWxpdmUiLCJpYXQiOjE2MzEwMzAwODAsImV4cCI6MTYzMTAzMzY4MH0sInVzZXItYWdlbnQiOiJQb3N0bWFuUnVudGltZS83LjI4LjQiLCJhY2NlcHQiOiIqLyoiLCJjYWNoZS1jb250cm9sIjoibm8tY2FjaGUiLCJwb3N0bWFuLXRva2VuIjoiZDZkZmFlY2QtMjg0MS00MzJkLTlmMWUtYWU5YzM3Y2M2MjY5IiwiaG9zdCI6ImxvY2FsaG9zdDo1MDUxIiwiYWNjZXB0LWVuY29kaW5nIjoiZ3ppcCwgZGVmbGF0ZSwgYnIiLCJjb25uZWN0aW9uIjoia2VlcC1hbGl2ZSIsImlhdCI6MTYzMTAzMTI0OCwiZXhwIjoxNjMxMDM0ODQ4fQ.F1waIadi3qMhZpryQjMSQBvClJcSj7ZfBY6rn6xlYTM",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5051/roles/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"roles",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "roles  By Worker",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6eyJ0b2tlbiI6eyJpZCI6NCwidHlwZSI6MiwiaWF0IjoxNjMxMDMwMDY4LCJleHAiOjE2MzEwMzE4Njh9LCJ1c2VyLWFnZW50IjoiUG9zdG1hblJ1bnRpbWUvNy4yOC40IiwiYWNjZXB0IjoiKi8qIiwiY2FjaGUtY29udHJvbCI6Im5vLWNhY2hlIiwicG9zdG1hbi10b2tlbiI6IjQ1NzU0Y2UxLTk4OTgtNDdjMy04ZWYzLTcxMjVhYjk2ZTk3ZSIsImhvc3QiOiJsb2NhbGhvc3Q6NTA1MSIsImFjY2VwdC1lbmNvZGluZyI6Imd6aXAsIGRlZmxhdGUsIGJyIiwiY29ubmVjdGlvbiI6ImtlZXAtYWxpdmUiLCJpYXQiOjE2MzEwMzAwODAsImV4cCI6MTYzMTAzMzY4MH0sInVzZXItYWdlbnQiOiJQb3N0bWFuUnVudGltZS83LjI4LjQiLCJhY2NlcHQiOiIqLyoiLCJjYWNoZS1jb250cm9sIjoibm8tY2FjaGUiLCJwb3N0bWFuLXRva2VuIjoiZDZkZmFlY2QtMjg0MS00MzJkLTlmMWUtYWU5YzM3Y2M2MjY5IiwiaG9zdCI6ImxvY2FsaG9zdDo1MDUxIiwiYWNjZXB0LWVuY29kaW5nIjoiZ3ppcCwgZGVmbGF0ZSwgYnIiLCJjb25uZWN0aW9uIjoia2VlcC1hbGl2ZSIsImlhdCI6MTYzMTAzMTI0OCwiZXhwIjoxNjMxMDM0ODQ4fQ.F1waIadi3qMhZpryQjMSQBvClJcSj7ZfBY6rn6xlYTM",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5051/roles/:id/worker",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"roles",
+								":id",
+								"worker"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "payment all",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6MiwiaWF0IjoxNjMxMjE1OTk4LCJleHAiOjE2MzEyMTc3OTh9.JglX6jF66S-9aDG2RECRMwSTpFdCtLd1Ud_G_As25kI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5051/payment/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"payment",
+								"all"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Location",
+			"item": [
+				{
+					"name": "estados",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6MiwiaWF0IjoxNjMxNTQ3MDkyLCJleHAiOjE2MzE1NDg4OTJ9.sSZ8blsUYl118oApgK6xXwH7Sx7IfMx9sTlhJB3Gle0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5051/Location/estado",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"Location",
+								"estado"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "municipios",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6MiwiaWF0IjoxNjMxNTQ3MDkyLCJleHAiOjE2MzE1NDg4OTJ9.sSZ8blsUYl118oApgK6xXwH7Sx7IfMx9sTlhJB3Gle0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5051/Location/:id_estado/municipio",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"Location",
+								":id_estado",
+								"municipio"
+							],
+							"variable": [
+								{
+									"key": "id_estado",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "parroquias",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6MiwiaWF0IjoxNjMxNTQ3MDkyLCJleHAiOjE2MzE1NDg4OTJ9.sSZ8blsUYl118oApgK6xXwH7Sx7IfMx9sTlhJB3Gle0",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5051/Location/:id_municipio/parroquia",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"Location",
+								":id_municipio",
+								"parroquia"
+							],
+							"variable": [
+								{
+									"key": "id_municipio",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ciudad",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6MiwiaWF0IjoxNjMxMTIzNDAwLCJleHAiOjE2MzExMjUyMDB9.pKH1BkHM73B1tQIss7b7WayjoGve49IruPJdD-d1PrA",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5051/Location/:id_estado/ciudad",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"Location",
+								":id_estado",
+								"ciudad"
+							],
+							"variable": [
+								{
+									"key": "id_estado",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "FM",
+			"item": [
+				{
+					"name": "FM RC",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email\n",
+									"value": "test@test.com\n",
+									"type": "text"
+								},
+								{
+									"key": "images\n",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "rc_property_document",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "rc_service_document",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "rc_special_contributor",
+									"value": "3",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "rc_ref_bank",
+									"value": "4",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "rc_ref_perso",
+									"value": "5",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "rc_account_number",
+									"value": "6",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "rc_front_local",
+									"value": "7",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "rc_in_local",
+									"value": "8",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "rc_rif",
+									"value": "9",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "rc_ident_card",
+									"value": "10",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:6060/1000pagosRC/RC",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"1000pagosRC",
+								"RC"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "email",
+									"value": "test@test.com",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/C:/Users/dmerida/Pictures/fm/rc_account_number'.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:6060/1000pagosRC/RC",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"1000pagosRC",
+								"RC"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ident_types",
+			"item": [
+				{
+					"name": "get All tipos de identidad",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6MiwiaWF0IjoxNjMxNTQ0MjQwLCJleHAiOjE2MzE1NDYwNDB9.ALUo1JEumZJfedvadhPenF6bRgFbXsV0KmfwhwAHUpQ",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5051/ident_type",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"ident_type"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
