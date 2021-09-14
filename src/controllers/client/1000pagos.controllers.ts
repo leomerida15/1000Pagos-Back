@@ -55,23 +55,11 @@ export const upFilesRecaudos = async (
 			throw { message: `${valid_description.length} imagenes no tiene un nomre referente a un recaudo` };
 		}
 
-		let info: any = {
-			rc_constitutive_act: 0,
-			rc_property_document: 0,
-			rc_service_document: 0,
-			rc_ref_bank: 0,
-			rc_ref_perso: 0,
-			rc_account_number: 0,
-			rc_front_local: 0,
-			rc_in_local: 0,
-			rc_rif: 0,
-			rc_ident_card: 0,
-			rc_special_contributor: 0,
-		};
+		let info: any = {};
 
 		const stop: Promise<void>[] = files.map(async (file: Express.Multer.File, i: number): Promise<void> => {
 			const link = await Doc.Move(file.filename, email);
-			const path = `${email}/${file.fieldname}`;
+			const path = `static/${email}/${file.filename}`;
 
 			const descript: any = file.originalname;
 
