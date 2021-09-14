@@ -7,6 +7,6 @@ const RC: Router = Router();
 // RC
 // RC.route('/RC').post(upload, upFileRecaudos);
 //
-RC.route('/RC').post(uploads, upFilesRecaudos).get(upFilesRecaudos);
+RC.route('/RC').post(uploads, upFilesRecaudos);
 //
 export default RC;

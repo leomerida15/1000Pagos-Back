@@ -29,11 +29,7 @@ export const upFilesRecaudos = async (
 	try {
 		const files: any = req.files;
 
-		console.log('files', files);
-
 		if (files.length < 10) throw { message: `solo envio ${files.length} imagenes y deben ser min 10`, code: 400 };
-
-		console.log('body', req.body);
 
 		const { email } = req.body;
 
@@ -74,8 +70,8 @@ export const upFilesRecaudos = async (
 		};
 
 		const stop: Promise<void>[] = files.map(async (file: Express.Multer.File, i: number): Promise<void> => {
-			const path = await Doc.Move(file.filename, email);
-			const link = Doc.Route(file.filename, email);
+			const link = await Doc.Move(file.filename, email);
+			const path = `${email}/${file.fieldname}`;
 
 			const descript: any = file.originalname;
 
