@@ -17,7 +17,8 @@ export interface legend {
 }
 
 export interface RC {
-	email: string;
+	id_client: string;
+	id_commerce: string;
 	// rc_constitutive_act: number | string;
 	// rc_property_document: number | string;
 	// rc_service_document: number | string;

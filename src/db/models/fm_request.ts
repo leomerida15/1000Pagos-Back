@@ -55,14 +55,6 @@ export default class fm_request {
 	text_account_number!: string;
 
 	@OneToOne(() => fm_photo)
-	@JoinColumn({ name: 'rc_front_local' })
-	rc_front_local!: number;
-
-	@OneToOne(() => fm_photo)
-	@JoinColumn({ name: 'rc_in_local' })
-	rc_in_local!: number;
-
-	@OneToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_rif' })
 	rc_rif!: number;
 

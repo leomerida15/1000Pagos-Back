@@ -3,6 +3,10 @@ import { Doc } from '../../hooks/docs';
 import { getRepository } from 'typeorm';
 import fm_photo from '../../db/models/fm_photo';
 import { Api } from '../../interfaces';
+import fm_client from '../../db/models/fm_client';
+import { base } from '../../hooks/docs/doc';
+import fs from 'fs/promises';
+import { existsSync } from 'fs';
 
 export const upFileRecaudos = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
@@ -29,9 +33,9 @@ export const upFilesRecaudos = async (
 	try {
 		const files: any = req.files;
 
-		if (files.length < 10) throw { message: `solo envio ${files.length} imagenes y deben ser min 10`, code: 400 };
+		if (files.length < 8) throw { message: `solo envio ${files.length} imagenes y deben ser min 10`, code: 400 };
 
-		const { email } = req.body;
+		const { id_client, id_commerce } = req.body;
 
 		const description = [
 			'rc_constitutive_act',
@@ -40,8 +44,6 @@ export const upFilesRecaudos = async (
 			'rc_ref_bank',
 			'rc_ref_perso',
 			'rc_account_number',
-			'rc_front_local',
-			'rc_in_local',
 			'rc_rif',
 			'rc_ident_card',
 			'rc_special_contributor',
@@ -57,9 +59,16 @@ export const upFilesRecaudos = async (
 
 		let info: any = {};
 
+		if (!existsSync(`${base}/${id_client}`)) {
+			await fs.mkdir(`${base}/${id_client}`);
+		}
+		if (!existsSync(`${base}/${id_client}/${id_commerce}`)) {
+			await fs.mkdir(`${base}/${id_client}/${id_commerce}`);
+		}
+
 		const stop: Promise<void>[] = files.map(async (file: Express.Multer.File, i: number): Promise<void> => {
-			const link = await Doc.Move(file.filename, email);
-			const path = `static/${email}/${file.filename}`;
+			const link = await Doc.Move(file.filename, `${id_client}/${id_commerce}`);
+			const path = `static/${id_client}/${id_commerce}/${file.filename}`;
 
 			const descript: any = file.originalname;
 
@@ -69,8 +78,6 @@ export const upFilesRecaudos = async (
 			info[descript] = save.id;
 		});
 		await Promise.all(stop);
-
-		console.log('info', info);
 
 		res.status(200).json({ message: 'archivos subidor', info });
 	} catch (err) {

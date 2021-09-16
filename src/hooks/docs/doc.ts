@@ -59,8 +59,6 @@ export const ID = (file: string) => file.split('/')[file.split('/').length - 1];
 export const IDs = (files: string[]) => files.map((file: string) => file.split('/')[file.split('/').length - 1]);
 //
 export const Move = async (file: string, folder: string) => {
-	console.log('folder', folder);
-
 	if (folder) await fileExistin(folder);
 
 	await fs.rename(path.join(base, file), path.join(base, folder, file));

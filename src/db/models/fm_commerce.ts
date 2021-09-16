@@ -3,6 +3,8 @@ import {
 	CreateDateColumn,
 	Entity,
 	JoinColumn,
+	JoinTable,
+	ManyToMany,
 	ManyToOne,
 	OneToMany,
 	OneToOne,
@@ -58,9 +60,9 @@ export default class fm_commerce {
 	@JoinColumn({ name: 'dir_posts' })
 	dir_posts!: fm_dir_post[];
 
-	@OneToMany(() => fm_photo, (fm_photo) => fm_photo.id)
-	@JoinColumn({ name: 'photos' })
-	photos!: fm_photo[];
+	@ManyToMany(() => fm_photo)
+	@JoinTable()
+	photos?: fm_photo[];
 
 	@OneToMany(() => fm_request, (fm_request) => fm_request.id_commerce)
 	@JoinColumn({ name: 'requests' })
