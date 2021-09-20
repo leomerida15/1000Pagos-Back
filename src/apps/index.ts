@@ -13,7 +13,7 @@ import path from 'path';
 
 createConnection()
 	.then(async () => {
-		await contents();
+		// await contents();
 		log.text.OK('DB OK');
 	})
 	.catch((err) => console.log('DB ERR', err));

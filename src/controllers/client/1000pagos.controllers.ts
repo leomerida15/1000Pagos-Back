@@ -98,7 +98,10 @@ export const upFilesRecaudos = async (
 				const link = await Doc.Move(file.filename, `${id_client}/${id_commerce}`);
 				const path = `static/${id_client}/${id_commerce}/${file.filename}`;
 
-				const descript: any = file.originalname;
+				const descript = ((): string => {
+					if (file.originalname.includes('.jpg')) return file.originalname.replace('.jpg', '');
+					else return file.originalname.replace('.png', '');
+				})();
 
 				const data = getRepository(fm_photo).create({ name: file.filename, path, link, descript });
 				const save = await getRepository(fm_photo).save(data);
