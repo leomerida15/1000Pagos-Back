@@ -4,7 +4,6 @@
  */
 
 import fs from 'fs/promises';
-import { existsSync } from 'fs';
 import path from 'path';
 import { host } from '../host';
 import { v4 as uuidv4 } from 'uuid';
@@ -28,9 +27,10 @@ export const ToFile: any = async (file: string | string[], title: string): Promi
 	return id;
 };
 //
-export const fileExistin = async (folder: string): Promise<void> => {
-	const valid: boolean = existsSync(`${base}/${folder}`);
-	if (!valid) {
+export const fileExistin = async (folder: string) => {
+	try {
+		await fs.lstat(`${base}/${folder}`);
+	} catch (err) {
 		await fs.mkdir(`${base}/${folder}`);
 	}
 };
