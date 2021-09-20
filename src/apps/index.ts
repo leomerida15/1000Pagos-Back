@@ -4,9 +4,7 @@ import { posRoutes, preRoutes } from '../Middlewares';
 import Routes from '../router';
 
 import { createConnection, getRepository } from 'typeorm';
-import contents from '../db/contents';
 import log from '../hooks/logs/index';
-import { Doc } from '../hooks/docs';
 import path from 'path';
 
 //database
