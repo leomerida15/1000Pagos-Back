@@ -15,6 +15,8 @@ import fm_request from './fm_request';
 import fm_roles from './fm_roles';
 import fm_company from './fm_company';
 import fm_department from './fm_department';
+import fm_commerce from './fm_commerce';
+import fm_aci_commerce from './fm_aci_commerce';
 
 @Entity()
 @Index(['id_ident_type', 'ident_num'], { unique: true })
@@ -46,6 +48,10 @@ export default class fm_worker {
 	@ManyToOne(() => fm_department)
 	@JoinColumn({ name: 'id_department' })
 	id_department!: number;
+
+	@OneToMany(() => fm_aci_commerce, (fm_aci_commerce) => fm_aci_commerce.id_worker)
+	@JoinColumn({ name: 'commerces' })
+	commerces?: fm_aci_commerce[];
 
 	@Column()
 	ident_num!: string;

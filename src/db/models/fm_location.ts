@@ -3,10 +3,8 @@ import {
 	Entity,
 	Column,
 	PrimaryGeneratedColumn,
-	OneToMany,
 	JoinColumn,
 	ManyToOne,
-	OneToOne,
 	UpdateDateColumn,
 	CreateDateColumn,
 } from 'typeorm';
@@ -20,19 +18,19 @@ export default class fm_location {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@OneToOne(() => fm_estado)
+	@ManyToOne(() => fm_estado, (fm_estado) => fm_estado.locations)
 	@JoinColumn({ name: 'id_estado' })
 	id_estado!: number;
 
-	@OneToOne(() => fm_municipio)
+	@ManyToOne(() => fm_municipio, (fm_municipio) => fm_municipio.locations)
 	@JoinColumn({ name: 'id_municipio' })
 	id_municipio!: number;
 
-	@OneToOne(() => fm_ciudad)
+	@ManyToOne(() => fm_ciudad, (fm_ciudad) => fm_ciudad.locations)
 	@JoinColumn({ name: 'id_ciudad' })
 	id_ciudad!: number;
 
-	@OneToOne(() => fm_parroquia)
+	@ManyToOne(() => fm_parroquia, (fm_parroquia) => fm_parroquia.locations)
 	@JoinColumn({ name: 'id_parroquia' })
 	id_parroquia!: number;
 

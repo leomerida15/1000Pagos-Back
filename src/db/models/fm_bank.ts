@@ -10,7 +10,7 @@ import {
 import fm_bank_commerce from './fm_bank_commerce';
 
 @Entity()
-export class fm_bank {
+export default class fm_bank {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
@@ -22,7 +22,7 @@ export class fm_bank {
 
 	@OneToMany(() => fm_bank_commerce, (fm_bank_commerce) => fm_bank_commerce.id_commerce)
 	@JoinColumn({ name: 'commerces' })
-	commerces!: fm_bank_commerce[];
+	commerces?: fm_bank_commerce[];
 
 	@CreateDateColumn()
 	createdAt?: string;

@@ -15,9 +15,11 @@ import fm_activity from './fm_activity';
 import fm_worker from './fm_worker';
 import fm_Client from './fm_client';
 import fm_bank_commerce from './fm_bank_commerce';
-import fm_dir_post from './fm_dir_post';
+import fm_dir_pos from './fm_dir_pos';
 import fm_request from './fm_request';
 import fm_photo from './fm_photo';
+import fm_location from './fm_location';
+import fm_aci_commerce from './fm_aci_commerce';
 
 @Entity()
 export default class fm_commerce {
@@ -31,22 +33,23 @@ export default class fm_commerce {
 	id_ident_type!: number;
 
 	@Column()
-	nro_ident!: string;
+	ident_num!: string;
 
 	@Column({ default: 0 })
 	special_contributor!: number;
 
+	@Column({ default: 1 })
 	@OneToOne(() => fm_activity)
 	@JoinColumn({ name: 'id_activity' })
 	id_activity!: number;
 
-	@Column()
+	@OneToOne(() => fm_location)
+	@JoinColumn({ name: 'id_location' })
 	id_location!: number;
 
-	@Column({ default: 0 })
-	@ManyToOne(() => fm_worker, (fm_worker) => fm_worker.id)
-	@JoinColumn({ name: 'id_aci' })
-	id_aci!: number;
+	@OneToMany(() => fm_aci_commerce, (fm_aci_commerce) => fm_aci_commerce.id_commerce)
+	@JoinColumn({ name: 'aci' })
+	aci?: fm_bank_commerce[];
 
 	@OneToOne(() => fm_Client)
 	@JoinColumn({ name: 'id_client' })
@@ -54,11 +57,11 @@ export default class fm_commerce {
 
 	@OneToMany(() => fm_bank_commerce, (fm_bank_commerce) => fm_bank_commerce.id_commerce)
 	@JoinColumn({ name: 'banks' })
-	banks!: fm_bank_commerce[];
+	banks?: fm_bank_commerce[];
 
-	@OneToMany(() => fm_dir_post, (fm_dir_post) => fm_dir_post.id_commerce)
-	@JoinColumn({ name: 'dir_posts' })
-	dir_posts!: fm_dir_post[];
+	@OneToMany(() => fm_aci_commerce, (fm_aci_commerce) => fm_aci_commerce.id_commerce)
+	@JoinColumn({ name: 'dir_pos' })
+	dir_pos!: number;
 
 	@ManyToMany(() => fm_photo)
 	@JoinTable()

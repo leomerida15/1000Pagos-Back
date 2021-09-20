@@ -13,7 +13,7 @@ import fm_location from './fm_location';
 import fm_commerce from './fm_commerce';
 
 @Entity()
-export default class fm_dir_post {
+export default class fm_dir_pos {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
@@ -21,7 +21,7 @@ export default class fm_dir_post {
 	@JoinColumn({ name: 'id_location' })
 	id_location!: number;
 
-	@ManyToOne(() => fm_commerce, (fm_Commerce) => fm_Commerce.dir_posts)
+	@ManyToOne(() => fm_commerce, (fm_Commerce) => fm_Commerce.dir_pos)
 	@JoinColumn({ name: 'id_commerce' })
 	id_commerce!: number;
 

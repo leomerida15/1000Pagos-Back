@@ -13,6 +13,7 @@ import department from './department';
 import client from './client';
 import status_request from './status_request';
 import type_request from './type_request';
+import bank from './bank';
 
 export default async () => {
 	await status_request();
@@ -30,4 +31,5 @@ export default async () => {
 	await municipio();
 	await parroquia();
 	await ciudad();
+	await bank();
 };

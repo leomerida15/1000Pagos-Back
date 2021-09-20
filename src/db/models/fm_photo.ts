@@ -6,7 +6,6 @@ import {
 	UpdateDateColumn,
 	ManyToOne,
 	JoinColumn,
-	OneToOne,
 } from 'typeorm';
 import fm_commerce from './fm_commerce';
 
