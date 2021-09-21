@@ -14,6 +14,7 @@ import fm_phone from './fm_phone';
 import fm_request from './fm_request';
 import fm_roles from './fm_roles';
 import fm_photo from './fm_photo';
+import fm_commerce from './fm_commerce';
 
 @Entity()
 @Index(['id_ident_type', 'ident_num'], { unique: true })
@@ -48,6 +49,10 @@ export default class fm_client {
 	@OneToMany(() => fm_phone, (fm_phone) => fm_phone.id_client)
 	@JoinColumn({ name: 'phones' })
 	phones?: fm_phone[];
+
+	@OneToMany(() => fm_commerce, (fm_commerce) => fm_commerce.id_client)
+	@JoinColumn({ name: 'commerces' })
+	commerces?: fm_commerce[];
 
 	@ManyToMany(() => fm_photo)
 	@JoinTable()

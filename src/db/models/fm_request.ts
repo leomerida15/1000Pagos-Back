@@ -3,7 +3,10 @@ import {
 	CreateDateColumn,
 	Entity,
 	JoinColumn,
+	JoinTable,
+	ManyToMany,
 	ManyToOne,
+	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
@@ -14,6 +17,9 @@ import fm_commerce from './fm_commerce';
 import fm_type_request from './fm_type_request';
 import fm_status_request from './fm_status_request';
 import fm_photo from './fm_photo';
+import fm_dir_pos from './fm_dir_pos';
+import fm_location from './fm_location';
+import fm_client from './fm_client';
 
 @Entity()
 export default class fm_request {
@@ -66,7 +72,7 @@ export default class fm_request {
 	@JoinColumn({ name: 'id_payment_method' })
 	id_payment_method!: number;
 
-	@ManyToOne(() => fm_Client, (fm_Client) => fm_Client.requests)
+	@ManyToOne(() => fm_client, (fm_client) => fm_client.commerces)
 	@JoinColumn({ name: 'id_client' })
 	id_client!: number;
 
@@ -74,7 +80,7 @@ export default class fm_request {
 	@JoinColumn({ name: 'id_commerce' })
 	id_commerce!: number;
 
-	@OneToOne(() => fm_type_request)
+	@ManyToOne(() => fm_type_request, (fm_type_request) => fm_type_request.requests)
 	@JoinColumn({ name: 'id_type_request' })
 	id_type_request!: number;
 
@@ -82,6 +88,10 @@ export default class fm_request {
 	@ManyToOne(() => fm_status_request, (fm_status_request) => fm_status_request.requests)
 	@JoinColumn({ name: 'id_status_request' })
 	id_status_request?: number;
+
+	@OneToMany(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_commerce)
+	@JoinColumn({ name: 'dir_pos' })
+	dir_pos?: fm_dir_pos | fm_location;
 
 	@CreateDateColumn()
 	createdAt?: string;
