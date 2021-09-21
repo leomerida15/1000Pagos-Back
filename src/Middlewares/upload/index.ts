@@ -20,7 +20,7 @@ const storage: StorageEngine = diskStorage({
 
 const options: Options = {
 	fileFilter: (req, file, cb) => {
-		const filetypes = /jpeg|jpg|png|svg/;
+		const filetypes = /jpeg|jpg|png|pdf/;
 		const mimetype = filetypes.test(file.mimetype);
 		const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
 		if (mimetype && extname) {
