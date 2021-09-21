@@ -99,10 +99,10 @@ export const upFilesRecaudos = async (
 				const path = `static/${id_client}/${id_commerce}/${file.filename}`;
 
 				const descript: string = file.originalname
-					.replace('.png', '')
-					.replace('.jpeg', '')
-					.replace('.pdf', '')
-					.replace('.jpg', '');
+					.replace(/.png/g, '')
+					.replace(/.jpeg/g, '')
+					.replace(/.pdf/g, '')
+					.replace(/.jpg/g, '');
 
 				const data = getRepository(fm_photo).create({ name: file.filename, path, link, descript });
 				const save = await getRepository(fm_photo).save(data);
