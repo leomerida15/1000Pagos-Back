@@ -3,4 +3,4 @@
 /dist
 /client
 /static/*
-# /src/db/data
+/src/db/data
