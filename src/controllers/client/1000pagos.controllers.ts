@@ -95,14 +95,18 @@ export const upFilesRecaudos = async (
 			}
 
 			const stop: Promise<void>[] = files.map(async (file: Express.Multer.File, i: number): Promise<void> => {
-				const link = await Doc.Move(file.filename, `${id_client}/${id_commerce}`);
-				const path = `static/${id_client}/${id_commerce}/${file.filename}`;
-
 				const descript: string = file.originalname
 					.replace(/.png/g, '')
 					.replace(/.jpeg/g, '')
 					.replace(/.pdf/g, '')
 					.replace(/.jpg/g, '');
+
+				const route_ids: string = ['rc_ident_card', 'rc_ref_perso'].includes(descript)
+					? `${id_client}`
+					: `${id_client}/${id_commerce}`;
+
+				const link = await Doc.Move(file.filename, route_ids);
+				const path = `static/${route_ids}/${file.filename}`;
 
 				const data = getRepository(fm_photo).create({ name: file.filename, path, link, descript });
 				const save = await getRepository(fm_photo).save(data);
