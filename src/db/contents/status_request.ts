@@ -5,7 +5,10 @@ import fm_status_request from '../models/fm_status_request';
 const status_request = async (): Promise<void> => {
 	const data: fm_status_request[] = [
 		{
-			name: 'en espera de aprobacion',
+			name: 'En espera de Admición',
+		},
+		{
+			name: 'En Admición',
 		},
 	];
 	//

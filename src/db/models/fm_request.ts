@@ -20,6 +20,7 @@ import fm_photo from './fm_photo';
 import fm_dir_pos from './fm_dir_pos';
 import fm_location from './fm_location';
 import fm_client from './fm_client';
+import fm_payment_method from './fm_payment_method';
 
 @Entity()
 export default class fm_request {
@@ -68,11 +69,11 @@ export default class fm_request {
 	@JoinColumn({ name: 'rc_ident_card' })
 	rc_ident_card!: number;
 
-	@OneToOne(() => fm_way_pay)
+	@ManyToOne(() => fm_payment_method, (fm_payment_method) => fm_payment_method.requests)
 	@JoinColumn({ name: 'id_payment_method' })
 	id_payment_method!: number;
 
-	@ManyToOne(() => fm_client, (fm_client) => fm_client.commerces)
+	@ManyToOne(() => fm_client, (fm_client) => fm_client.requests)
 	@JoinColumn({ name: 'id_client' })
 	id_client!: number;
 
