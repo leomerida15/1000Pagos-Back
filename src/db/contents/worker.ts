@@ -1,26 +1,25 @@
-import Log from 'hooks/logs';
 import { getRepository } from 'typeorm';
 import fm_worker from '../models/fm_worker';
+import Log from '../../hooks/logs';
 
-const worker = async (): Promise<void> => {
+const activity = async (): Promise<void> => {
 	const data: fm_worker[] = [
 		{
-			id: 0,
-			name: 'no commerce',
-			last_name: 'no commerce',
-			id_roles: 1,
-			password: '',
-			email: 'null',
-			id_depart: 1,
+			name: 'test',
+			last_name: 'test',
+			password: '$2b$10$4fYNDPFNI8TzB/scddXfV.hsgXtPfi8jFAp7MOujpeSfB0TbtO6fe', //Test123.
 			id_ident_type: 1,
-			ident_num: '',
-			phone: '',
+			ident_num: '12345678',
+			email: 'leomerida15@gmail.com',
+			phone: '+584444848',
+			id_company: 1,
+			id_department: 1,
 		},
 	];
 
 	//
-	const valid = await getRepository(fm_worker).find({ where: [{ name: 'no commerce' }] });
+	const valid = await getRepository(fm_worker).findByIds([1]);
 	if (!valid.length) await getRepository(fm_worker).save(data);
 };
 
-export default worker;
+export default activity;

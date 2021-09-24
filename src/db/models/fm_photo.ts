@@ -23,6 +23,9 @@ export default class fm_photo {
 	@Column()
 	name!: string;
 
+	@Column()
+	descript!: string;
+
 	@CreateDateColumn()
 	createdAt?: string;
 

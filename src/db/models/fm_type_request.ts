@@ -1,12 +1,25 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+	Column,
+	CreateDateColumn,
+	Entity,
+	JoinColumn,
+	OneToMany,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
+} from 'typeorm';
+import fm_request from './fm_request';
 
 @Entity()
-export class fm_type_request {
+export default class fm_type_request {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
 	@Column()
 	name!: string;
+
+	@OneToMany(() => fm_request, (fm_request) => fm_request.id_status_request)
+	@JoinColumn({ name: 'id_requests' })
+	requests?: fm_request[];
 
 	@CreateDateColumn()
 	createdAt?: string;

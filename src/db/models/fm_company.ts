@@ -3,23 +3,23 @@ import {
 	CreateDateColumn,
 	Entity,
 	JoinColumn,
-	OneToMany,
+	ManyToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
-import fm_commerce from './fm_commerce';
+import fm_worker from './fm_worker';
 
 @Entity()
-export default class fm_activity {
+export default class fm_company {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
 	@Column()
 	name!: string;
 
-	@OneToMany(() => fm_commerce, (fm_commerce) => fm_commerce.id_activity)
-	@JoinColumn({ name: 'commerces' })
-	commerces?: fm_commerce[];
+	@ManyToOne(() => fm_worker, (fm_worker) => fm_worker.id_company)
+	@JoinColumn({ name: 'id_commerce' })
+	workers?: fm_worker[];
 
 	@CreateDateColumn()
 	createdAt?: string;
