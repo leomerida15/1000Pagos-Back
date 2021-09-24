@@ -15,11 +15,8 @@ import fm_request from './fm_request';
 import fm_roles from './fm_roles';
 import fm_company from './fm_company';
 import fm_department from './fm_department';
-<<<<<<< HEAD
 import fm_commerce from './fm_commerce';
 import fm_aci_commerce from './fm_aci_commerce';
-=======
->>>>>>> c0ecb9b106222750e375be87c02ebcb21d6f32cd
 
 @Entity()
 @Index(['id_ident_type', 'ident_num'], { unique: true })
@@ -35,11 +32,7 @@ export default class fm_worker {
 
 	@ManyToMany(() => fm_roles)
 	@JoinTable()
-<<<<<<< HEAD
-	roles?: fm_roles[];
-=======
 	id_roles?: number;
->>>>>>> c0ecb9b106222750e375be87c02ebcb21d6f32cd
 
 	@Column()
 	password!: string;
@@ -56,13 +49,10 @@ export default class fm_worker {
 	@JoinColumn({ name: 'id_department' })
 	id_department!: number;
 
-<<<<<<< HEAD
 	@OneToMany(() => fm_aci_commerce, (fm_aci_commerce) => fm_aci_commerce.id_worker)
 	@JoinColumn({ name: 'commerces' })
 	commerces?: fm_aci_commerce[];
 
-=======
->>>>>>> c0ecb9b106222750e375be87c02ebcb21d6f32cd
 	@Column()
 	ident_num!: string;
 
