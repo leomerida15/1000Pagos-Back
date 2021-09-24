@@ -11,13 +11,9 @@ import ciudad from './ciudad';
 import company from './company';
 import department from './department';
 import client from './client';
-<<<<<<< HEAD
 import status_request from './status_request';
 import type_request from './type_request';
 import bank from './bank';
-=======
-
->>>>>>> c0ecb9b106222750e375be87c02ebcb21d6f32cd
 
 export default async () => {
 	await status_request();
@@ -35,9 +31,5 @@ export default async () => {
 	await municipio();
 	await parroquia();
 	await ciudad();
-<<<<<<< HEAD
 	await bank();
-=======
-
->>>>>>> c0ecb9b106222750e375be87c02ebcb21d6f32cd
 };

@@ -10,7 +10,7 @@ import contents from '../db/contents';
 
 createConnection()
 	.then(async () => {
-		// await contents();
+		await contents();
 		console.log('DB OK');
 	})
 	.catch((err) => console.log('DB ERR', err));

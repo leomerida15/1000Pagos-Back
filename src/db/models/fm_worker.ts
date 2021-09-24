@@ -32,7 +32,7 @@ export default class fm_worker {
 
 	@ManyToMany(() => fm_roles)
 	@JoinTable()
-	id_roles?: number;
+	roles?: fm_roles[];
 
 	@Column()
 	password!: string;
