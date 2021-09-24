@@ -30,7 +30,7 @@ deploy_qa:
 deploy_qa_client: 
   stage: deploy
   script: 
-    - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo git checkout qa-client && sudo git pull " 
+    - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT2/ && sudo git checkout qa-client && sudo git pull " 
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT2/ && sudo yarn "
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT2 && sudo pm2 restart client  "
   only: 
