@@ -3,7 +3,7 @@
 	"host": "localhost",
 	"port": 3306,
 	"username": "1000pagosdev",
-	"password": "Evolis554",
+	"password": "Evolis544",
 	"database": "1000pagosdev",
 	"synchronize": true,
 	"logging": false,
