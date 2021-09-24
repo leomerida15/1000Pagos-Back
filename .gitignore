@@ -2,3 +2,8 @@
 /node_modules
 /dist
 /client
+<<<<<<< HEAD
+=======
+
+/src/db/base
+>>>>>>> c0ecb9b106222750e375be87c02ebcb21d6f32cd
