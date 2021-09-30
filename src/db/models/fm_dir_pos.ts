@@ -12,6 +12,7 @@ import {
 import fm_location from './fm_location';
 import fm_commerce from './fm_commerce';
 import fm_request from './fm_request';
+import fm_product from './fm_product';
 
 @Entity()
 export default class fm_dir_pos {
@@ -29,6 +30,10 @@ export default class fm_dir_pos {
 	@ManyToOne(() => fm_request, (fm_request) => fm_request.dir_pos)
 	@JoinColumn({ name: 'id_request' })
 	id_request!: number;
+
+	@ManyToOne(() => fm_product, (fm_product) => fm_product.dir_pos)
+	@JoinColumn({ name: 'id_product' })
+	id_product!: number;
 
 	@CreateDateColumn({ select: false })
 	createdAt?: string;

@@ -68,6 +68,7 @@ export default class fm_client {
 	@JoinColumn({ name: 'requests' })
 	requests?: fm_request[];
 
+	@Column({ nullable: true, default: null })
 	@ManyToOne(() => fm_location, (fm_location) => fm_location.clients)
 	@JoinColumn({ name: 'id_location' })
 	id_location?: number;
