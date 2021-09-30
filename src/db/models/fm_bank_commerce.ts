@@ -29,7 +29,7 @@ export default class fm_bank_commerce {
 	@JoinColumn({ name: 'id_bank' })
 	id_bank!: number;
 
-	@Column({ unique: true })
+	@Column()
 	bank_account_num!: string;
 
 	@CreateDateColumn({ select: false })
