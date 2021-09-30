@@ -14,6 +14,8 @@ import fm_municipio from './fm_municipio';
 import fm_ciudad from './fm_ciudad';
 import fm_parroquia from './fm_parroquia';
 import fm_dir_pos from './fm_dir_pos';
+import fm_client from './fm_client';
+import fm_commerce from './fm_commerce';
 
 @Entity()
 export default class fm_location {
@@ -36,9 +38,17 @@ export default class fm_location {
 	@JoinColumn({ name: 'id_parroquia' })
 	id_parroquia!: number;
 
-	@OneToMany(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_commerce)
+	@OneToMany(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_location)
 	@JoinColumn({ name: 'dir_pos' })
-	dir_pos?: fm_dir_pos | fm_location;
+	dir_pos?: fm_dir_pos[];
+
+	@OneToMany(() => fm_commerce, (fm_commerce) => fm_commerce.id_location)
+	@JoinColumn({ name: 'commerces' })
+	commerces?: fm_commerce[];
+
+	@OneToMany(() => fm_client, (fm_client) => fm_client.id_location)
+	@JoinColumn({ name: 'clients' })
+	clients?: fm_client[];
 
 	@Column()
 	sector!: string;
@@ -49,9 +59,9 @@ export default class fm_location {
 	@Column()
 	local!: string;
 
-	@CreateDateColumn()
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt?: number;
 }

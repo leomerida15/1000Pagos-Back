@@ -37,11 +37,11 @@ export default class fm_commerce {
 	@Column({ default: 1 })
 	special_contributor!: number;
 
-	@OneToMany(() => fm_activity, (fm_activity) => fm_activity.commerces)
+	@ManyToOne(() => fm_activity, (fm_activity) => fm_activity.commerces)
 	@JoinColumn({ name: 'id_activity' })
 	id_activity!: number;
 
-	@OneToOne(() => fm_location)
+	@ManyToOne(() => fm_location, (fm_location) => fm_location.commerces)
 	@JoinColumn({ name: 'id_location' })
 	id_location!: number;
 
@@ -69,9 +69,9 @@ export default class fm_commerce {
 	@JoinColumn({ name: 'requests' })
 	requests!: fm_request[];
 
-	@CreateDateColumn()
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt?: number;
 }

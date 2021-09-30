@@ -94,9 +94,9 @@ export default class fm_request {
 	@JoinColumn({ name: 'dir_pos' })
 	dir_pos?: fm_dir_pos | fm_location;
 
-	@CreateDateColumn()
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt?: number;
 }

@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import fm_commerce from './fm_commerce';
 import fm_bank from './fm_bank';
+import fm_client from './fm_client';
 
 @Entity()
 export default class fm_bank_commerce {
@@ -20,6 +21,10 @@ export default class fm_bank_commerce {
 	@JoinColumn({ name: 'id_commerce' })
 	id_commerce!: number;
 
+	@ManyToOne(() => fm_client, (fm_client) => fm_client.banks)
+	@JoinColumn({ name: 'id_client' })
+	id_client!: number;
+
 	@ManyToOne(() => fm_bank, (fm_bank) => fm_bank.commerces)
 	@JoinColumn({ name: 'id_bank' })
 	id_bank!: number;
@@ -27,9 +32,9 @@ export default class fm_bank_commerce {
 	@Column({ unique: true })
 	bank_account_num!: string;
 
-	@CreateDateColumn()
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt?: number;
 }

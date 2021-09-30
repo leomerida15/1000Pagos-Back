@@ -35,9 +35,9 @@ export default class fm_estado {
 	@JoinColumn({ name: 'locations' })
 	locations?: fm_location[];
 
-	@CreateDateColumn()
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt?: number;
 }

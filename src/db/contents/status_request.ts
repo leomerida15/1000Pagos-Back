@@ -8,7 +8,13 @@ const status_request = async (): Promise<void> => {
 			name: 'En espera de Admición',
 		},
 		{
-			name: 'En Admición',
+			name: 'En proceso Admición',
+		},
+		{
+			name: 'aprobado por Admición',
+		},
+		{
+			name: 'diferido por Admición',
 		},
 	];
 	//

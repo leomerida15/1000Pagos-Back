@@ -30,9 +30,9 @@ export default class fm_dir_pos {
 	@JoinColumn({ name: 'id_request' })
 	id_request!: number;
 
-	@CreateDateColumn()
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt!: number;
 }

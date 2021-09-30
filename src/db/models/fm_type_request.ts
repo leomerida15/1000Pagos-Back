@@ -21,9 +21,9 @@ export default class fm_type_request {
 	@JoinColumn({ name: 'id_requests' })
 	requests?: fm_request[];
 
-	@CreateDateColumn()
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt?: number;
 }

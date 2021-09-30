@@ -5,13 +5,11 @@ const product = async (): Promise<void> => {
 	const data: fm_product[] = [
 		{
 			name: 'WP PAR-1',
-			id_paym_method: 1,
 			price: 350,
 			description: 'El mejor equipo',
 		},
 		{
 			name: 'WP PAR-2',
-			id_paym_method: 2,
 			price: 450,
 			description: 'El mejor equipo',
 		},

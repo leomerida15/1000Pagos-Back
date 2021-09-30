@@ -16,9 +16,9 @@ export default class fm_roles {
 	@ManyToMany(() => fm_client)
 	fm_clients?: fm_client[];
 
-	@CreateDateColumn()
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt?: number;
 }
