@@ -94,6 +94,33 @@ export default class fm_request {
 	@JoinColumn({ name: 'dir_pos' })
 	dir_pos?: fm_dir_pos | fm_location;
 
+	@Column({ name: 'valid_rc_constitutive_act', default: '', nullable: true })
+	valid_rc_constitutive_act!: string;
+
+	@Column({ name: 'valid_rc_property_document', default: '', nullable: true })
+	valid_rc_property_document!: string;
+
+	@Column({ name: 'valid_rc_service_document', default: '', nullable: true })
+	valid_rc_service_document!: string;
+
+	@Column({ name: 'valid_rc_special_contributor', default: '', nullable: true })
+	valid_rc_special_contributor!: string;
+
+	@Column({ name: 'valid_rc_ref_bank', default: '', nullable: true })
+	valid_rc_ref_bank!: string;
+
+	@Column({ name: 'valid_rc_ref_perso', default: '', nullable: true })
+	valid_rc_ref_perso!: string;
+
+	@Column({ name: 'valid_rc_account_number', default: '', nullable: true })
+	valid_rc_account_number!: string;
+
+	@Column({ name: 'valid_rc_rif', default: '', nullable: true })
+	valid_rc_rif!: string;
+
+	@Column({ name: 'valid_rc_ident_card', default: '', nullable: true })
+	valid_rc_ident_card!: string;
+
 	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
