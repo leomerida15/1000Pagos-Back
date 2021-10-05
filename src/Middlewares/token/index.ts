@@ -29,7 +29,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
 		} else {
 			next();
 		}
-	} catch (err) {
+	} catch (err: any) {
 		err.code = 403;
 		next(err);
 	}

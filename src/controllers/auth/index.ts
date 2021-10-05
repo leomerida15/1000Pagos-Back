@@ -179,7 +179,6 @@ export const editPass = async (req: Request, res: Response, next: NextFunction):
 		// response
 		res.status(200).json({ message: 'Contraseña actualizada con exito' });
 	} catch (err) {
-		err.logger = true;
 		next(err);
 	}
 };
