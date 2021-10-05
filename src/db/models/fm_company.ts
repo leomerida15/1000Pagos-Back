@@ -21,9 +21,9 @@ export default class fm_company {
 	@JoinColumn({ name: 'id_commerce' })
 	workers?: fm_worker[];
 
-	@CreateDateColumn()
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt?: number;
 }

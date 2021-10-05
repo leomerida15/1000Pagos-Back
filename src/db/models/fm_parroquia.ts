@@ -4,10 +4,12 @@ import {
 	Entity,
 	JoinColumn,
 	ManyToOne,
+	OneToMany,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
 import fm_municipio from './fm_municipio';
+import fm_location from './fm_location';
 
 @Entity()
 export default class fm_parroquia {
@@ -18,12 +20,16 @@ export default class fm_parroquia {
 	@JoinColumn({ name: 'id_municipio' })
 	id_municipio!: number;
 
+	@OneToMany(() => fm_location, (fm_location) => fm_location.id_parroquia)
+	@JoinColumn({ name: 'locations' })
+	locations?: fm_location[];
+
 	@Column()
 	parroquia!: string;
 
-	@CreateDateColumn()
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt?: number;
 }

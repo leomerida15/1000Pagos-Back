@@ -10,6 +10,12 @@ const roles = async (): Promise<void> => {
 			name: 'worker',
 		},
 		{
+			name: 'security',
+		},
+		{
+			name: 'applicant',
+		},
+		{
 			name: 'admin',
 		},
 		{

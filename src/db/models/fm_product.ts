@@ -4,13 +4,11 @@ import {
 	Entity,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
-	ManyToOne,
-	JoinColumn,
 	OneToMany,
+	JoinColumn,
 } from 'typeorm';
-import fm_commerce from './fm_commerce';
-import fm_payment_method from './fm_payment_method';
 import fm_photo from './fm_photo';
+import fm_dir_pos from './fm_dir_pos';
 
 @Entity()
 export default class fm_product {
@@ -26,16 +24,16 @@ export default class fm_product {
 	@Column()
 	price!: number;
 
-	@ManyToOne(() => fm_payment_method, (fm_payment_method) => fm_payment_method.id)
-	@JoinColumn({ name: 'id_paym_method' })
-	id_paym_method!: number;
-
 	@OneToMany(() => fm_photo, (fm_photo) => fm_photo.id)
 	photos?: fm_photo[];
 
-	@CreateDateColumn()
+	@OneToMany(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_product)
+	@JoinColumn({ name: 'dir_pos' })
+	dir_pos?: number;
+
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt?: number;
 }

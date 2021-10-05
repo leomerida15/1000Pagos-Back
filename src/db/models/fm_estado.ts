@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import fm_ciudad from './fm_ciudad';
 import fm_municipio from './fm_municipio';
+import fm_location from './fm_location';
 
 @Entity()
 export default class fm_estado {
@@ -30,9 +31,13 @@ export default class fm_estado {
 	@JoinColumn({ name: 'municipios' })
 	municipios?: fm_municipio[];
 
-	@CreateDateColumn()
+	@OneToMany(() => fm_location, (fm_location) => fm_location.id_estado)
+	@JoinColumn({ name: 'locations' })
+	locations?: fm_location[];
+
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt?: number;
 }
