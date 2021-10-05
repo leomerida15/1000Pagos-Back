@@ -1,6 +1,6 @@
 import { Response, NextFunction, Request } from 'express';
 import { Doc } from '../../hooks/docs';
-import { getRepository } from 'typeorm';
+import { getConnection, getRepository } from 'typeorm';
 import fm_photo from '../../db/models/fm_photo';
 import { Api } from '../../interfaces';
 import { base } from '../../hooks/docs/doc';
@@ -37,9 +37,17 @@ export const upFilesRecaudos = async (
 		const files: any = req.files;
 		let info: any = {};
 
+		console.log('body',req.body);
+		
+
 		const { id_client, id_commerce, bank_account_num }: any = req.body;
 
+		console.log('id_client, id_commerce, bank_account_num ',id_client, id_commerce, bank_account_num );
+		
+
 		const client = await getRepository(fm_client).findOne(id_client);
+		console.log('id_client',client);
+		
 		const commerce = await getRepository(fm_commerce).findOne(id_client);
 		const bank = await getRepository(fm_bank_commerce).findOne({ bank_account_num, id_commerce, id_client });
 
@@ -56,14 +64,12 @@ export const upFilesRecaudos = async (
 		];
 
 		if (client) {
-			const fm: any = await getRepository(fm_request)
-				.createQueryBuilder('fm_request')
-				.addOrderBy('createdAt')
-				.where('id_client = :id_client', { id_client })
-				.getOne();
+			const fm: any = await getConnection().query('select * FROM fm_request WHERE id_client = '+id_client+'  ORDER by id ASC LIMIT 1')
+
+			console.log(fm);
+
 
 			const {
-				rc_constitutive_act,
 				rc_property_document,
 				rc_service_document,
 				rc_special_contributor,
@@ -71,9 +77,12 @@ export const upFilesRecaudos = async (
 				rc_ref_perso,
 				rc_rif,
 				rc_account_number,
-
+				rc_constitutive_act,
 				rc_ident_card,
-			} = fm;
+			} = fm[0];
+			console.log('commerce',commerce);
+			
+			
 			if (commerce) {
 				info = {
 					rc_ident_card,
@@ -129,6 +138,9 @@ export const upFilesRecaudos = async (
 			info[descript] = save.id;
 		});
 		await Promise.all(stop);
+
+		console.log('info',info);
+		
 
 		res.status(200).json({ message: 'archivos listos', info });
 	} catch (err) {

@@ -3,11 +3,8 @@ import {
 	CreateDateColumn,
 	Entity,
 	JoinColumn,
-	JoinTable,
-	ManyToMany,
-	ManyToOne,
 	OneToMany,
-	OneToOne,
+	ManyToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
@@ -30,42 +27,42 @@ export default class fm_request {
 	@Column()
 	number_post!: number;
 
-	@OneToOne(() => fm_photo)
+	@ManyToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_constitutive_act' })
 	rc_constitutive_act!: number; //acta constitutiva
 
-	@OneToOne(() => fm_photo)
+	@ManyToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_property_document' }) // documento de propiedad
 	rc_property_document!: number;
 
-	@OneToOne(() => fm_photo)
+	@ManyToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_service_document' }) // recivo de un servicio publico
 	rc_service_document!: number;
 
-	@OneToOne(() => fm_photo)
+	@ManyToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_special_contributor' }) // acta de contribullene especial
 	rc_special_contributor!: number;
 
-	@OneToOne(() => fm_photo)
+	@ManyToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_ref_bank' }) // ref bancaria
 	rc_ref_bank!: number;
 
-	@OneToOne(() => fm_photo)
+	@ManyToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_ref_perso' }) // ref personal
 	rc_ref_perso!: number;
 
-	@OneToOne(() => fm_photo)
+	@ManyToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_account_number' }) // foto del  numero de cuenta
 	rc_account_number!: number;
 
 	@Column()
 	bank_account_num!: string;
 
-	@OneToOne(() => fm_photo)
+	@ManyToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_rif' })
 	rc_rif!: number;
 
-	@OneToOne(() => fm_photo)
+	@ManyToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_ident_card' })
 	rc_ident_card!: number;
 
