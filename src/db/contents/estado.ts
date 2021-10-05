@@ -29,7 +29,6 @@ const estado = async (): Promise<void> => {
 		{ id: 23, estado: 'Zulia', iso_3166: 'VE-V' },
 		{ id: 24, estado: 'Distrito Capital', iso_3166: 'VE-A' },
 		{ id: 25, estado: 'Dependencias Federales', iso_3166: 'VE-Z' },
-
 	];
 	//
 	const valid = await getRepository(fm_estado).find({ where: data });

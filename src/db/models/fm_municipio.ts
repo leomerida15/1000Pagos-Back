@@ -13,6 +13,7 @@ import {
 import fm_estado from './fm_estado';
 import fm_parroquia from './fm_parroquia';
 import fm_ciudad from './fm_ciudad';
+import fm_location from './fm_location';
 
 @Entity()
 export default class fm_municipio {
@@ -27,12 +28,16 @@ export default class fm_municipio {
 	@JoinColumn({ name: 'parroquias' })
 	parroquias?: fm_parroquia[];
 
+	@OneToMany(() => fm_location, (fm_location) => fm_location.id_municipio)
+	@JoinColumn({ name: 'locations' })
+	locations?: fm_location[];
+
 	@Column()
 	municipio!: string;
 
-	@CreateDateColumn()
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt?: number;
 }

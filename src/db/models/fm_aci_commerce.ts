@@ -10,24 +10,20 @@ import {
 } from 'typeorm';
 import fm_commerce from './fm_commerce';
 import fm_bank from './fm_bank';
-import fm_client from './fm_client';
+import fm_worker from './fm_worker';
 
 @Entity()
-export default class fm_bank_commerce {
+export default class fm_aci_commerce {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@ManyToOne(() => fm_commerce, (fm_commerce) => fm_commerce.banks)
+	@ManyToOne(() => fm_commerce, (fm_commerce) => fm_commerce.aci)
 	@JoinColumn({ name: 'id_commerce' })
 	id_commerce!: number;
 
-	@ManyToOne(() => fm_client, (fm_client) => fm_client.banks)
-	@JoinColumn({ name: 'id_client' })
-	id_client!: number;
-
-	@ManyToOne(() => fm_bank, (fm_bank) => fm_bank.commerces)
+	@ManyToOne(() => fm_worker, (fm_worker) => fm_worker.commerces)
 	@JoinColumn({ name: 'id_bank' })
-	id_bank!: number;
+	id_worker!: number;
 
 	@Column()
 	bank_account_num!: string;

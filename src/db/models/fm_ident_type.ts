@@ -1,4 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn, CreateDateColumn } from 'typeorm';
+import {
+	Column,
+	Entity,
+	PrimaryGeneratedColumn,
+	UpdateDateColumn,
+	CreateDateColumn,
+	OneToMany,
+	JoinColumn,
+} from 'typeorm';
+import fm_client from './fm_client';
 
 @Entity()
 export default class fm_ident_type {
@@ -8,9 +17,13 @@ export default class fm_ident_type {
 	@Column()
 	name!: string;
 
-	@CreateDateColumn()
+	@OneToMany(() => fm_client, (fm_client) => fm_client.id_ident_type)
+	@JoinColumn({ name: 'clients' })
+	clients?: fm_client[];
+
+	@CreateDateColumn({ select: false })
 	createdAt?: string;
 
-	@UpdateDateColumn({ type: 'timestamp' })
+	@UpdateDateColumn({ type: 'timestamp', select: false })
 	updatedAt?: number;
 }

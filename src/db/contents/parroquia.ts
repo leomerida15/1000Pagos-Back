@@ -110,7 +110,7 @@ const parroquia = async (): Promise<void> => {
 		{ id: 105, id_municipio: 35, parroquia: 'Peñalver' },
 		{ id: 106, id_municipio: 35, parroquia: 'San Rafael de Atamaica' },
 		{ id: 107, id_municipio: 36, parroquia: 'Pedro José Ovalles' },
-		{ id: 108, id_municipio: 36, parroquia: 'Joaquín Crespo' },
+		{ id: 108, id_municipio: 36, parroquia: 'Joaquín CRespo' },
 		{ id: 109, id_municipio: 36, parroquia: 'José Casanova Godoy' },
 		{ id: 110, id_municipio: 36, parroquia: 'Madre María de San José' },
 		{ id: 111, id_municipio: 36, parroquia: 'Andrés Eloy Blanco' },

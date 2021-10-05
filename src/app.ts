@@ -4,24 +4,23 @@ import fs from 'fs';
 import app from './apps';
 // init server
 
-// print process.argv
-const prod = process.argv[0] === '/root/.nvm/versions/node/v14.15.0/bin/node';
+import { createConnection, getRepository } from 'typeorm';
 
-if (prod) {
-	const options = {
-		key: fs.readFileSync('/etc/letsencrypt/live/api.node.devceres.cloud/privkey.pem', 'utf8'),
-		cert: fs.readFileSync('/etc/letsencrypt/live/api.node.devceres.cloud/fullchain.pem', 'utf8'),
-	};
+//database
 
-	https.createServer(options, app).listen(app.get('port'), () => {
-		console.log('                                                                  ()_()');
-		console.log(`app corriendo en el puerto http://localhost:${app.get('port')} leoM             (o.o)`);
-		console.log('                                                                  (|_|)*');
-	});
-} else {
-	app.listen(app.get('port'), () => {
-		console.log('                                                                  ()_()');
-		console.log(`app corriendo en el puerto http://localhost:${app.get('port')} leoM             (o.o)`);
-		console.log('                                                                  (|_|)*');
-	});
-}
+createConnection()
+	.then(() => {
+		// print process.argv
+		app.listen(app.get('port'), () => {
+			console.log(`app corriendo en el puerto http://localhost:${app.get('port')} leoM   `);
+			console.log('_________');
+			console.log('|       |');
+			console.log('| ()_() |');
+			console.log(`| (o.o) |`);
+			console.log('| (|_|)*|');
+			console.log('|_______|');
+			console.log('| DB OK |');
+			console.log('|_______|');
+		});
+	})
+	.catch((err) => console.log('DB ERR', err));
