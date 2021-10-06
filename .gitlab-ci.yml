@@ -25,7 +25,7 @@ deploy_qa:
   script: 
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo git checkout qa && sudo git pull " 
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo yarn "
-    - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " sudo pm2 restart back1000pagos "
+    - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " sudo pm2 restart backfiles "
   only: 
     - qa
   
