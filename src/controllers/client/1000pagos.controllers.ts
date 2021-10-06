@@ -42,11 +42,9 @@ export const upFilesRecaudos = async (
 
 		const { id_client, id_commerce, bank_account_num }: any = req.body;
 
-		console.log('id_client, id_commerce, bank_account_num ',id_client, id_commerce, bank_account_num );
 		
 
 		const client = await getRepository(fm_client).findOne(id_client);
-		console.log('id_client',client);
 		
 		const commerce = await getRepository(fm_commerce).findOne(id_client);
 		const bank = await getRepository(fm_bank_commerce).findOne({ bank_account_num, id_commerce, id_client });
@@ -63,10 +61,9 @@ export const upFilesRecaudos = async (
 			'rc_special_contributor',
 		];
 
-		if (client) {
+		if (client &&  await getRepository(fm_request).findOne({id_client})) {
 			const fm: any = await getConnection().query('select * FROM fm_request WHERE id_client = '+id_client+'  ORDER by id ASC LIMIT 1')
 
-			console.log(fm);
 
 
 			const {
