@@ -18,6 +18,7 @@ import fm_dir_pos from './fm_dir_pos';
 import fm_location from './fm_location';
 import fm_client from './fm_client';
 import fm_payment_method from './fm_payment_method';
+import fm_product from './fm_product';
 
 @Entity()
 export default class fm_request {
@@ -78,6 +79,10 @@ export default class fm_request {
 	@JoinColumn({ name: 'id_commerce' })
 	id_commerce!: number;
 
+	@ManyToOne(() => fm_product, (fm_product) => fm_product.requests)
+	@JoinColumn({ name: 'id_commerce' })
+	id_product!: number;
+
 	@ManyToOne(() => fm_type_request, (fm_type_request) => fm_type_request.requests)
 	@JoinColumn({ name: 'id_type_request' })
 	id_type_request!: number;
@@ -91,31 +96,31 @@ export default class fm_request {
 	@JoinColumn({ name: 'dir_pos' })
 	dir_pos?: fm_dir_pos | fm_location;
 
-	@Column({ name: 'valid_rc_constitutive_act', default: '', nullable: true })
-	valid_rc_constitutive_act!: string;
+	@Column({ name: 'valid_rc_constitutive_act', type: 'json' })
+	valid_rc_constitutive_act!: { status: boolean; message: string };
 
-	@Column({ name: 'valid_rc_property_document', default: '', nullable: true })
+	@Column({ name: 'valid_rc_property_document', type: 'json' })
 	valid_rc_property_document!: string;
 
-	@Column({ name: 'valid_rc_service_document', default: '', nullable: true })
+	@Column({ name: 'valid_rc_service_document', type: 'json' })
 	valid_rc_service_document!: string;
 
-	@Column({ name: 'valid_rc_special_contributor', default: '', nullable: true })
+	@Column({ name: 'valid_rc_special_contributor', type: 'json' })
 	valid_rc_special_contributor!: string;
 
-	@Column({ name: 'valid_rc_ref_bank', default: '', nullable: true })
+	@Column({ name: 'valid_rc_ref_bank', type: 'json' })
 	valid_rc_ref_bank!: string;
 
-	@Column({ name: 'valid_rc_ref_perso', default: '', nullable: true })
+	@Column({ name: 'valid_rc_ref_perso', type: 'json' })
 	valid_rc_ref_perso!: string;
 
-	@Column({ name: 'valid_rc_account_number', default: '', nullable: true })
+	@Column({ name: 'valid_rc_account_number', type: 'json' })
 	valid_rc_account_number!: string;
 
-	@Column({ name: 'valid_rc_rif', default: '', nullable: true })
+	@Column({ name: 'valid_rc_rif', type: 'json' })
 	valid_rc_rif!: string;
 
-	@Column({ name: 'valid_rc_ident_card', default: '', nullable: true })
+	@Column({ name: 'valid_rc_ident_card', type: 'json' })
 	valid_rc_ident_card!: string;
 
 	@CreateDateColumn({ select: false })

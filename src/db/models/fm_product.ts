@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import fm_photo from './fm_photo';
 import fm_dir_pos from './fm_dir_pos';
+import fm_request from './fm_request';
 
 @Entity()
 export default class fm_product {
@@ -30,6 +31,10 @@ export default class fm_product {
 	@OneToMany(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_product)
 	@JoinColumn({ name: 'dir_pos' })
 	dir_pos?: number;
+
+	@OneToMany(() => fm_request, (fm_request) => fm_request.id_commerce)
+	@JoinColumn({ name: 'requests' })
+	requests!: fm_request[];
 
 	@CreateDateColumn({ select: false })
 	createdAt?: string;

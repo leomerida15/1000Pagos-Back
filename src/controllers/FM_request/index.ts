@@ -386,7 +386,7 @@ export const editStatusById = async (
 ): Promise<void> => {
 	try {
 		const { id_FM }: any = req.params;
-		const { id_status_request } = req.body;
+		const { id_status_request, valids } = req.body;
 
 		const FM: any = await getRepository(fm_request).findOne(id_FM);
 		if (!FM) throw { message: 'FM no existe' };
@@ -394,19 +394,8 @@ export const editStatusById = async (
 		await getRepository(fm_request).update(id_FM, { id_status_request });
 
 		if (id_status_request === 4) {
+			await getRepository(fm_request).update(id_FM, { id_status_request, ...valids });
 			await refresh();
-			const valids: any = {};
-
-			for (const key in req.body.valids) {
-				if (Object.prototype.hasOwnProperty.call(req.body.valids, key)) {
-					const e = req.body.valids[key];
-
-					if (!e.status) valids[key] = e.msg;
-					else valids[key] = '';
-				}
-			}
-
-			await getRepository(fm_request).update(id_FM, valids);
 		}
 
 		const message: string = Msg('Status del FM').edit;

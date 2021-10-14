@@ -14,6 +14,8 @@ import client from './client';
 import status_request from './status_request';
 import type_request from './type_request';
 import bank from './bank';
+import type_person from './client';
+import afiliados from './afiliados';
 
 export default async () => {
 	await status_request();
@@ -32,4 +34,6 @@ export default async () => {
 	await parroquia();
 	await ciudad();
 	await bank();
+	await type_person();
+	await afiliados();
 };

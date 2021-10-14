@@ -4,26 +4,24 @@ import { Server } from 'socket.io';
 import { getRepository, getConnection } from 'typeorm';
 import Log from '../hooks/logs/index';
 
-export let diferidos: any[];
+export let diferidos: any[] = [];
 
 export const refresh = async () => {
-	const valid = await getRepository(fm_request).find();
-
-	if (valid.length) {
-		diferidos = await getConnection().query(/*sql*/ `
+	diferidos = await getConnection().query(/*sql*/ `
 	SELECT 
-		 a.id AS id_fm 
-		 ,c.id AS id_client
-		 ,c.name AS name_client
-		 ,c.last_name AS last_name_client
-		 ,c.email AS email_client
-		 ,i.name AS ident_type_client
-		 ,c.ident_num AS ident_num_client
-		 ,cc.name AS name_commerce
-		 ,ic.name AS ident_type_commerce
-		 ,cc.ident_num AS ident_num_commerce
+		a.id AS id_fm 
+		,c.id AS id_client
+		,c.name AS name_client
+		,c.last_name AS last_name_client
+		,c.email AS email_client
+		,i.name AS ident_type_client
+		,c.ident_num AS ident_num_client
+		,cc.name AS name_commerce
+		,ic.name AS ident_type_commerce
+		,cc.ident_num AS ident_num_commerce
 	
-	FROM 
+	FROM
+	
 		(SELECT * FROM fm_request 
 		 WHERE id_status_request = 4
 		 ORDER by id ASC ) AS a
@@ -32,7 +30,6 @@ export const refresh = async () => {
 		INNER JOIN fm_commerce AS cc ON id_commerce = cc.id
 		INNER JOIN fm_ident_type AS i ON c.id_ident_type = i.id 
 		INNER JOIN fm_ident_type AS ic ON cc.id_ident_type = ic.id`);
-	}
 };
 
 export default async (httpServer: http.Server): Promise<void> => {
@@ -45,4 +42,6 @@ export default async (httpServer: http.Server): Promise<void> => {
 	wss.on('connection', (ws) => {
 		ws.emit('list_diferidos', { diferidos });
 	});
+
+	wss.emit('list_diferidos', { diferidos });
 };
