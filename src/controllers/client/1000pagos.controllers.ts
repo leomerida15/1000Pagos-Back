@@ -37,67 +37,49 @@ export const upFilesRecaudos = async (
 		const files: any = req.files;
 		let info: any = {};
 
-		console.log('body',req.body);
-		
-
-		const { id_client, id_commerce, bank_account_num }: any = req.body;
-
-		
+		const { id_client, id_commerce }: any = req.body;
 
 		const client = await getRepository(fm_client).findOne(id_client);
-		
+
 		const commerce = await getRepository(fm_commerce).findOne(id_client);
-		const bank = await getRepository(fm_bank_commerce).findOne({ bank_account_num, id_commerce, id_client });
 
 		const description = [
 			'rc_constitutive_act',
-			'rc_property_document',
-			'rc_service_document',
 			'rc_ref_bank',
-			'rc_ref_perso',
-			'rc_account_number',
 			'rc_rif',
 			'rc_ident_card',
 			'rc_special_contributor',
+			'rc_comp_dep',
 		];
 
-		if (client &&  await getRepository(fm_request).findOne({id_client})) {
-			const fm: any = await getConnection().query('select * FROM fm_request WHERE id_client = '+id_client+'  ORDER by id ASC LIMIT 1')
-
-
+		if (client && (await getRepository(fm_request).findOne({ id_client }))) {
+			const fm: any = await getConnection().query(
+				'select * FROM fm_request WHERE id_client = ' + id_client + '  ORDER by id ASC LIMIT 1'
+			);
 
 			const {
 				rc_property_document,
-				rc_service_document,
 				rc_special_contributor,
 				rc_ref_bank,
-				rc_ref_perso,
 				rc_rif,
-				rc_account_number,
 				rc_constitutive_act,
 				rc_ident_card,
 			} = fm[0];
-			console.log('commerce',commerce);
-			
-			
+
 			if (commerce) {
 				info = {
 					rc_ident_card,
-					rc_ref_perso,
 					rc_rif,
 					rc_special_contributor,
 					rc_ref_bank,
 					rc_constitutive_act,
 					rc_property_document,
-					rc_service_document,
 				};
 			} else {
 				info = {
-					rc_ref_perso,
 					rc_ident_card,
 				};
 			}
-			if (bank) info = { ...info, rc_account_number };
 		}
 
 		const valid_description: any[] = files.filter((file: Express.Multer.File) =>
@@ -115,29 +97,32 @@ export const upFilesRecaudos = async (
 			await fs.mkdir(`${base}/${id_client}/${id_commerce}`);
 		}
 
-		const stop: Promise<void>[] = files.map(async (file: Express.Multer.File, i: number): Promise<void> => {
-			const descript: string = file.originalname
-				.replace(/.png/g, '')
-				.replace(/.jpeg/g, '')
-				.replace(/.pdf/g, '')
-				.replace(/.jpg/g, '');
+		const stop: Promise<void>[] = files
+			.filter((file: Express.Multer.File) =>
+				description.includes(
+					file.originalname.replace(/.png/g, '').replace(/.jpeg/g, '').replace(/.pdf/g, '').replace(/.jpg/g, '')
+				)
+			)
+			.map(async (file: Express.Multer.File, i: number): Promise<void> => {
+				const descript: string = file.originalname
+					.replace(/.png/g, '')
+					.replace(/.jpeg/g, '')
+					.replace(/.pdf/g, '')
+					.replace(/.jpg/g, '');
 
-			const route_ids: string = ['rc_ident_card', 'rc_ref_perso'].includes(descript)
-				? `${id_client}`
-				: `${id_client}/${id_commerce}`;
+				const route_ids: string = ['rc_ident_card'].includes(descript)
+					? `${id_client}`
+					: `${id_client}/${id_commerce}`;
 
-			const link = await Doc.Move(file.filename, route_ids);
-			const path = `static/${route_ids}/${file.filename}`;
+				const link = await Doc.Move(file.filename, route_ids);
+				const path = `static/${route_ids}/${file.filename}`;
 
-			const data = getRepository(fm_photo).create({ name: file.filename, path, link, descript });
-			const save = await getRepository(fm_photo).save(data);
+				const data = getRepository(fm_photo).create({ name: file.filename, path, link, descript });
+				const save = await getRepository(fm_photo).save(data);
 
-			info[descript] = save.id;
-		});
+				info[descript] = save.id;
+			});
 		await Promise.all(stop);
-
-		console.log('info',info);
-		
 
 		res.status(200).json({ message: 'archivos listos', info });
 	} catch (err) {

@@ -8,6 +8,7 @@ import {
 	UpdateDateColumn,
 } from 'typeorm';
 import fm_bank_commerce from './fm_bank_commerce';
+import fm_afiliados from './fm_afiliados';
 
 @Entity()
 export default class fm_bank {
@@ -23,6 +24,10 @@ export default class fm_bank {
 	@OneToMany(() => fm_bank_commerce, (fm_bank_commerce) => fm_bank_commerce.id_commerce)
 	@JoinColumn({ name: 'commerces' })
 	commerces?: fm_bank_commerce[];
+
+	@OneToMany(() => fm_afiliados, (fm_afiliados) => fm_afiliados.id_bank)
+	@JoinColumn({ name: 'afiliados' })
+	afiliados?: fm_afiliados[];
 
 	@CreateDateColumn({ select: false })
 	createdAt?: string;

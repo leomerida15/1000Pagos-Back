@@ -4,3 +4,4 @@
 /client
 /static/*
 /src/db/base
+ormconfig.json

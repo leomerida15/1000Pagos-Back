@@ -503,9 +503,7 @@ const ciudad = async (): Promise<void> => {
 	(519, 25, 'Isla de Aves', 0),
 	(520, 25, 'Isla La Blanquilla', 0),
 	(521, 25, 'Isla de Patos', 0),
-	(522, 25, 'Islas Los Hermanos', 0);`
-				// @ts-expect-error
-				.replaceAll('"', '`')
+	(522, 25, 'Islas Los Hermanos', 0);`.replace(/"/g, '`')
 		);
 	}
 };
