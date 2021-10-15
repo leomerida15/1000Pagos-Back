@@ -246,6 +246,7 @@ export const FM_create = async (
 			bank_account_num,
 			id_request_origin,
 			id_type_payment,
+			ci_referred,
 		}: any = req.body;
 
 		const bank: any = await getRepository(fm_bank).findOne({ code: bank_account_num.slice(0, 4) });
@@ -288,9 +289,16 @@ export const FM_create = async (
 			id_client,
 			id_commerce,
 			id_type_request: 1,
-			d_status_request: 1,
+			id_status_request: 1,
 			id_request_origin,
 			id_type_payment,
+			ci_referred,
+			valid_rc_constitutive_act: { status: true, message: '' },
+			valid_rc_special_contributor: { status: true, message: '' },
+			valid_rc_ref_bank: { status: true, message: '' },
+			valid_rc_comp_dep: { status: true, message: '' },
+			valid_rc_rif: { status: true, message: '' },
+			valid_rc_ident_card: { status: true, message: '' },
 		});
 
 		const FM_save = await getRepository(fm_request).save(FM);

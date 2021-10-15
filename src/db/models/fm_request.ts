@@ -28,13 +28,18 @@ export default class fm_request {
 	@Column()
 	number_post!: number;
 
+	@Column()
+	bank_account_num!: string;
+
+	@Column({ name: 'ci_referred' })
+	ci_referred!: string;
+
+	@Column({ name: 'delivery_POS', default: false })
+	POS_received!: boolean;
+
 	@ManyToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_constitutive_act' })
 	rc_constitutive_act!: number; //acta constitutiva
-
-	@ManyToOne(() => fm_photo)
-	@JoinColumn({ name: 'rc_property_document' }) // documento de propiedad
-	rc_property_document!: number;
 
 	@ManyToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_service_document' }) // recivo de un servicio publico
@@ -51,9 +56,6 @@ export default class fm_request {
 	@ManyToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_comp_dep' }) // foto del  numero de cuenta
 	rc_comp_dep!: number;
-
-	@Column()
-	bank_account_num!: string;
 
 	@ManyToOne(() => fm_photo)
 	@JoinColumn({ name: 'rc_rif' })
@@ -100,29 +102,23 @@ export default class fm_request {
 	@JoinColumn({ name: 'dir_pos' })
 	dir_pos?: fm_dir_pos | fm_location;
 
-	@Column({ name: 'valid_rc_constitutive_act', type: 'json' })
+	@Column({ name: 'valid_rc_constitutive_act', type: 'json', default: `{ status: true, message: "" }` })
 	valid_rc_constitutive_act!: { status: boolean; message: string };
 
-	@Column({ name: 'valid_rc_property_document', type: 'json' })
-	valid_rc_property_document!: string;
+	@Column({ name: 'valid_rc_special_contributor', type: 'json', default: `{ status: true, message: "" }` })
+	valid_rc_special_contributor!: { status: boolean; message: string };
 
-	@Column({ name: 'valid_rc_service_document', type: 'json' })
-	valid_rc_service_document!: string;
+	@Column({ name: 'valid_rc_ref_bank', type: 'json', default: `{ status: true, message: "" }` })
+	valid_rc_ref_bank!: { status: boolean; message: string };
 
-	@Column({ name: 'valid_rc_special_contributor', type: 'json' })
-	valid_rc_special_contributor!: string;
+	@Column({ name: 'valid_rc_comp_dep', type: 'json', default: `{ status: true, message: "" }` })
+	valid_rc_comp_dep!: { status: boolean; message: string };
 
-	@Column({ name: 'valid_rc_ref_bank', type: 'json' })
-	valid_rc_ref_bank!: string;
+	@Column({ name: 'valid_rc_rif', type: 'json', default: `{ status: true, message: "" }` })
+	valid_rc_rif!: { status: boolean; message: string };
 
-	@Column({ name: 'valid_rc_comp_dep', type: 'json' })
-	valid_rc_comp_dep!: string;
-
-	@Column({ name: 'valid_rc_rif', type: 'json' })
-	valid_rc_rif!: string;
-
-	@Column({ name: 'valid_rc_ident_card', type: 'json' })
-	valid_rc_ident_card!: string;
+	@Column({ name: 'valid_rc_ident_card', type: 'json', default: `{ status: true, message: "" }` })
+	valid_rc_ident_card!: { status: boolean; message: string };
 
 	@CreateDateColumn({ select: false })
 	createdAt?: string;
