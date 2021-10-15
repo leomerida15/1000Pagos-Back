@@ -9,7 +9,7 @@ export default class fm_afiliados {
 	id?: number;
 
 	@ManyToOne(() => fm_type_person, (fm_type_person) => fm_type_person.afiliados)
-	@JoinColumn({ name: 'id_bank' })
+	@JoinColumn({ name: 'id_type_person' })
 	id_type_person!: number;
 
 	@ManyToOne(() => fm_bank, (fm_bank) => fm_bank.afiliados)

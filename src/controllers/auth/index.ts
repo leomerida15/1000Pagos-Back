@@ -161,14 +161,8 @@ export const login = async (
 				.execute();
 		}
 
-		console.log({ id, type: 2 });
-		
-
 		//generamos token
 		const token = jwt.sign({ id, type: 2 }, key, { expiresIn: 60 * 30 });
-
-		console.log('token',token);
-		
 
 		// Response
 		Resp(req, res, {

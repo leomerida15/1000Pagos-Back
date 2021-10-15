@@ -1,7 +1,7 @@
 import fm_request from '../db/models/fm_request';
 import http from 'http';
 import { Server } from 'socket.io';
-import { getRepository, getConnection } from 'typeorm';
+import { getConnection } from 'typeorm';
 import Log from '../hooks/logs/index';
 
 export let diferidos: any[] = [];
@@ -19,6 +19,7 @@ export const refresh = async () => {
 		,cc.name AS name_commerce
 		,ic.name AS ident_type_commerce
 		,cc.ident_num AS ident_num_commerce
+		,a.updatedAt AS dif_date
 	
 	FROM
 	

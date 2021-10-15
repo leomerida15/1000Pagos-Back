@@ -11,7 +11,6 @@ import log from './hooks/logs/index';
 createConnection()
 	.then(async () => {
 		await contents();
-		log.text.OK('DB OK');
 
 		const httpServer = app.listen(app.get('port'), () => {
 			console.log(`app corriendo en el puerto http://localhost:${app.get('port')} leoM   `);

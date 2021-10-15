@@ -26,7 +26,7 @@ export default class fm_bank {
 	commerces?: fm_bank_commerce[];
 
 	@OneToMany(() => fm_afiliados, (fm_afiliados) => fm_afiliados.id_bank)
-	@JoinColumn({ name: 'fm_afiliados' })
+	@JoinColumn({ name: 'afiliados' })
 	afiliados?: fm_afiliados[];
 
 	@CreateDateColumn({ select: false })

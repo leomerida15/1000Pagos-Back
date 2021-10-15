@@ -14,7 +14,23 @@ import fm_bank from '../../db/models/fm_bank';
 import fm_bank_commerce from '../../db/models/fm_bank_commerce';
 import fm_request from '../../db/models/fm_request';
 import fm_dir_pos from '../../db/models/fm_dir_pos';
+import fm_request_origin from '../../db/models/fm_request_origin';
 import { refresh } from '../../apps/WebSocket';
+
+//
+export const requestOrigin = async (
+	req: Request<any, Api.Resp>,
+	res: Response<Api.Resp>,
+	next: NextFunction
+): Promise<void> => {
+	try {
+		const info = await getRepository(fm_request_origin).find();
+
+		Resp(req, res, { message: 'Origenes de la solicitud', info });
+	} catch (err) {
+		next(err);
+	}
+};
 
 // crear al cliente
 export const fm_valid_client = async (
@@ -214,7 +230,6 @@ export const FM_create = async (
 
 		const {
 			number_post,
-			bank_account_num,
 			rc_constitutive_act,
 			rc_property_document,
 			rc_service_document,
@@ -228,6 +243,9 @@ export const FM_create = async (
 			id_client,
 			id_commerce,
 			dir_pos,
+			bank_account_num,
+			id_request_origin,
+			id_type_payment,
 		}: any = req.body;
 
 		const bank: any = await getRepository(fm_bank).findOne({ code: bank_account_num.slice(0, 4) });
@@ -270,7 +288,9 @@ export const FM_create = async (
 			id_client,
 			id_commerce,
 			id_type_request: 1,
-			id_status_request: 1,
+			d_status_request: 1,
+			id_request_origin,
+			id_type_payment,
 		});
 
 		const FM_save = await getRepository(fm_request).save(FM);

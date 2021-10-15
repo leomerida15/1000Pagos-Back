@@ -8,8 +8,6 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
-import fm_Client from './fm_client';
-import fm_way_pay from './fm_payment_method';
 import fm_commerce from './fm_commerce';
 import fm_type_request from './fm_type_request';
 import fm_status_request from './fm_status_request';
@@ -19,6 +17,8 @@ import fm_location from './fm_location';
 import fm_client from './fm_client';
 import fm_payment_method from './fm_payment_method';
 import fm_product from './fm_product';
+import fm_request_origin from './fm_request_origin';
+import { fm_type_payment } from './fm_type_payment';
 
 @Entity()
 export default class fm_request {
@@ -49,12 +49,8 @@ export default class fm_request {
 	rc_ref_bank!: number;
 
 	@ManyToOne(() => fm_photo)
-	@JoinColumn({ name: 'rc_ref_perso' }) // ref personal
-	rc_ref_perso!: number;
-
-	@ManyToOne(() => fm_photo)
-	@JoinColumn({ name: 'rc_account_number' }) // foto del  numero de cuenta
-	rc_account_number!: number;
+	@JoinColumn({ name: 'rc_comp_dep' }) // foto del  numero de cuenta
+	rc_comp_dep!: number;
 
 	@Column()
 	bank_account_num!: string;
@@ -71,6 +67,10 @@ export default class fm_request {
 	@JoinColumn({ name: 'id_payment_method' })
 	id_payment_method!: number;
 
+	@ManyToOne(() => fm_type_payment, (fm_type_payment) => fm_type_payment.requests)
+	@JoinColumn({ name: 'id_type_payment' })
+	id_type_payment!: number;
+
 	@ManyToOne(() => fm_client, (fm_client) => fm_client.requests)
 	@JoinColumn({ name: 'id_client' })
 	id_client!: number;
@@ -80,7 +80,7 @@ export default class fm_request {
 	id_commerce!: number;
 
 	@ManyToOne(() => fm_product, (fm_product) => fm_product.requests)
-	@JoinColumn({ name: 'id_commerce' })
+	@JoinColumn({ name: 'id_product' })
 	id_product!: number;
 
 	@ManyToOne(() => fm_type_request, (fm_type_request) => fm_type_request.requests)
@@ -91,6 +91,10 @@ export default class fm_request {
 	@ManyToOne(() => fm_status_request, (fm_status_request) => fm_status_request.requests)
 	@JoinColumn({ name: 'id_status_request' })
 	id_status_request?: number;
+
+	@ManyToOne(() => fm_request_origin, (fm_request_origin) => fm_request_origin.requests)
+	@JoinColumn({ name: 'id_request_origin' })
+	id_request_origin!: number;
 
 	@OneToMany(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_commerce)
 	@JoinColumn({ name: 'dir_pos' })
@@ -111,11 +115,8 @@ export default class fm_request {
 	@Column({ name: 'valid_rc_ref_bank', type: 'json' })
 	valid_rc_ref_bank!: string;
 
-	@Column({ name: 'valid_rc_ref_perso', type: 'json' })
-	valid_rc_ref_perso!: string;
-
-	@Column({ name: 'valid_rc_account_number', type: 'json' })
-	valid_rc_account_number!: string;
+	@Column({ name: 'valid_rc_comp_dep', type: 'json' })
+	valid_rc_comp_dep!: string;
 
 	@Column({ name: 'valid_rc_rif', type: 'json' })
 	valid_rc_rif!: string;

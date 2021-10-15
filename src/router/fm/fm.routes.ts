@@ -11,6 +11,7 @@ import { validExistingClient, validClientData, validBankAccount } from '../../Mi
 import { validCommerceData } from '../../Middlewares/data/commerce';
 import { validFmData } from '../../Middlewares/data/fm';
 import { valid_bank_account } from '../../controllers/FM_request';
+import { requestOrigin } from '../../controllers/FM_request/index';
 
 const FM: Router = Router();
 
@@ -33,5 +34,9 @@ FM.route('/FM').get(getFm);
 // ? cambiar status fm
 //
 FM.route('/FM/:id_FM/status').put(editStatusById);
+
+// ? origenes
+//
+FM.route('/FM/origins').get(requestOrigin);
 
 export default FM;
