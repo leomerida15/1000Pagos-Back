@@ -4,6 +4,12 @@ import { getRepository } from 'typeorm';
 const payment_method = async (): Promise<void> => {
 	const data: fm_payment_method[] = [
 		{
+			name: 'Deposito Bancario',
+		},
+		{
+			name: 'Efectivo',
+		},
+		{
 			name: 'Punto de venta',
 		},
 		{
@@ -11,9 +17,6 @@ const payment_method = async (): Promise<void> => {
 		},
 		{
 			name: 'Pago movil',
-		},
-		{
-			name: 'Efectivo',
 		},
 		{
 			name: 'web 1000Pagos',

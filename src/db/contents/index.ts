@@ -14,6 +14,10 @@ import client from './client';
 import status_request from './status_request';
 import type_request from './type_request';
 import bank from './bank';
+import type_person from './client';
+import afiliados from './afiliados';
+import type_payment from './type_payment';
+import request_origin from './request_origin';
 
 export default async () => {
 	await status_request();
@@ -21,15 +25,19 @@ export default async () => {
 	await ident_type();
 	await roles();
 	await payment_method();
+	await type_payment();
 	await company();
 	await department();
 	await worker();
 	await client();
-	await activity();
 	await Product();
 	await estado();
 	await municipio();
 	await parroquia();
 	await ciudad();
 	await bank();
+	await type_person();
+	await afiliados();
+	await activity();
+	await request_origin();
 };
