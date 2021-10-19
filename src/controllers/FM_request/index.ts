@@ -15,7 +15,7 @@ import fm_bank_commerce from '../../db/models/fm_bank_commerce';
 import fm_request from '../../db/models/fm_request';
 import fm_dir_pos from '../../db/models/fm_dir_pos';
 import fm_request_origin from '../../db/models/fm_request_origin';
-import { refresh } from '../../apps/WebSocket';
+import { fm_valid_request } from '../../db/models/fm_valid_request';
 
 //
 export const requestOrigin = async (
@@ -116,8 +116,18 @@ export const valid_existin_client = async (
 			throw { message: 'el correo ya esta asociado a otro documento de identidad' };
 		}
 
-		const client = await getRepository(fm_client).findOne({ id_ident_type, ident_num, email });
-		if (client) resp = { message: 'el usuario existe', info: { id: client.id, mash: true } };
+		const client = await getRepository(fm_client).findOne({
+			where: { id_ident_type, ident_num, email },
+			relations: [
+				'id_location',
+				'id_location.id_estado',
+				'id_location.id_municipio',
+				'id_location.id_ciudad',
+				'id_location.id_parroquia',
+				'id_ident_type',
+			],
+		});
+		if (client) resp = { message: 'el usuario existe', info: { client, mash: true } };
 		else if (!resp.message.length) resp.message = `ni el correo ni la ci existen`;
 
 		Resp(req, res, resp);
@@ -129,6 +139,41 @@ export const valid_existin_client = async (
 interface commerce extends fm_commerce {
 	location: fm_location;
 }
+// crear comercio
+export const valid_exitin_commerce = async (
+	req: Request<Api.params, Api.Resp, commerce>,
+	res: Response,
+	next: NextFunction
+): Promise<void> => {
+	try {
+		validationResult(req).throw();
+
+		let resp: Api.Resp;
+
+		const id_client: any = req.params.id;
+		const { id_ident_type, ident_num } = req.body;
+		const commerce = await getRepository(fm_commerce).findOne({
+			where: { id_ident_type, ident_num, id_client },
+			relations: ['id_ident_type', 'id_activity', 'id_location', 'banks'],
+		});
+
+		if (!commerce) {
+			const valid_commerce_client = await getRepository(fm_commerce).findOne({ id_ident_type, ident_num });
+			if (valid_commerce_client) {
+				throw { message: 'este comercio ya se encuentra asociado a un cliente', code: 400 };
+			} else {
+				resp = { message: 'el commercio no exite' };
+			}
+		} else {
+			resp = { message: 'datos del comercio', info: commerce };
+		}
+
+		Resp(req, res, resp);
+	} catch (err) {
+		next(err);
+	}
+};
+
 // crear comercio
 export const fm_create_commerce = async (
 	req: Request<Api.params, Api.Resp, commerce>,
@@ -273,6 +318,15 @@ export const FM_create = async (
 			});
 		}
 
+		const valids = await getRepository(fm_valid_request).save({
+			valid_constitutive_act: '',
+			valid_special_contributor: '',
+			valid_ref_bank: '',
+			valid_comp_dep: '',
+			valid_rif: '',
+			valid_ident_card: '',
+		});
+
 		const FM = await getRepository(fm_request).save({
 			number_post,
 			bank_account_num,
@@ -293,12 +347,7 @@ export const FM_create = async (
 			id_request_origin,
 			id_type_payment,
 			ci_referred,
-			valid_rc_constitutive_act: { status: true, message: '' },
-			valid_rc_special_contributor: { status: true, message: '' },
-			valid_rc_ref_bank: { status: true, message: '' },
-			valid_rc_comp_dep: { status: true, message: '' },
-			valid_rc_rif: { status: true, message: '' },
-			valid_rc_ident_card: { status: true, message: '' },
+			id_valid_request: valids.id,
 		});
 
 		const FM_save = await getRepository(fm_request).save(FM);
@@ -321,84 +370,41 @@ export const getFm = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const FM: any = await getConnection().query(/*sql*/ `
-		SELECT 
- 			a.id AS id_fm 
- 			,a.number_post
- 			,p.name AS paymet
- 			,a.bank_account_num
- 			,c.id AS id_client
- 			,c.name AS name_client
- 			,c.last_name AS last_name_client
- 			,c.email AS email_client
- 			,i.name AS ident_type_client
- 			,c.ident_num AS ident_num_client
- 			,cc.name AS name_commerce
- 			,ic.name AS ident_type_commerce
- 			,cc.ident_num AS ident_num_commerce
- 			,cc.special_contributor
- 			,es.estado AS estado_commerce
- 			,mu.municipio AS municipio_commerce
- 			,ci.ciudad AS ciudad_commerce
- 			,pa.parroquia AS parroquia_commerce
- 			,l.sector AS sector_commerce
- 			,l.calle AS calle_commerce
- 			,l.local AS local_commerce
- 			,esp.estado AS estado_pos
- 			,mup.municipio AS municipio_pos
- 			,cip.ciudad AS ciudad_pos
- 			,pap.parroquia AS parroquia_pos
- 			,lp.sector AS sector_pos
- 			,lp.calle AS calle_pos
- 			,lp.local AS local_pos
- 			,p1.path AS path_rc_ident_card
- 			,p2.path AS path_rc_rif
- 			,p3.path AS path_rc_constitutive_act
- 			,p4.path AS path_rc_property_document
- 			,p5.path AS path_rc_service_document
- 			,p6.path AS path_rc_ref_bank
- 			,p7.path AS path_rc_ref_perso
- 			,p8.path AS path_rc_account_number
- 			,p9.path AS path_rc_special_contributor
-		
-		FROM 
-			(SELECT * FROM fm_request 
- 			WHERE id_status_request = 1
- 			ORDER by id ASC 
- 			LIMIT 1) AS a
-
-			INNER JOIN fm_client AS c ON id_client = c.id
-			INNER JOIN fm_commerce AS cc ON id_commerce = cc.id
-			INNER JOIN fm_ident_type AS i ON c.id_ident_type = i.id 
-			INNER JOIN fm_ident_type AS ic ON cc.id_ident_type = ic.id
-			INNER JOIN fm_location AS l ON cc.id_location = l.id
-			INNER JOIN fm_estado as es ON l.id_estado = es.id
-			INNER JOIN fm_municipio as mu ON l.id_municipio = mu.id
-			INNER JOIN fm_ciudad as ci ON l.id_ciudad = ci.id
-			INNER JOIN fm_parroquia as pa ON l.id_parroquia = pa.id
-			INNER JOIN fm_payment_method as p ON id_payment_method = p.id
-			LEFT JOIN fm_photo AS p1 ON rc_ident_card = p1.id
-			LEFT JOIN fm_photo AS p2 ON rc_rif = p2.id
-			LEFT JOIN fm_photo AS p3 ON rc_constitutive_act = p3.id
-			LEFT JOIN fm_photo AS p4 ON rc_property_document = p4.id
-			LEFT JOIN fm_photo AS p5 ON rc_service_document = p5.id
-			LEFT JOIN fm_photo AS p6 ON rc_ref_bank = p6.id
-			LEFT JOIN fm_photo AS p7 ON rc_ref_perso = p7.id
-			LEFT JOIN fm_photo AS p8 ON rc_account_number = p8.id
-			LEFT JOIN fm_photo AS p9 ON rc_special_contributor = p9.id
-			INNER JOIN fm_dir_pos AS dp ON a.id = dp.id_request 
-			INNER JOIN fm_location AS lp ON dp.id_location = lp.id
-			INNER JOIN fm_estado as esp ON lp.id_estado = esp.id
-			INNER JOIN fm_municipio as mup ON lp.id_municipio = mup.id
-			INNER JOIN fm_ciudad as cip ON lp.id_ciudad = cip.id
-			INNER JOIN fm_parroquia as pap ON lp.id_parroquia = pap.id`);
-
-		if (!FM.length) throw { message: 'No existen formularios de solicitud en espera de aprobacion' };
-
-		const phones = await getRepository(fm_phone).find({ id_client: FM[0].id_client });
-
-		const info = { ...FM[0], phone1: phones[0].phone, phone2: phones[1].phone };
-
+		const info = await getRepository(fm_request).findOne({
+			where: { id_status_request: 1 },
+			order: {
+				id: 'ASC',
+			},
+			relations: [
+				'id_client',
+				'id_client.id_location',
+				'id_client.id_location.id_estado',
+				'id_client.id_location.id_municipio',
+				'id_client.id_location.id_ciudad',
+				'id_client.id_location.id_parroquia',
+				'id_client.id_ident_type',
+				'id_valid_request',
+				'dir_pos',
+				'dir_pos.id_location',
+				'rc_constitutive_act',
+				'rc_special_contributor',
+				'rc_ref_bank',
+				'rc_comp_dep',
+				'rc_rif',
+				'rc_ident_card',
+				'id_payment_method',
+				'id_type_payment',
+				'id_commerce',
+				'id_commerce.id_ident_type',
+				'id_commerce.id_activity',
+				'id_commerce.id_location',
+				'id_commerce.banks',
+				'id_product',
+				'id_type_request',
+				'id_status_request',
+				'id_request_origin',
+			],
+		});
 		// await getRepository(fm_request).update(FM.id, { id_status_request: 2 });
 
 		Resp(req, res, { message: 'FM respondida', info });
@@ -423,7 +429,6 @@ export const editStatusById = async (
 
 		if (id_status_request === 4) {
 			await getRepository(fm_request).update(id_FM, { id_status_request, ...valids });
-			await refresh();
 		}
 
 		const message: string = Msg('Status del FM').edit;

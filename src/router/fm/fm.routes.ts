@@ -11,7 +11,7 @@ import { validExistingClient, validClientData, validBankAccount } from '../../Mi
 import { validCommerceData } from '../../Middlewares/data/commerce';
 import { validFmData } from '../../Middlewares/data/fm';
 import { valid_bank_account } from '../../controllers/FM_request';
-import { requestOrigin } from '../../controllers/FM_request/index';
+import { requestOrigin, valid_exitin_commerce } from '../../controllers/FM_request/index';
 
 const FM: Router = Router();
 
@@ -24,6 +24,8 @@ FM.route('/FM/:id/commerce').post(validCommerceData, fm_create_commerce);
 FM.route('/FM').post(validFmData, FM_create);
 //
 FM.route('/FM/client/valid').post(validExistingClient, valid_existin_client);
+//
+FM.route('/FM/:id/commerce/valid').post(valid_exitin_commerce);
 //
 FM.route('/FM/bank/valid').post(validBankAccount, valid_bank_account);
 

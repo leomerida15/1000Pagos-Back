@@ -19,6 +19,7 @@ import fm_photo from './fm_photo';
 import fm_location from './fm_location';
 import fm_aci_commerce from './fm_aci_commerce';
 import fm_dir_pos from './fm_dir_pos';
+import fm_ident_type from './fm_ident_type';
 
 @Entity()
 export default class fm_commerce {
@@ -28,7 +29,8 @@ export default class fm_commerce {
 	@Column()
 	name!: string;
 
-	@Column()
+	@ManyToOne(() => fm_ident_type, (fm_ident_type) => fm_ident_type.clients)
+	@JoinColumn({ name: 'id_ident_type' })
 	id_ident_type!: number;
 
 	@Column()

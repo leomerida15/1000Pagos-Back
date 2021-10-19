@@ -1,9 +1,7 @@
 // app's
 import app from './apps';
-import WebSocket, { diferidos } from './apps/WebSocket';
-import { createConnection, getRepository } from 'typeorm';
+import { createConnection } from 'typeorm';
 import contents from './db/contents';
-import log from './hooks/logs/index';
 // init server
 
 //database
@@ -23,7 +21,5 @@ createConnection()
 			console.log('| DB OK |');
 			console.log('|_______|');
 		});
-
-		WebSocket(httpServer);
 	})
 	.catch((err) => console.log('DB ERR', err));

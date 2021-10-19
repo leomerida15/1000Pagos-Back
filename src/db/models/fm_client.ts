@@ -35,7 +35,7 @@ export default class fm_client {
 	@JoinTable()
 	id_roles?: number;
 
-	@Column()
+	@Column({ select: false })
 	password!: string;
 
 	@ManyToOne(() => fm_ident_type, (fm_ident_type) => fm_ident_type.clients)
