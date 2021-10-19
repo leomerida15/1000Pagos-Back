@@ -1,25 +1,25 @@
-import https from 'https';
-import fs from 'fs';
 // app's
 import app from './apps';
-import { prod } from './hooks/host';
+import { createConnection } from 'typeorm';
+import contents from './db/contents';
 // init server
 
-if (prod) {
-	const options = {
-		key: fs.readFileSync('/etc/letsencrypt/live/api.node.devceres.cloud/privkey.pem', 'utf8'),
-		cert: fs.readFileSync('/etc/letsencrypt/live/api.node.devceres.cloud/fullchain.pem', 'utf8'),
-	};
+//database
 
-	https.createServer(options, app).listen(app.get('port'), () => {
-		console.log('                                                                  ()_()');
-		console.log(`app corriendo en el puerto http://localhost:${app.get('port')} leoM             (o.o)`);
-		console.log('                                                                  (|_|)*');
-	});
-} else {
-	app.listen(app.get('port'), () => {
-		console.log('                                                                  ()_()');
-		console.log(`app corriendo en el puerto http://localhost:${app.get('port')} leoM             (o.o)`);
-		console.log('                                                                  (|_|)*');
-	});
-}
+createConnection()
+	.then(async () => {
+		await contents();
+
+		const httpServer = app.listen(app.get('port'), () => {
+			console.log(`app corriendo en el puerto http://localhost:${app.get('port')} leoM   `);
+			console.log('_________');
+			console.log('|       |');
+			console.log('| ()_() |');
+			console.log(`| (o.o) |`);
+			console.log('| (|_|)*|');
+			console.log('|_______|');
+			console.log('| DB OK |');
+			console.log('|_______|');
+		});
+	})
+	.catch((err) => console.log('DB ERR', err));

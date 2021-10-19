@@ -7,15 +7,6 @@ import { createConnection, getRepository } from 'typeorm';
 import log from '../hooks/logs/index';
 import path from 'path';
 
-//database
-
-createConnection()
-	.then(async () => {
-		// await contents();
-		log.text.OK('DB OK');
-	})
-	.catch((err) => console.log('DB ERR', err));
-
 const app: Application = express();
 
 // middleware preRoutes
