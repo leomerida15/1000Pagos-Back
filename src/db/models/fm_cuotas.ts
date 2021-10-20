@@ -12,8 +12,8 @@ export default class fm_cuotas {
 	cuotas_pendientes!: number;
 
 	@CreateDateColumn()
-	createdAt?: string;
+	createdAt?: Date;
 
-	@UpdateDateColumn({ type: 'timestamp', select: false })
-	updatedAt?: number;
+	@UpdateDateColumn({ select: false })
+	updatedAt?: Date;
 }

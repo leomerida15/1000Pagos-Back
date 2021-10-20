@@ -119,12 +119,13 @@ export const valid_existin_client = async (
 		const client = await getRepository(fm_client).findOne({
 			where: { id_ident_type, ident_num, email },
 			relations: [
+				'phones',
+				'id_ident_type',
 				'id_location',
 				'id_location.id_estado',
 				'id_location.id_municipio',
 				'id_location.id_ciudad',
 				'id_location.id_parroquia',
-				'id_ident_type',
 			],
 		});
 		if (client) resp = { message: 'el usuario existe', info: { client, mash: true } };
@@ -154,7 +155,16 @@ export const valid_exitin_commerce = async (
 		const { id_ident_type, ident_num } = req.body;
 		const commerce = await getRepository(fm_commerce).findOne({
 			where: { id_ident_type, ident_num, id_client },
-			relations: ['id_ident_type', 'id_activity', 'id_location', 'banks'],
+			relations: [
+				'id_ident_type',
+				'id_activity',
+				'id_location',
+				'id_location.id_estado',
+				'id_location.id_municipio',
+				'id_location.id_ciudad',
+				'id_location.id_parroquia',
+				'banks',
+			],
 		});
 
 		if (!commerce) {
