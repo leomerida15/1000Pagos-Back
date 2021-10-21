@@ -8,7 +8,6 @@ export const validCommerceData: ValidationChain[] = [
 	check('id_ident_type', 'el tipo de documento de identidad no es valido')
 		.exists({ checkFalsy: true, checkNull: true })
 		.isNumeric({ no_symbols: true })
-		.isIn([2, 3])
 		.custom(NoSQL),
 	//
 	check('ident_num', 'numero de identidad invalido')
