@@ -4,11 +4,11 @@ import fm_request from '../../db/models/fm_request';
 
 export const validFmData: ValidationChain[] = [
 	//
-	check('rc_ref_bank', 'rc_ref_bank es requerido').isNumeric().custom(NoSQL),
+	check('rc_ref_bank', 'la referencia bancaria es requerido').isNumeric().custom(NoSQL),
 	//
-	check('rc_ident_card', 'rc_ident_card es requerido').isNumeric().custom(NoSQL),
+	check('rc_ident_card', 'la cedula es requerido').isNumeric().custom(NoSQL),
 	//
-	check('rc_rif', 'rc_rif es requerido').isNumeric().custom(NoSQL),
+	check('rc_rif', 'rif es requerido').isNumeric().custom(NoSQL),
 	//
 	check('number_post', 'number_post es requerido').isNumeric().custom(NoSQL),
 	// validar la data del cliente
