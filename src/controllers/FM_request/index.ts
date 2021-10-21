@@ -128,8 +128,10 @@ export const valid_existin_client = async (
 				'id_location.id_parroquia',
 			],
 		});
-		if (client) resp = { message: 'el usuario existe', info: { client, mash: true } };
-		else if (!resp.message.length) resp.message = `ni el correo ni la ci existen`;
+		if (client) {
+			resp = { message: 'el usuario existe', info: { client, matsh: true } };
+			resp.info.matshImg = (await getRepository(fm_request).findOne({ id_client: client.id })) ? true : false;
+		} else if (!resp.message.length) resp.message = `ni el correo ni la ci existen`;
 
 		Resp(req, res, resp);
 	} catch (err) {
@@ -178,6 +180,8 @@ export const valid_exitin_commerce = async (
 			resp = { message: 'datos del comercio', info: commerce };
 		}
 
+		resp.info.matchImg = (await getRepository(fm_request).findOne({ id_client })) ? true : false;
+
 		Resp(req, res, resp);
 	} catch (err) {
 		next(err);
@@ -206,24 +210,19 @@ export const fm_create_commerce = async (
 			const reslocation = await getRepository(fm_location).save(location);
 			const id_location = reslocation.id;
 
-			commerce = await getConnection()
-				.createQueryBuilder()
-				.insert()
-				.into(fm_commerce)
-				.values({
-					name,
-					id_ident_type,
-					ident_num,
-					special_contributor,
-					id_activity,
-					id_location,
-					id_client,
-				})
-				.execute();
+			commerce = await getRepository(fm_commerce).save({
+				name,
+				id_ident_type,
+				ident_num,
+				special_contributor,
+				id_activity,
+				id_location,
+				id_client,
+			});
 
 			Resps = {
-				message: Msg('commercio', commerce.identifiers[0].id).create,
-				info: { id_commerce: commerce.identifiers[0].id },
+				message: Msg('commercio', commerce.id).create,
+				info: { id_commerce: commerce.id },
 			};
 		} else {
 			Resps = { message: Msg('commercio', commerce.id).get, info: { id_commerce: commerce.id } };
