@@ -25,6 +25,6 @@ posRoutes(app);
 
 // Settings
 
-app.set('port', process.env.PORT || 4040);
+app.set('port', process.env.PORT || 6060);
 
 export default app;
