@@ -302,6 +302,7 @@ export const FM_create = async (
 			id_request_origin,
 			id_type_payment,
 			ci_referred,
+			id_product,
 		}: any = req.body;
 
 		const bank: any = await getRepository(fm_bank).findOne({ code: bank_account_num.slice(0, 4) });
@@ -358,6 +359,7 @@ export const FM_create = async (
 			id_type_payment,
 			ci_referred,
 			id_valid_request: valids.id,
+			id_product,
 		});
 
 		const FM_save = await getRepository(fm_request).save(FM);
