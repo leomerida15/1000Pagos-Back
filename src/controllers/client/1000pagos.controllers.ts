@@ -9,7 +9,6 @@ import { existsSync } from 'fs';
 import fm_request from '../../db/models/fm_request';
 import fm_client from '../../db/models/fm_client';
 import fm_commerce from '../../db/models/fm_commerce';
-import fm_bank_commerce from '../../db/models/fm_bank_commerce';
 
 export const upFileRecaudos = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
@@ -40,8 +39,10 @@ export const upFilesRecaudos = async (
 		const { id_client, id_commerce }: any = req.body;
 
 		const client = await getRepository(fm_client).findOne(id_client);
+		if (!client) throw { message: 'el cliente suministrado no existe', code: 400 };
 
 		const commerce = await getRepository(fm_commerce).findOne(id_client);
+		if (!commerce) throw { message: 'el comercio suministrado no existe', code: 400 };
 
 		const description = [
 			'rc_constitutive_act',
@@ -52,19 +53,10 @@ export const upFilesRecaudos = async (
 			'rc_comp_dep',
 		];
 
-		if (client && (await getRepository(fm_request).findOne({ id_client }))) {
-			const fm: any = await getConnection().query(
-				'select * FROM fm_request WHERE id_client = ' + id_client + '  ORDER by id ASC LIMIT 1'
-			);
+		const fm = await getRepository(fm_request).findOne({ where: { id_client }, order: { id: 'ASC' } });
 
-			const {
-				rc_property_document,
-				rc_special_contributor,
-				rc_ref_bank,
-				rc_rif,
-				rc_constitutive_act,
-				rc_ident_card,
-			} = fm[0];
+		if (client && fm) {
+			const { rc_special_contributor, rc_ref_bank, rc_rif, rc_constitutive_act, rc_ident_card } = fm;
 
 			if (commerce) {
 				info = {
@@ -73,7 +65,6 @@ export const upFilesRecaudos = async (
 					rc_special_contributor,
 					rc_ref_bank,
 					rc_constitutive_act,
-					rc_property_document,
 				};
 			} else {
 				info = {
@@ -87,7 +78,7 @@ export const upFilesRecaudos = async (
 		);
 
 		if (valid_description.length) {
-			throw { message: `${valid_description.length} imagenes no tiene un nomre referente a un recaudo` };
+			throw { message: `${valid_description.length} imagenes no tiene un nombre referente a un recaudo` };
 		}
 
 		if (!existsSync(`${base}/${id_client}`)) {
@@ -98,23 +89,19 @@ export const upFilesRecaudos = async (
 		}
 
 		const stop: Promise<void>[] = files
-			.filter((file: Express.Multer.File) =>
-				description.includes(
-					file.originalname.replace(/.png/g, '').replace(/.jpeg/g, '').replace(/.pdf/g, '').replace(/.jpg/g, '')
-				)
-			)
+			.filter((file: Express.Multer.File) => {
+				const valid: string = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
+				return description.includes(valid);
+			})
 			.map(async (file: Express.Multer.File, i: number): Promise<void> => {
-				const descript: string = file.originalname
-					.replace(/.png/g, '')
-					.replace(/.jpeg/g, '')
-					.replace(/.pdf/g, '')
-					.replace(/.jpg/g, '');
+				const descript: string = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
 
 				const route_ids: string = ['rc_ident_card'].includes(descript)
 					? `${id_client}`
 					: `${id_client}/${id_commerce}`;
 
-				const link = await Doc.Move(file.filename, route_ids);
+				await Doc.Move(file.filename, route_ids);
+				const link = `${process.env.HOST}static/${route_ids}/${file.filename}`;
 				const path = `static/${route_ids}/${file.filename}`;
 
 				const data = getRepository(fm_photo).create({ name: file.filename, path, link, descript });
@@ -122,6 +109,7 @@ export const upFilesRecaudos = async (
 
 				info[descript] = save.id;
 			});
+
 		await Promise.all(stop);
 
 		res.status(200).json({ message: 'archivos listos', info });
