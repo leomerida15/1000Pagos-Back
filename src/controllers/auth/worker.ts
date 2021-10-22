@@ -22,15 +22,12 @@ export const worker = async (req: Request<any, Api.Resp>, res: Response, next: N
 
 export const workerAll = async (req: Request<any, Api.Resp>, res: Response, next: NextFunction): Promise<void> => {
 	try {
-		const worker = await getRepository(fm_worker)
-			.createQueryBuilder('fm_worker')
-			.leftJoinAndSelect('fm_worker.roles', 'roles')
-			.getMany();
+		const workers = await getRepository(fm_worker).find({ relations: ['roles'] });
 
-		const info: any[] = worker.map((item: any) => {
+		const info: any[] = workers.map((worker: any) => {
 			const { password, ...data }: any = worker;
 
-			return data[0];
+			return data;
 		});
 
 		Resp(req, res, { message: 'data del usuario', info });

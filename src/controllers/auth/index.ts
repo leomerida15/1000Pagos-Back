@@ -43,11 +43,7 @@ export const register = async (
 
 		await getRepository(fm_worker).save(req.body);
 		// encript password
-		const worker = await getRepository(fm_worker)
-			.createQueryBuilder('fm_worker')
-			.where('email = :email', { email })
-			.leftJoinAndSelect('fm_worker.roles', 'roles')
-			.getOne();
+		const worker = await getRepository(fm_worker).findOne({ where: { email }, relations: ['roles'] });
 
 		const { password, id, roles, ...data_user }: any = worker;
 
@@ -128,11 +124,7 @@ export const login = async (
 
 	try {
 		// encript password
-		const worker = await getRepository(fm_worker)
-			.createQueryBuilder('fm_worker')
-			.where('email = :email', { email })
-			.leftJoinAndSelect('fm_worker.roles', 'roles')
-			.getOne();
+		const worker = await getRepository(fm_worker).findOne({ where: { email }, relations: ['roles'] });
 
 		if (!worker) throw { message: 'correo o contraseña incorrecta', code: 400 };
 
