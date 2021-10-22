@@ -44,7 +44,7 @@ export const getWorkerById = async (
 	try {
 		const { id }: any = req.params;
 
-		const worker = await getRepository(fm_worker).find({ where: { id }, relations: ['roles'] });
+		const worker = await getRepository(fm_worker).findOne({ where: { id }, relations: ['roles'] });
 		const { password, ...data }: any = worker;
 
 		const info = data;
@@ -56,14 +56,15 @@ export const getWorkerById = async (
 };
 
 export const editWorkerById = async (
-	req: Request<Api.params, Api.Resp>,
+	req: Request<Api.params, Api.Resp, fm_worker>,
 	res: Response,
 	next: NextFunction
 ): Promise<void> => {
 	try {
 		const { id }: any = req.params;
+		const { roles } = req.body;
 
-		const worker = await getRepository(fm_worker).find({ where: { id }, relations: ['roles'] });
+		const worker = await getRepository(fm_worker).update(id, { roles });
 		const { password, ...data }: any = worker;
 
 		const info = data;
