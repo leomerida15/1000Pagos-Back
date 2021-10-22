@@ -441,17 +441,17 @@ export const editStatusById = async (
 		const { id_FM }: any = req.params;
 		const { id_status_request, valids } = req.body;
 
-		const FM: any = await getRepository(fm_request).findOne(id_FM);
+		const FM: any = await getRepository(fm_request).findOne(id_FM, { relations: ['id_valid_request'] });
 		if (!FM) throw { message: 'FM no existe' };
 
 		await getRepository(fm_request).update(id_FM, { id_status_request });
 
 		if (id_status_request === 4) {
-			const { id_valid_request } = FM;
-			if (!valids) {
-				throw { message: 'si el cambio de estatus es 4, el valor valids es requerido para continuar', code: 400 };
-			}
-			await getRepository(fm_valid_request).update(id_valid_request, valids);
+			const { id } = FM.id_valid_request;
+
+			if (!valids) throw { message: 'cambio de estatus es 4, valids es requerido', code: 400 };
+
+			await getRepository(fm_valid_request).update(id, { ...valids });
 		}
 
 		const message: string = Msg('Status del FM').edit;
