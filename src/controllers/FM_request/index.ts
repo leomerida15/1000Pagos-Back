@@ -129,8 +129,14 @@ export const valid_existin_client = async (
 			],
 		});
 		if (client) {
-			resp = { message: 'el usuario existe', info: { client, matsh: true } };
-			resp.info.matshImg = (await getRepository(fm_request).findOne({ id_client: client.id })) ? true : false;
+			resp = {
+				message: 'el usuario existe',
+				info: {
+					client,
+					matsh: true,
+					matshImg: (await getRepository(fm_request).findOne({ id_client: client.id })) ? true : false,
+				},
+			};
 		} else if (!resp.message.length) resp.message = `ni el correo ni la ci existen`;
 
 		Resp(req, res, resp);
@@ -177,10 +183,9 @@ export const valid_exitin_commerce = async (
 				resp = { message: 'el commercio no exite' };
 			}
 		} else {
-			resp = { message: 'datos del comercio', info: commerce };
+			const matchImg: boolean = (await getRepository(fm_request).findOne({ id_client })) ? true : false;
+			resp = { message: 'datos del comercio', info: { ...commerce, matchImg } };
 		}
-
-		resp.info.matchImg = (await getRepository(fm_request).findOne({ id_client })) ? true : false;
 
 		Resp(req, res, resp);
 	} catch (err) {
@@ -289,6 +294,7 @@ export const FM_create = async (
 			rc_service_document,
 			rc_special_contributor,
 			rc_ref_bank,
+			rc_comp_dep,
 			rc_ref_perso,
 			rc_account_number,
 			rc_rif,
@@ -345,6 +351,7 @@ export const FM_create = async (
 			rc_service_document,
 			rc_special_contributor,
 			rc_ref_bank,
+			rc_comp_dep,
 			rc_ref_perso,
 			rc_account_number,
 			rc_rif,
@@ -426,7 +433,7 @@ export const getFm = async (
 };
 
 export const editStatusById = async (
-	req: Request<Api.params, Api.Resp, { id_status_request: number; valids?: any }>,
+	req: Request<Api.params, Api.Resp, { id_status_request: number; valids?: fm_valid_request }>,
 	res: Response<Api.Resp>,
 	next: NextFunction
 ): Promise<void> => {
@@ -440,7 +447,11 @@ export const editStatusById = async (
 		await getRepository(fm_request).update(id_FM, { id_status_request });
 
 		if (id_status_request === 4) {
-			await getRepository(fm_request).update(id_FM, { id_status_request, ...valids });
+			const { id_valid_request } = FM;
+			if (!valids) {
+				throw { message: 'si el cambio de estatus es 4, el valor valids es requerido para continuar', code: 400 };
+			}
+			await getRepository(fm_valid_request).update(id_valid_request, valids);
 		}
 
 		const message: string = Msg('Status del FM').edit;

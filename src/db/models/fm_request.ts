@@ -72,6 +72,10 @@ export default class fm_request {
 	@JoinColumn({ name: 'id_request_origin' })
 	id_request_origin!: number;
 
+	@OneToOne(() => fm_valid_request)
+	@JoinColumn({ name: 'id_valid_request' })
+	id_valid_request!: number;
+
 	@OneToMany(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_commerce)
 	@JoinColumn({ name: 'dir_pos' })
 	dir_pos?: fm_dir_pos | fm_location;
@@ -99,10 +103,6 @@ export default class fm_request {
 	@ManyToOne(() => fm_photo, (fm_photo) => fm_photo.requests)
 	@JoinColumn({ name: 'rc_ident_card' })
 	rc_ident_card!: number;
-
-	@OneToOne(() => fm_valid_request)
-	@JoinColumn({ name: 'id_valid_request' })
-	id_valid_request!: number;
 
 	@CreateDateColumn({ select: false })
 	createdAt?: Date;
