@@ -56,14 +56,6 @@ export const upFilesRecaudos = async (
 		const fm = await getRepository(fm_request).findOne({
 			where: { id_client },
 			order: { id: 'ASC' },
-			relations: [
-				'rc_constitutive_act',
-				'rc_ref_bank',
-				'rc_rif',
-				'rc_ident_card',
-				'rc_special_contributor',
-				'rc_comp_dep',
-			],
 		});
 
 		if (client && fm) {
