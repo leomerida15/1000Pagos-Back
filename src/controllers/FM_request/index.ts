@@ -93,7 +93,7 @@ export const valid_existin_client = async (
 
 		const { email, id_ident_type, ident_num } = req.body;
 
-		let resp: Api.Resp = { message: ``, info: { mash: false } };
+		let resp: Api.Resp = { message: ``, info: { matsh: false } };
 
 		// validar existencia de la clave cumpuesta
 		const validIdent = await getRepository(fm_client).findOne({ id_ident_type, ident_num });
