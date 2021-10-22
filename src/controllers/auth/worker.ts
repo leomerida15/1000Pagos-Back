@@ -74,19 +74,3 @@ export const editWorkerById = async (
 		next(err);
 	}
 };
-
-export const workerByRol = async (
-	req: Request<Api.params, Api.Resp>,
-	res: Response,
-	next: NextFunction
-): Promise<void> => {
-	try {
-		const { id }: any = req.params;
-
-		const info = await getRepository(fm_roles).find({ where: { id }, relations: ['workers'] });
-
-		Resp(req, res, { message: 'data del usuario', info });
-	} catch (err) {
-		next(err);
-	}
-};
