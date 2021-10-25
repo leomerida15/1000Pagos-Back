@@ -12,7 +12,9 @@ import fm_commerce from '../../db/models/fm_commerce';
 import fm_location from '../../db/models/fm_location';
 import fm_bank from '../../db/models/fm_bank';
 import fm_bank_commerce from '../../db/models/fm_bank_commerce';
+import fm_department from '../../db/models/fm_department';
 import fm_request from '../../db/models/fm_request';
+import fm_status from '../../db/models/fm_status';
 import fm_dir_pos from '../../db/models/fm_dir_pos';
 import fm_request_origin from '../../db/models/fm_request_origin';
 import { fm_valid_request } from '../../db/models/fm_valid_request';
@@ -360,7 +362,6 @@ export const FM_create = async (
 			id_client,
 			id_commerce,
 			id_type_request: 1,
-			id_status_request: 1,
 			id_request_origin,
 			id_type_payment,
 			ci_referred,
@@ -375,6 +376,21 @@ export const FM_create = async (
 
 		await getRepository(fm_dir_pos).save({ id_location: location.id, id_commerce, id_request: FM_save.id });
 
+		const departments = await getRepository(fm_department).find();
+
+		const status = departments.map((department) => {
+			const id_request = FM_save.id; 
+			const id_department = department.id;
+			const id_status_request = 1;
+			return {
+				id_request,
+				id_department,
+				id_status_request,
+			}
+		});
+
+		await getRepository(fm_status).save(status);
+
 		res.status(200).json({ message: 'FM creada', info: { id: FM_save.id } });
 	} catch (err) {
 		next(err);
@@ -388,43 +404,46 @@ export const getFm = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const info = await getRepository(fm_request).findOne({
-			where: { id_status_request: 1 },
+		const query = await getRepository(fm_status).findOne({
+			where: { id_status_request: 1, id_department: 1 },
 			order: {
 				id: 'ASC',
 			},
 			relations: [
-				'id_client',
-				'id_client.id_location',
-				'id_client.id_location.id_estado',
-				'id_client.id_location.id_municipio',
-				'id_client.id_location.id_ciudad',
-				'id_client.id_location.id_parroquia',
-				'id_client.id_ident_type',
-				'id_valid_request',
-				'dir_pos',
-				'dir_pos.id_location',
-				'rc_constitutive_act',
-				'rc_special_contributor',
-				'rc_ref_bank',
-				'rc_comp_dep',
-				'rc_rif',
-				'rc_ident_card',
-				'id_payment_method',
-				'id_type_payment',
-				'id_commerce',
-				'id_commerce.id_ident_type',
-				'id_commerce.id_activity',
-				'id_commerce.id_location',
-				'id_commerce.banks',
-				'id_product',
-				'id_type_request',
-				'id_status_request',
-				'id_request_origin',
+				'id_request',
+				'id_request.id_client',
+				'id_request.id_client.id_location',
+				'id_request.id_client.id_location.id_estado',
+				'id_request.id_client.id_location.id_municipio',
+				'id_request.id_client.id_location.id_ciudad',
+				'id_request.id_client.id_location.id_parroquia',
+				'id_request.id_client.id_ident_type',
+				'id_request.id_valid_request',
+				'id_request.dir_pos',
+				'id_request.dir_pos.id_location',
+				'id_request.rc_constitutive_act',
+				'id_request.rc_special_contributor',
+				'id_request.rc_ref_bank',
+				'id_request.rc_comp_dep',
+				'id_request.rc_rif',
+				'id_request.rc_ident_card',
+				'id_request.id_payment_method',
+				'id_request.id_type_payment',
+				'id_request.id_commerce',
+				'id_request.id_commerce.id_ident_type',
+				'id_request.id_commerce.id_activity',
+				'id_request.id_commerce.id_location',
+				'id_request.id_commerce.banks',
+				'id_request.id_product',
+				'id_request.id_type_request',
+				'id_request.id_request_origin',
 			],
 		});
-		if (!info) throw { message: 'no existen solicitudes en espera', code: 400 };
+
+		if (!query) throw { message: 'no existen solicitudes en espera', code: 400 };
 		// await getRepository(fm_request).update(FM.id, { id_status_request: 2 });
+
+		const info = query.id_request;
 
 		Resp(req, res, { message: 'FM respondida', info });
 	} catch (err) {
@@ -432,7 +451,7 @@ export const getFm = async (
 	}
 };
 
-export const editStatusById = async (
+export const editStatusByIdAdmision = async (
 	req: Request<Api.params, Api.Resp, { id_status_request: number; valids?: fm_valid_request }>,
 	res: Response<Api.Resp>,
 	next: NextFunction
@@ -444,7 +463,7 @@ export const editStatusById = async (
 		const FM: any = await getRepository(fm_request).findOne(id_FM, { relations: ['id_valid_request'] });
 		if (!FM) throw { message: 'FM no existe' };
 
-		await getRepository(fm_request).update(id_FM, { id_status_request });
+		await getRepository(fm_status).update({id_request:id_FM, id_department:1}, { id_status_request });
 
 		if (id_status_request === 4) {
 			const { id } = FM.id_valid_request;

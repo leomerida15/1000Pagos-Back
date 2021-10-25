@@ -5,7 +5,7 @@ import {
 	fm_create_commerce,
 	FM_create,
 	getFm,
-	editStatusById,
+	editStatusByIdAdmision,
 } from '../../controllers/FM_request/index';
 import { validExistingClient, validClientData, validBankAccount } from '../../Middlewares/data/auth';
 import { validCommerceData } from '../../Middlewares/data/commerce';
@@ -35,7 +35,7 @@ FM.route('/FM').get(getFm);
 
 // ? cambiar status fm
 //
-FM.route('/FM/:id_FM/status').put(editStatusById);
+FM.route('/FM/admision/:id_FM/status').put(editStatusByIdAdmision);
 
 // ? origenes
 //
