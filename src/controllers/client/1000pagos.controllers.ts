@@ -67,19 +67,19 @@ export const upFilesRecaudos = async (
 		});
 
 		if (client && fm) {
-			const { rc_special_contributor, rc_ref_bank, rc_rif, rc_constitutive_act, rc_ident_card } = fm;
+			const { rc_special_contributor, rc_ref_bank, rc_rif, rc_constitutive_act, rc_ident_card }: any = fm;
 
 			if (commerce) {
 				info = {
-					rc_ident_card,
-					rc_rif,
-					rc_special_contributor,
-					rc_ref_bank,
-					rc_constitutive_act,
+					rc_ident_card: rc_ident_card && rc_ident_card.id,
+					rc_rif: rc_rif && rc_rif.id,
+					rc_special_contributor: rc_special_contributor && rc_special_contributor.id,
+					rc_ref_bank: rc_ref_bank && rc_ref_bank.id,
+					rc_constitutive_act: rc_constitutive_act && rc_constitutive_act.id,
 				};
 			} else {
 				info = {
-					rc_ident_card,
+					rc_ident_card: rc_ident_card && rc_ident_card.id,
 				};
 			}
 		}
