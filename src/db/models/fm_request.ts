@@ -11,7 +11,6 @@ import {
 } from 'typeorm';
 import fm_commerce from './fm_commerce';
 import fm_type_request from './fm_type_request';
-import fm_status_request from './fm_status_request';
 import fm_photo from './fm_photo';
 import fm_dir_pos from './fm_dir_pos';
 import fm_location from './fm_location';
@@ -19,6 +18,7 @@ import fm_client from './fm_client';
 import fm_payment_method from './fm_payment_method';
 import fm_product from './fm_product';
 import fm_request_origin from './fm_request_origin';
+import fm_status from './fm_status';
 import { fm_type_payment } from './fm_type_payment';
 import { fm_valid_request } from './fm_valid_request';
 
@@ -63,14 +63,13 @@ export default class fm_request {
 	@JoinColumn({ name: 'id_type_request' })
 	id_type_request!: number;
 
-	@Column({ default: 0 })
-	@ManyToOne(() => fm_status_request, (fm_status_request) => fm_status_request.requests)
-	@JoinColumn({ name: 'id_status_request' })
-	id_status_request?: number;
-
 	@ManyToOne(() => fm_request_origin, (fm_request_origin) => fm_request_origin.requests)
 	@JoinColumn({ name: 'id_request_origin' })
 	id_request_origin!: number;
+
+	@OneToOne(() => fm_valid_request)
+	@JoinColumn({ name: 'id_valid_request' })
+	id_valid_request!: number;
 
 	@OneToMany(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_commerce)
 	@JoinColumn({ name: 'dir_pos' })
@@ -100,9 +99,9 @@ export default class fm_request {
 	@JoinColumn({ name: 'rc_ident_card' })
 	rc_ident_card!: number;
 
-	@OneToOne(() => fm_valid_request)
-	@JoinColumn({ name: 'id_valid_request' })
-	id_valid_request!: number;
+	@OneToMany(() => fm_status, (fm_status) => fm_status.id_request)
+	@JoinColumn({ name: 'status' })
+	status?: fm_status[];
 
 	@CreateDateColumn({ select: false })
 	createdAt?: Date;

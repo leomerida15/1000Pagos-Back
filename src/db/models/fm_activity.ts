@@ -28,8 +28,8 @@ export default class fm_activity {
 	commerces?: fm_commerce[];
 
 	@CreateDateColumn({ select: false })
-	createdAt?: string;
+	createdAt?: Date;
 
-	@UpdateDateColumn({ type: 'timestamp', select: false })
-	updatedAt?: number;
+	@UpdateDateColumn({ select: false })
+	updatedAt?: Date;
 }

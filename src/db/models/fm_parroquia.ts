@@ -28,8 +28,8 @@ export default class fm_parroquia {
 	parroquia!: string;
 
 	@CreateDateColumn({ select: false })
-	createdAt?: string;
+	createdAt?: Date;
 
-	@UpdateDateColumn({ type: 'timestamp', select: false })
-	updatedAt?: number;
+	@UpdateDateColumn({ select: false })
+	updatedAt?: Date;
 }

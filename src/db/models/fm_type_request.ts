@@ -17,13 +17,13 @@ export default class fm_type_request {
 	@Column()
 	name!: string;
 
-	@OneToMany(() => fm_request, (fm_request) => fm_request.id_status_request)
-	@JoinColumn({ name: 'id_requests' })
+	@OneToMany(() => fm_request, (fm_request) => fm_request.id_type_request)
+	@JoinColumn({ name: 'requests' })
 	requests?: fm_request[];
 
 	@CreateDateColumn({ select: false })
-	createdAt?: string;
+	createdAt?: Date;
 
-	@UpdateDateColumn({ type: 'timestamp', select: false })
-	updatedAt?: number;
+	@UpdateDateColumn({ select: false })
+	updatedAt?: Date;
 }

@@ -1,4 +1,12 @@
-import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn, CreateDateColumn } from 'typeorm';
+import { Entity,
+	PrimaryGeneratedColumn,
+	Column,
+	UpdateDateColumn,
+	OneToMany,
+	JoinColumn,
+	CreateDateColumn
+} from 'typeorm';
+import fm_status from './fm_status';
 
 @Entity()
 export default class fm_department {
@@ -8,9 +16,13 @@ export default class fm_department {
 	@Column()
 	name!: string;
 
-	@CreateDateColumn({ select: false })
-	createdAt?: string;
+	@OneToMany(() => fm_status, (fm_status) => fm_status.id_department)
+	@JoinColumn({ name: 'status' })
+	status?: fm_status[];
 
-	@UpdateDateColumn({ type: 'timestamp', select: false })
-	updatedAt?: number;
+	@CreateDateColumn({ select: false })
+	createdAt?: Date;
+
+	@UpdateDateColumn({ select: false })
+	updatedAt?: Date;
 }

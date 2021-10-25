@@ -36,8 +36,8 @@ export default class fm_dir_pos {
 	id_product!: number;
 
 	@CreateDateColumn({ select: false })
-	createdAt?: string;
+	createdAt?: Date;
 
-	@UpdateDateColumn({ type: 'timestamp', select: false })
+	@UpdateDateColumn({ select: false })
 	updatedAt!: number;
 }
