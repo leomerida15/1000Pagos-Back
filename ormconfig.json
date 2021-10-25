@@ -5,7 +5,7 @@
 	"username": "root",
 	"password": "",
 	"database": "1000pagosdev",
-	"synchronize": true,
+	"synchronize": false,
 	"logging": false,
 	"entities": ["src/db/models/**/*.ts"],
 	"migrations": ["src/db/base/**/*.ts"],
