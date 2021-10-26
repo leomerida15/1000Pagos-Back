@@ -441,7 +441,6 @@ export const getFm = async (
 		});
 
 		if (!query) throw { message: 'no existen solicitudes en espera', code: 400 };
-		// await getRepository(fm_request).update(FM.id, { id_status_request: 2 });
 
 		const info = query.id_request;
 

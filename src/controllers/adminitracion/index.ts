@@ -3,7 +3,7 @@ import { Api } from 'interfaces';
 import Resp from '../../Middlewares/res/resp';
 import fm_client from '../../db/models/fm_client';
 import Msg from '../../hooks/messages/index.ts';
-import { getConnection, getRepository } from 'typeorm';
+import { getRepository, In } from 'typeorm';
 import bcrypt from 'bcrypt';
 import fm_phone from '../../db/models/fm_phone';
 import { validationResult } from 'express-validator';
@@ -27,22 +27,29 @@ export const getFmAdministration = async (
 ): Promise<void> => {
 	try {
 		const query = await getRepository(fm_status).find({
-			where: { id_status_request: 3, id_department: 1 },
-			order: {
-				id: 'ASC',
-			},
+			where: {id_department: 1, id_status_request: 3},
+			relations: [
+				'id_request'
+			]
+		});
+
+		if(!query.length) throw { message: 'no existen solicitudes en espera', code: 400 };
+
+		const ids:any[] = query.map((item:any) => item.id_request.id);
+
+		const query2 = await getRepository(fm_status).find({
+			where: { id_request: In(ids), id_department: 2, id_status_request: 1},
 			relations: [
 				'id_request',
 				'id_request.rc_comp_dep',
 				'id_request.id_payment_method',
 				'id_request.id_type_payment',
-			],
+			]
 		});
 
-		if (!query) throw { message: 'no existen solicitudes en espera', code: 400 };
-		// await getRepository(fm_request).update(FM.id, { id_status_request: 2 });
+		const info = query2;
 
-		const info = query;
+		if (!query2.length) throw { message: 'no existen solicitudes en espera', code: 400 };
 
 		Resp(req, res, { message: 'FM respondida', info });
 	} catch (err) {
