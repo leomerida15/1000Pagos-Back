@@ -36,7 +36,7 @@ export default class fm_request {
 	@Column({ name: 'ci_referred' })
 	ci_referred!: string;
 
-	@Column({ name: 'delivery_POS', default: false })
+	@Column({ name: 'POS_received', default: false })
 	POS_received!: boolean;
 
 	@Column()
