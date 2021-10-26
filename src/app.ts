@@ -12,7 +12,10 @@ createConnection()
 		await contents();
 
 		const app: Application = services.find((service: any): boolean => {
-			return service.key === JSON.parse(`${process.env.npm_config_argv}`).original[0].replace('serve:', '');
+			const keySer: string = service.key;
+			return (
+				keySer === JSON.parse(`${process.env.npm_config_argv}`).original[0].replace(/('serve:'|'start:')/g, '')
+			);
 		}).app;
 
 		app.listen(app.get('port'), () => {
