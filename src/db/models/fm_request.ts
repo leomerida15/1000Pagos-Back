@@ -39,11 +39,13 @@ export default class fm_request {
 	@Column({ name: 'delivery_POS', default: false })
 	POS_received!: boolean;
 
+	/*
 	@Column()
 	nro_comp_dep!: number;
 
 	@Column()
 	pagadero!: number; //paga despues
+	*/
 
 	@ManyToOne(() => fm_payment_method, (fm_payment_method) => fm_payment_method.requests)
 	@JoinColumn({ name: 'id_payment_method' })
