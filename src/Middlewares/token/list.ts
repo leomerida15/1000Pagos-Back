@@ -12,6 +12,7 @@ const list: string[] = [
 	'status',
 	'products',
 	'payment',
+	'adminitracion',
 ];
 
 export default list;
