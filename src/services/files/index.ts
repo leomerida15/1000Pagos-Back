@@ -3,8 +3,6 @@ import express, { Application, Request, Response } from 'express';
 import { posRoutes, preRoutes } from './Middlewares';
 import Routes from './router';
 
-import { createConnection, getRepository } from 'typeorm';
-import log from '../../hooks/logs/index';
 import path from 'path';
 
 const app: Application = express();
