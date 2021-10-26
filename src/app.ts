@@ -13,9 +13,10 @@ createConnection()
 
 		const app: Application = services.find((service: any): boolean => {
 			const keySer: string = service.key;
-			return (
-				keySer === JSON.parse(`${process.env.npm_config_argv}`).original[0].replace(/('serve:'|'start:')/g, '')
-			);
+			const key = JSON.parse(`${process.env.npm_config_argv}`).original[0].replace(/(serve:|start:)/i, '');
+			console.log('key', key);
+
+			return keySer === key;
 		}).app;
 
 		app.listen(app.get('port'), () => {
