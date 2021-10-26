@@ -11,9 +11,9 @@ createConnection()
 	.then(async () => {
 		await contents();
 
-		const key: any = JSON.parse(`${process.env.npm_config_argv}`).original[0].replace('serve:', '');
-
-		const app: Application = services.find((service: any) => service.key === key).app;
+		const app: Application = services.find((service: any): boolean => {
+			return service.key === JSON.parse(`${process.env.npm_config_argv}`).original[0].replace('serve:', '');
+		}).app;
 
 		app.listen(app.get('port'), () => {
 			console.log(`app corriendo en el puerto http://localhost:${app.get('port')} leoM   `);

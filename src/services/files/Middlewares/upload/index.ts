@@ -38,20 +38,4 @@ const options: Options = {
 
 export const upload = multer(options).single('image');
 
-export const FM_RC = () => {
-	return [
-		multer(options).array('rc_constitutive_act', 1),
-		multer(options).array('rc_property_document', 1),
-		multer(options).array('rc_service_document', 1),
-		multer(options).array('rc_special_contributor', 1),
-		multer(options).array('rc_ref_bank', 1),
-		multer(options).array('rc_ref_perso', 1),
-		multer(options).array('rc_account_number', 1),
-		multer(options).array('rc_front_local', 1),
-		multer(options).array('rc_in_local', 1),
-		multer(options).array('rc_rif', 1),
-		multer(options).array('rc_ident_card', 1),
-	];
-};
-
 export const uploads = multer(options).array('images', 20);
