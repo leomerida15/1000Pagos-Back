@@ -28,6 +28,9 @@ export default class fm_request {
 	id?: number;
 
 	@Column()
+	code!: string;
+
+	@Column()
 	number_post!: number;
 
 	@Column()

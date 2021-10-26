@@ -845,7 +845,7 @@
 								},
 								{
 									"key": "id_commerce",
-									"value": "1",
+									"value": "2",
 									"type": "text"
 								},
 								{
@@ -1253,6 +1253,43 @@
 						}
 					},
 					"response": []
+				}
+			]
+		},
+		{
+			"name": "deparments",
+			"item": [
+				{
+					"name": "admicion",
+					"item": [
+						{
+							"name": "diferidos de admicion",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "token",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwidHlwZSI6MiwiaWF0IjoxNjM1Mjc1ODU5LCJleHAiOjE2MzUyNzc2NTl9.FBMndtr9g9Ajdg6w3HFr2CRNrUYBMPm2afpQBKmiRGY",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:5051/deparment/amition/diferidos",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5051",
+									"path": [
+										"deparment",
+										"amition",
+										"diferidos"
+									]
+								}
+							},
+							"response": []
+						}
+					]
 				}
 			]
 		}
