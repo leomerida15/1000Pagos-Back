@@ -4,6 +4,7 @@ import { getRepository } from 'typeorm';
 import fm_estado from '../../../../db/models/fm_estado';
 import Resp from '../../Middlewares/res/resp';
 import fm_municipio from '../../../../db/models/fm_municipio';
+import estado from '../../../../db/contents/estado';
 import fm_parroquia from '../../../../db/models/fm_parroquia';
 import fm_ciudad from '../../../../db/models/fm_ciudad';
 

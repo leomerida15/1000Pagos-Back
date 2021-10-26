@@ -7,7 +7,7 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm';
-import fm_request from './fm_request';
+import fm_status from './fm_status';
 
 @Entity()
 export default class fm_status_request {
@@ -17,9 +17,9 @@ export default class fm_status_request {
 	@Column()
 	name!: string;
 
-	@OneToMany(() => fm_request, (fm_request) => fm_request.id_status_request)
-	@JoinColumn({ name: 'id_requests' })
-	requests?: fm_request[];
+	@OneToMany(() => fm_status, (fm_status) => fm_status.id_status_request)
+	@JoinColumn({ name: 'status' })
+	status?: fm_status[];
 
 	@CreateDateColumn({ select: false })
 	createdAt?: Date;

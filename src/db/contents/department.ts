@@ -7,6 +7,12 @@ const department = async (): Promise<void> => {
 		{
 			name: 'aceptacion',
 		},
+		{
+			name: 'adminitracion',
+		},
+		{
+			name: 'activacion',
+		},
 	];
 
 	//

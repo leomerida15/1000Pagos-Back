@@ -5,8 +5,11 @@ import {
 	fm_create_commerce,
 	FM_create,
 	getFm,
-	editStatusById,
+	editStatusByIdAdmision,
 } from '../../controllers/FM_request/index';
+
+import { getFmAdministration, editStatusByIdAdministration } from '../../controllers/adminitracion/index';
+
 import { validExistingClient, validClientData, validBankAccount } from '../../Middlewares/data/auth';
 import { validCommerceData } from '../../Middlewares/data/commerce';
 import { validFmData } from '../../Middlewares/data/fm';
@@ -35,10 +38,16 @@ FM.route('/FM').get(getFm);
 
 // ? cambiar status fm
 //
-FM.route('/FM/:id_FM/status').put(editStatusById);
+FM.route('/FM/admision/:id_FM/status').put(editStatusByIdAdmision);
 
 // ? origenes
 //
 FM.route('/FM/origins').get(requestOrigin);
+
+// ? Adminitracion
+//
+FM.route('/FM/administration').get(getFmAdministration);
+
+FM.route('/FM/administration/:id_FM/status').put(editStatusByIdAdministration);
 
 export default FM;

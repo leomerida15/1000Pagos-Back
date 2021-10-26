@@ -7,6 +7,7 @@ import { Api } from 'interfaces';
 import fm_activity from '../../../../db/models/fm_activity';
 import fm_status_request from '../../../../db/models/fm_status_request';
 import fm_product from '../../../../db/models/fm_product';
+import fm_estado from '../../../../db/models/fm_estado';
 
 export const getAllIdent_type = async (
 	req: Request<any, any, Api.Resp>,
