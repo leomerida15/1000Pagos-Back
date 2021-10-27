@@ -39,11 +39,11 @@ export default class fm_request {
 	@Column({ name: 'ci_referred' })
 	ci_referred!: string;
 
-	@Column({ name: 'POS_received', default: false })
-	POS_received!: boolean;
-
 	@Column({ name: 'nro_comp_dep' })
 	nro_comp_dep!: number;
+
+	@Column({ name: 'discount' })
+	discount!: boolean;
 
 	@Column({ name: 'pagadero' })
 	pagadero!: boolean; //paga despues
