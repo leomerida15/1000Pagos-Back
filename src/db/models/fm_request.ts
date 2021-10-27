@@ -28,6 +28,9 @@ export default class fm_request {
 	id?: number;
 
 	@Column()
+	code!: string;
+
+	@Column()
 	number_post!: number;
 
 	@Column()
@@ -38,6 +41,7 @@ export default class fm_request {
 
 	@Column({ name: 'POS_received', default: false })
 	POS_received!: boolean;
+
 
 	@Column()
 	nro_comp_dep!: number;

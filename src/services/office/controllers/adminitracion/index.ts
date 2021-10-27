@@ -38,6 +38,8 @@ export const getFmAdministration = async (
 			where: { id_request: In(ids), id_department: 2, id_status_request: 1 },
 			relations: [
 				'id_request',
+				'id_request.id_commerce',
+				'id_request.id_client',
 				'id_request.rc_comp_dep',
 				'id_request.id_payment_method',
 				'id_request.id_type_payment',
