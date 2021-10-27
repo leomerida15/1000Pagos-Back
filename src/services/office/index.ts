@@ -18,6 +18,6 @@ posRoutes(app);
 
 // Settings
 
-app.set('port', process.env.PORT || 5051);
+app.set('port', process.env.PORT_OFFICE || 5051);
 
 export default app;
