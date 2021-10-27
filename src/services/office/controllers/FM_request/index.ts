@@ -310,6 +310,9 @@ export const FM_create = async (
 			id_type_payment,
 			ci_referred,
 			id_product,
+			POS_received,
+			nro_comp_dep,
+			pagadero,
 		}: any = req.body;
 
 		const bank: any = await getRepository(fm_bank).findOne({ code: bank_account_num.slice(0, 4) });
@@ -345,6 +348,7 @@ export const FM_create = async (
 			valid_ident_card: '',
 		});
 
+
 		const FM = await getRepository(fm_request).save({
 			number_post,
 			bank_account_num,
@@ -367,6 +371,9 @@ export const FM_create = async (
 			ci_referred,
 			id_valid_request: valids.id,
 			id_product,
+			POS_received,
+			nro_comp_dep,
+			pagadero,
 		});
 
 		const FM_save = await getRepository(fm_request).save(FM);
@@ -375,6 +382,8 @@ export const FM_create = async (
 		const location = validlocation ? validlocation : await getRepository(fm_location).save(dir_pos);
 
 		await getRepository(fm_dir_pos).save({ id_location: location.id, id_commerce, id_request: FM_save.id });
+
+		await getRepository(fm_request).update({ id: FM_save.id }, { code: 'S' + id_client + id_commerce + 'F' + FM_save.id});
 
 		const departments = await getRepository(fm_department).find();
 
