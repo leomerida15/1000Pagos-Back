@@ -5,6 +5,6 @@ const Amition: Router = Router();
 
 // Amition
 //
-Amition.route('/amition/diferidos').get(getAllDiferidosByAdmition);
+Amition.route('/admition/diferidos').get(getAllDiferidosByAdmition);
 
 export default Amition;
