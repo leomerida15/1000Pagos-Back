@@ -13,7 +13,6 @@ createConnection()
 
 		const app: Application = services.find((service: any): boolean => {
 			const keySer: string = service.key;
-			console.log('process.env', process.env);
 
 			if (!process.env.npm_lifecycle_event) return false;
 			const key = process.env.npm_lifecycle_event.replace(/(serve:|start:)/i, '');

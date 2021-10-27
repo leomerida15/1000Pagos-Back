@@ -4,6 +4,7 @@
 /client
 /src/db/base
 /src/db/json/diferidos.json
+static
 yarn.lock
 ormconfig.json
 # /src/hook`
