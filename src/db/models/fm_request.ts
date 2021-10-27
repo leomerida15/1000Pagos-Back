@@ -27,13 +27,13 @@ export default class fm_request {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ name: 'code' })
 	code!: string;
 
-	@Column()
+	@Column({ name: 'number_post' })
 	number_post!: number;
 
-	@Column()
+	@Column({ name: 'bank_account_num' })
 	bank_account_num!: string;
 
 	@Column({ name: 'ci_referred' })
@@ -42,12 +42,11 @@ export default class fm_request {
 	@Column({ name: 'POS_received', default: false })
 	POS_received!: boolean;
 
-
-	@Column()
+	@Column({ name: 'nro_comp_dep' })
 	nro_comp_dep!: number;
 
-	@Column()
-	pagadero!: number; //paga despues
+	@Column({ name: 'pagadero' })
+	pagadero!: boolean; //paga despues
 
 	@ManyToOne(() => fm_payment_method, (fm_payment_method) => fm_payment_method.requests)
 	@JoinColumn({ name: 'id_payment_method' })
