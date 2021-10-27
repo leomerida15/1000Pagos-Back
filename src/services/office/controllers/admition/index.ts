@@ -14,9 +14,7 @@ export const getAllDiferidosByAdmition = async (
 	try {
 		const status = await getRepository(fm_status).find({
 			where: { id_status_request: 1, id_department: 4 },
-			order: {
-				id: 'ASC',
-			},
+			order: { id: 'ASC' },
 			relations: [
 				'id_request',
 				'id_request.id_client',

@@ -21,6 +21,7 @@ import fm_request_origin from './fm_request_origin';
 import fm_status from './fm_status';
 import { fm_type_payment } from './fm_type_payment';
 import { fm_valid_request } from './fm_valid_request';
+import fm_quotas_calculat from './fm_quotas_calculated';
 
 @Entity()
 export default class fm_request {
@@ -47,6 +48,10 @@ export default class fm_request {
 
 	@Column({ name: 'pagadero' })
 	pagadero!: boolean; //paga despues
+
+	@OneToOne(() => fm_quotas_calculat, (fm_quotas_calculat) => fm_quotas_calculat.id_request)
+	@JoinColumn({ name: 'id_quotas_calculat' })
+	id_quotas_calculat!: number | fm_quotas_calculat;
 
 	@ManyToOne(() => fm_payment_method, (fm_payment_method) => fm_payment_method.requests)
 	@JoinColumn({ name: 'id_payment_method' })

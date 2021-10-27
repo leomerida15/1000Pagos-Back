@@ -10,6 +10,7 @@ import {
 import fm_photo from './fm_photo';
 import fm_dir_pos from './fm_dir_pos';
 import fm_request from './fm_request';
+import fm_plans from './fm_plans';
 
 @Entity()
 export default class fm_product {
@@ -35,6 +36,10 @@ export default class fm_product {
 	@OneToMany(() => fm_request, (fm_request) => fm_request.id_commerce)
 	@JoinColumn({ name: 'requests' })
 	requests?: fm_request[];
+
+	@OneToMany(() => fm_plans, (fm_plans) => fm_plans.id_product)
+	@JoinColumn({ name: 'plans' })
+	plans?: fm_plans[];
 
 	@CreateDateColumn({ select: false })
 	createdAt?: Date;
