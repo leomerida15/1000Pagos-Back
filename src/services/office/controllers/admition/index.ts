@@ -13,7 +13,7 @@ export const getAllDiferidosByAdmition = async (
 ): Promise<void> => {
 	try {
 		const status = await getRepository(fm_status).find({
-			where: { id_status_request: 1, id_department: 4 },
+			where: { id_status_request: 4, id_department: 1 },
 			order: {
 				id: 'ASC',
 			},
