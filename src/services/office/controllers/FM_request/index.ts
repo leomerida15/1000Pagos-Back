@@ -3,7 +3,7 @@ import { Api } from 'interfaces';
 import Resp from '../../Middlewares/res/resp';
 import fm_client from '../../../../db/models/fm_client';
 import Msg from '../../../../hooks/messages/index.ts';
-import { getConnection, getRepository } from 'typeorm';
+import { getConnection, getRepository, Not } from 'typeorm';
 import bcrypt from 'bcrypt';
 import fm_phone from '../../../../db/models/fm_phone';
 import { validationResult } from 'express-validator';
@@ -313,6 +313,7 @@ export const FM_create = async (
 			discount,
 			nro_comp_dep,
 			pagadero,
+			initial,
 		}: any = req.body;
 
 		const bank: any = await getRepository(fm_bank).findOne({ code: bank_account_num.slice(0, 4) });
@@ -324,11 +325,15 @@ export const FM_create = async (
 			ids: [id_client],
 		};
 
-		const valid_bank_commerce = await getConnection()
-			.createQueryBuilder()
-			.from(fm_bank_commerce, 'fm_bank_commerce')
-			.where('fm_bank_commerce.id_client NOT IN (:ids)', obj)
-			.getMany();
+		const valid_bank_commerce = await getRepository(fm_bank_commerce).find({
+			where: { id_client: Not(id_client) },
+		});
+
+		// const valid_bank_commerce = await getConnection()
+		// 	.createQueryBuilder()
+		// 	.from(fm_bank_commerce, 'fm_bank_commerce')
+		// 	.where('fm_bank_commerce.id_client NOT IN (:ids)', obj)
+		// 	.getMany();
 
 		if (valid_bank_commerce.length) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		else {

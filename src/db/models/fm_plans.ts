@@ -11,9 +11,6 @@ export default class fm_plans {
 	name!: string;
 
 	@Column()
-	initial!: number;
-
-	@Column()
 	total!: number;
 
 	@Column()

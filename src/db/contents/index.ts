@@ -18,6 +18,7 @@ import type_person from './client';
 import afiliados from './afiliados';
 import type_payment from './type_payment';
 import request_origin from './request_origin';
+import plans from './plans';
 
 export default async () => {
 	await status_request();
@@ -40,4 +41,5 @@ export default async () => {
 	await afiliados();
 	await activity();
 	await request_origin();
+	await plans();
 };
