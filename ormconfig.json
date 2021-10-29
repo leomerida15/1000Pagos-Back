@@ -1,10 +1,15 @@
-{
-	"type": "mysql",
-	"host": "localhost",
-	"port": 3306,
-	"username": "root",
-	"password": "",
-	"database": "1000pagosdev",
+{	
+	"type": "mssql",
+	"host": "DESKTOP-TUHIIIT",
+	"username": "node",
+	"password": "node",
+	"database": "1000pagosdev", 
+	"options": { 
+		"trustServerCertificate": true
+	},
+	"maxQueryExecutionTime": "",
+	"requestTimeout": 30000000,
+	"connectionTimeout": 30000,
 	"synchronize": true,
 	"logging": false,
 	"entities": ["src/db/models/**/*.ts"],
