@@ -7,6 +7,7 @@ import { Api } from 'interfaces';
 import fm_activity from '../../../../db/models/fm_activity';
 import fm_status_request from '../../../../db/models/fm_status_request';
 import fm_product from '../../../../db/models/fm_product';
+import fm_plans from '../../../../db/models/fm_plans';
 
 export const getAllIdent_type = async (
 	req: Request<any, any, Api.Resp>,
@@ -62,9 +63,25 @@ export const getAllProcusts = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const info = await getRepository(fm_product).find();
+		const info = await getRepository(fm_product).find({ relations: ['plans'] });
 
 		const message: string = Msg('Productos').getAll;
+
+		Resp(req, res, { message, info });
+	} catch (err) {
+		next(err);
+	}
+};
+
+export const getAllPlans = async (
+	req: Request<any, any, Api.Resp>,
+	res: Response<Api.Resp>,
+	next: NextFunction
+): Promise<void> => {
+	try {
+		const info = await getRepository(fm_plans).find();
+
+		const message: string = Msg('plane').getAll;
 
 		Resp(req, res, { message, info });
 	} catch (err) {

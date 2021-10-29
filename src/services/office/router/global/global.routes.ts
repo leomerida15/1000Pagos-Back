@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { getAllIdent_type, getAllActivity } from '../../controllers/global';
-import { getAllStatus, getAllProcusts } from '../../controllers/global/index';
+import { getAllStatus, getAllProcusts, getAllPlans } from '../../controllers/global/index';
 const global: Router = Router();
 
 // controllers
@@ -20,6 +20,10 @@ global.route('/status').get(getAllStatus);
 // ? Ident_type
 //
 global.route('/products').get(getAllProcusts);
+
+// ? Ident_type
+//
+global.route('/products/plans').get(getAllPlans);
 
 // ?
 //

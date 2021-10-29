@@ -16,6 +16,9 @@ export default class fm_quotas_calculated {
 	@JoinColumn({ name: 'id_request' })
 	id_request!: number | fm_request;
 
+	@Column()
+	initial!: number;
+
 	@Column({ name: 'quotas_total' })
 	quotas_total!: number; // =|> (total / quota)
 
