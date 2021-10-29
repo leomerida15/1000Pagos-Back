@@ -14,7 +14,7 @@
 		"build": "tsc",
 		"table": "typeorm entity:create -n",
 		"DB": "npm run typeorm migration:run",
-		"migration": "npm run typeorm migration:generate -- -n initDB"
+		"migration": "npm run typeorm migration:generate -- -n"
 	},
 	"author": "Dimas Merida",
 	"license": "ISC",

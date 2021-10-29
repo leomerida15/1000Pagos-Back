@@ -1,11 +1,11 @@
 // app's
 import services from './services';
-import { createConnection } from 'typeorm';
+import { createConnection, getConnection, getRepository } from 'typeorm';
 import contents from './db/contents';
 import { Application } from 'express';
+import fm_status_request from './db/models/fm_status_request';
 // init server
 
-//database
 
 createConnection()
 	.then(async () => {

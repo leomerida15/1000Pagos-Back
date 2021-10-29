@@ -1,19 +1,22 @@
-import fm_roles from '../models/fm_roles';
 import { getRepository } from 'typeorm';
 import fm_status_request from '../models/fm_status_request';
 
 const status_request = async (): Promise<void> => {
 	const data: fm_status_request[] = [
 		{
+			id: 1,
 			name: 'En espera',
 		},
 		{
+			id: 2,
 			name: 'En proceso',
 		},
 		{
+			id: 3,
 			name: 'aprobado',
 		},
 		{
+			id: 4,
 			name: 'diferido',
 		},
 	];
