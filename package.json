@@ -17,7 +17,7 @@
 		"migration": "npm run typeorm migration:generate -- -n",
 		"initDB": "./cli/db.sh"
 	},
-	"author": "Dimas Merida",
+	"author": "Dimas, Jesus, Aldrin, Carlos",
 	"license": "ISC",
 	"devDependencies": {
 		"@types/bcrypt": "^5.0.0",
