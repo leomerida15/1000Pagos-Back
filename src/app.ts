@@ -16,7 +16,6 @@ createConnection()
 
 			if (!process.env.npm_lifecycle_event) return false;
 			const key = process.env.npm_lifecycle_event.replace(/(serve:|start:)/i, '');
-			console.log('key', key);
 
 			return keySer === key;
 		}).app;
