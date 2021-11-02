@@ -41,7 +41,7 @@ export default class fm_request {
 	ci_referred!: string;
 
 	@Column({ name: 'nro_comp_dep' })
-	nro_comp_dep!: number;
+	nro_comp_dep!: string;
 
 	@Column({ name: 'discount' })
 	discount!: boolean;
