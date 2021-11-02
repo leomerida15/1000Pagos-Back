@@ -502,12 +502,8 @@ const ciudad = async (): Promise<void> => {
 			{ id: 519, id_estado: 25, ciudad: 'Isla de Aves', capital: false },
 			{ id: 520, id_estado: 25, ciudad: 'Isla La Blanquilla', capital: false },
 			{ id: 521, id_estado: 25, ciudad: 'Isla de Patos', capital: false },
-<<<<<<< HEAD
 			{ id: 522, id_estado: 25, ciudad: 'Islas Los Hermanos', capital: false },
 		]);
-=======
-			{ id: 522, id_estado: 25, ciudad: 'Islas Los Hermanos', capital: false }])
->>>>>>> fc0f26fc3b5c9f510c27cf03d4a051cf546004c7
 	}
 };
 
