@@ -2,7 +2,7 @@
 /node_modules
 /dist
 /client
-/src/db/base
+# /src/db/base
 /src/db/json/diferidos.json
 static
 /static

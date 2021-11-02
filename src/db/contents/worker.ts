@@ -1,8 +1,7 @@
 import { getRepository } from 'typeorm';
 import fm_worker from '../models/fm_worker';
-import Log from '../../hooks/logs';
 
-const activity = async (): Promise<void> => {
+const worker = async (): Promise<void> => {
 	const data: fm_worker[] = [
 		{
 			name: 'test',
@@ -18,8 +17,8 @@ const activity = async (): Promise<void> => {
 	];
 
 	//
-	const valid = await getRepository(fm_worker).findByIds([1]);
+	const valid = await getRepository(fm_worker).find();
 	if (!valid.length) await getRepository(fm_worker).save(data);
 };
 
-export default activity;
+export default worker;

@@ -1,16 +1,10 @@
 // app's
 import services from './services';
-import { createConnection, getConnection, getRepository } from 'typeorm';
-import contents from './db/contents';
-import { Application } from 'express';
-import fm_status_request from './db/models/fm_status_request';
+import { createConnection } from 'typeorm';
 // init server
-
 
 createConnection()
 	.then(async () => {
-		await contents();
-
 		const sv = services.find((service: any): boolean => {
 			const keySer: string = service.key;
 

@@ -10,17 +10,18 @@ import parroquia from './parroquia';
 import ciudad from './ciudad';
 import company from './company';
 import department from './department';
-import client from './client';
 import status_request from './status_request';
 import type_request from './type_request';
 import bank from './bank';
-import type_person from './client';
+import type_person from './type_person';
 import afiliados from './afiliados';
 import type_payment from './type_payment';
 import request_origin from './request_origin';
 import plans from './plans';
+import { createConnection } from 'typeorm';
+// init server
 
-export default async () => {
+createConnection().then(async () => {
 	await status_request();
 	await type_request();
 	await ident_type();
@@ -30,7 +31,6 @@ export default async () => {
 	await company();
 	await department();
 	await worker();
-	await client();
 	await Product();
 	await estado();
 	await municipio();
@@ -42,4 +42,4 @@ export default async () => {
 	await activity();
 	await request_origin();
 	await plans();
-};
+});
