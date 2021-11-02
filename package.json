@@ -18,7 +18,7 @@
 		"migration:reverse": "npm run typeorm migration:revert",
 		"migration:show": "npm run typeorm migration:show"
 	},
-	"author": "Dimas Merida",
+	"author": "Dimas, Jesus, Aldrin, Carlos",
 	"license": "ISC",
 	"devDependencies": {
 		"@types/bcrypt": "^5.0.0",
