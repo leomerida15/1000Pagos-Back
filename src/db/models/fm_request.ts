@@ -28,7 +28,7 @@ export default class fm_request {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column({ name: 'code' })
+	@Column({ name: 'code', nullable: true, default: null })
 	code!: string;
 
 	@Column({ name: 'number_post' })
