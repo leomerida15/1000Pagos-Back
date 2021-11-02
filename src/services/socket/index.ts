@@ -3,11 +3,10 @@ import express, { Application } from 'express';
 import { posRoutes, preRoutes } from './Middlewares';
 import Routes from './router';
 import http from 'http';
-import { Server } from 'socket.io';
+import socket from './router/web/index';
 
 const app: Application = express();
-const server = http.createServer(app);
-const io = new Server(server);
+const WsServer = http.createServer(app);
 
 // middleware preRoutes
 preRoutes(app);
@@ -20,9 +19,8 @@ Routes(app);
 // meddleware posRutes
 posRoutes(app);
 
-io.on('connection', (socket: any): void => {
-	console.log('a user connected');
-});
+// se levanta el servidor de sockets
+socket(WsServer);
 
 // Settings
 app.set('port', process.env.PORT_SOCKET || 6061);

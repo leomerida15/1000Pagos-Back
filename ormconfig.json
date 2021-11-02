@@ -1,9 +1,12 @@
 {	
 	"type": "mssql",
-	"host": "10.198.72.31",
-	"username": "amendoza",
-	"password": "Am1523246.",
-	"database": "milpagos", 
+	"host": "DESKTOP-TUHIIIT",
+	"username": "node",
+	"password": "node",
+	"database": "1000pagosdev", 
+	"options": { 
+		"trustServerCertificate": true
+	},
 	"maxQueryExecutionTime": "",
 	"requestTimeout": 30000000,
 	"connectionTimeout": 30000,

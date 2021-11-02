@@ -21,15 +21,17 @@ export default class fm_ciudad {
 	@JoinColumn({ name: 'id_estado' })
 	id_estado!: number;
 
-	@OneToMany(() => fm_location, (fm_location) => fm_location.id_municipio)
-	@JoinColumn({ name: 'locations' })
-	locations?: fm_location[];
 
 	@Column()
 	ciudad!: string;
 
 	@Column()
 	capital!: boolean;
+
+
+	@OneToMany(() => fm_location, (fm_location) => fm_location.id_municipio)
+	@JoinColumn({ name: 'locations' })
+	locations?: fm_location[];
 
 	@CreateDateColumn({ select: false })
 	createdAt?: Date;

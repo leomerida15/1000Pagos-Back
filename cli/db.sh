@@ -1,17 +1,5 @@
-cp -r ./src/db ../files/src/db
-# 
-cp -r ./src/db ../1000Pagos-client/src/db
-# 
+yarn migration InitDB
 
-#
-cd ../files
-git add .
-git commit -m "new db"
+yarn DB
 
-# 
-cd ../1000Pagos-client
-git add .
-git commit -m "new db"
-
-# 
-cd ../admin
+yarn start:office
