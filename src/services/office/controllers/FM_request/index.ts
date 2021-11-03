@@ -17,7 +17,7 @@ import fm_request from '../../../../db/models/fm_request';
 import fm_status from '../../../../db/models/fm_status';
 import fm_dir_pos from '../../../../db/models/fm_dir_pos';
 import fm_request_origin from '../../../../db/models/fm_request_origin';
-import { fm_valid_request } from '../../../../db/models/fm_valid_request';
+import fm_valid_request from '../../../../db/models/fm_valid_request';
 import fm_quotas_calculated from '../../../../db/models/fm_quotas_calculated';
 import fm_product from '../../../../db/models/fm_product';
 
@@ -319,14 +319,13 @@ export const FM_create = async (
 			initial,
 		}: any = req.body;
 
+		const product = await getRepository(fm_product).findOne(id_product);
+		if (!product) throw { message: 'el producto no existe suministrado' };
+
 		const bank: any = await getRepository(fm_bank).findOne({ code: bank_account_num.slice(0, 4) });
 		if (!bank) throw { message: 'el banco no existe' };
 
-		const obj = {
-			bank_account_num,
-			id_bank: bank.id,
-			ids: [id_client],
-		};
+		const obj = { bank_account_num, id_bank: bank.id, ids: [id_client] };
 
 		const valid_bank_commerce = await getRepository(fm_bank_commerce).find({
 			where: { id_client: Not(id_client) },
@@ -411,14 +410,12 @@ export const FM_create = async (
 
 		await getRepository(fm_status).save(status);
 
-		const product = await getRepository(fm_product).findOne(id_product);
-
 		await getRepository(fm_quotas_calculated).save({
 			id_type_payment,
 			id_request,
 			initial,
-			quotas_total: product?.price,
-			quotas_to_pay: product?.price ? product?.price / 50 : 0,
+			quotas_total: product.price,
+			quotas_to_pay: (product.price - (discount ? 50 : 0)) / 50,
 		});
 
 		res.status(200).json({ message: 'FM creada', info: { id: FM_save.id } });

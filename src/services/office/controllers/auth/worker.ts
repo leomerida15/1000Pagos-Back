@@ -9,7 +9,7 @@ export const worker = async (req: Request<any, Api.Resp>, res: Response, next: N
 		const { id, type }: any = req.headers.token;
 
 		if (type === 1) throw { message: 'no esta tiene permiso de consumir enta data' };
-		const worker = await getRepository(fm_worker).findOne(id);
+		const worker = await getRepository(fm_worker).findOne({ where: { id }, relations: ['roles'] });
 
 		const { password, ...info }: any = worker;
 

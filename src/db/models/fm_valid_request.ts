@@ -2,7 +2,7 @@ import { Column, Entity, OneToOne, PrimaryGeneratedColumn, JoinColumn } from 'ty
 import fm_request from './fm_request';
 
 @Entity()
-export class fm_valid_request {
+export default class fm_valid_request {
 	@PrimaryGeneratedColumn()
 	id?: number;
 

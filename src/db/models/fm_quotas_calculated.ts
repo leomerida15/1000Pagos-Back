@@ -1,6 +1,6 @@
-import { Entity, JoinColumn, PrimaryGeneratedColumn, ManyToOne, OneToOne, Column } from 'typeorm';
+import { Entity, JoinColumn, PrimaryGeneratedColumn, ManyToOne, OneToOne, Column, OneToMany } from 'typeorm';
+import fm_payment_book from './fm_payment_book';
 import fm_request from './fm_request';
-import fm_payment_method from './fm_payment_method';
 import fm_type_payment from './fm_type_payment';
 
 @Entity()
@@ -30,4 +30,8 @@ export default class fm_quotas_calculated {
 	// cuotas ya pagadas
 	@Column({ name: 'quotas_paid', default: 0 })
 	quotas_paid!: number; // =|> vienen de front y se inicializa en 0
+
+	@OneToMany(() => fm_payment_book, (fm_payment_book) => fm_payment_book.id_quotas_calculated)
+	@JoinColumn({ name: 'payments_book' })
+	payments_book?: fm_payment_book[];
 }

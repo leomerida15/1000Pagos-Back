@@ -19,8 +19,8 @@ import fm_payment_method from './fm_payment_method';
 import fm_product from './fm_product';
 import fm_request_origin from './fm_request_origin';
 import fm_status from './fm_status';
-import { fm_type_payment } from './fm_type_payment';
-import { fm_valid_request } from './fm_valid_request';
+import fm_type_payment from './fm_type_payment';
+import fm_valid_request from './fm_valid_request';
 import fm_quotas_calculat from './fm_quotas_calculated';
 
 @Entity()
