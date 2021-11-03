@@ -7,9 +7,11 @@ import {
 	ManyToOne,
 	JoinColumn,
 	OneToMany,
+	ManyToMany,
+	JoinTable,
 } from 'typeorm';
-import fm_commerce from './fm_commerce';
 import fm_request from './fm_request';
+import fm_product from './fm_product';
 
 @Entity()
 export default class fm_photo {

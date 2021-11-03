@@ -14,7 +14,7 @@ import { mail } from '../../../../helpers';
 
 // db talbes
 import fm_worker from '../../../../db/models/fm_worker';
-import Resp from '../../Middlewares/res/resp';
+import Resp from '../../Middlewares/res';
 
 // getter a Client
 export const register = async (

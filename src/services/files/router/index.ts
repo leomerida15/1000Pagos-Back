@@ -1,9 +1,12 @@
 import { Application } from 'express';
 
 // rputers
-import Milpagos from './1000pagos';
+// import auth from './auth/auth.routes';
+import RC from './RC.routes';
+import Global from './global.routes';
 
 //
 export default (app: Application) => {
-	Milpagos(app);
+	app.use('/1000pagosRC', RC);
+	app.use('/global', Global);
 };

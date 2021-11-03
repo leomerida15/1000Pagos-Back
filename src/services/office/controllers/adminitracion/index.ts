@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Api } from '../../../../interfaces';
 import Msg from '../../../../hooks/messages/index.ts';
-import Resp from '../../Middlewares/res/resp';
+import Resp from '../../Middlewares/res';
 import { getRepository, In } from 'typeorm';
 import bcrypt from 'bcrypt';
 import fm_phone from '../../../../db/models/fm_phone';
@@ -57,20 +57,24 @@ export const getFmAdministration = async (
 };
 
 export const editStatusByIdAdministration = async (
-	req: Request<Api.params, Api.Resp, { id_status_request: number; id_payment_method: number; id_type_payment: number; }>,
+	req: Request<
+		Api.params,
+		Api.Resp,
+		{ id_status_request: number; id_payment_method: number; id_type_payment: number }
+	>,
 	res: Response<Api.Resp>,
 	next: NextFunction
 ): Promise<void> => {
 	try {
 		const { id_FM }: any = req.params;
-		const { id_status_request, id_payment_method , id_type_payment } = req.body;
+		const { id_status_request, id_payment_method, id_type_payment } = req.body;
 
 		const FM: any = await getRepository(fm_request).findOne(id_FM, { relations: ['id_valid_request'] });
 		if (!FM) throw { message: 'FM no existe' };
 
 		await getRepository(fm_status).update({ id_request: id_FM, id_department: 2 }, { id_status_request });
 
-		if(id_payment_method && id_type_payment)
+		if (id_payment_method && id_type_payment)
 			await getRepository(fm_request).update({ id: id_FM }, { id_payment_method, id_type_payment });
 
 		const message: string = Msg('Status del FM').edit;

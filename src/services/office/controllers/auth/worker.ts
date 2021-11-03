@@ -1,6 +1,6 @@
 import { Response, Request, NextFunction } from 'express';
 import { Api } from 'interfaces';
-import Resp from '../../Middlewares/res/resp';
+import Resp from '../../Middlewares/res';
 import { getRepository } from 'typeorm';
 import fm_worker from '../../../../db/models/fm_worker';
 

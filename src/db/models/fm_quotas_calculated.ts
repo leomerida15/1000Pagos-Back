@@ -1,6 +1,7 @@
 import { Entity, JoinColumn, PrimaryGeneratedColumn, ManyToOne, OneToOne, Column } from 'typeorm';
-import fm_plans from './fm_plans';
 import fm_request from './fm_request';
+import fm_payment_method from './fm_payment_method';
+import fm_type_payment from './fm_type_payment';
 
 @Entity()
 export default class fm_quotas_calculated {
@@ -8,9 +9,9 @@ export default class fm_quotas_calculated {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@ManyToOne(() => fm_plans, (fm_plans) => fm_plans.quotas_calculated)
-	@JoinColumn({ name: 'id_plan' })
-	id_plan!: number | fm_plans;
+	@ManyToOne(() => fm_type_payment, (fm_type_payment) => fm_type_payment.quotas_calculateds)
+	@JoinColumn({ name: 'id_type_payment' })
+	id_type_payment!: number | fm_type_payment;
 
 	@OneToOne(() => fm_request, (fm_request) => fm_request.id_quotas_calculat)
 	@JoinColumn({ name: 'id_request' })

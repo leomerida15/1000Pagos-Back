@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import Resp from '../../Middlewares/res/resp';
+import Resp from '../../Middlewares/res';
 import { getRepository } from 'typeorm';
 import fm_payment_method from '../../../../db/models/fm_payment_method';
 import { Api } from 'interfaces';

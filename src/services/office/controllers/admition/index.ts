@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Api } from 'interfaces';
-import Resp from '../../Middlewares/res/resp';
+import Resp from '../../Middlewares/res';
 import Msg from '../../../../hooks/messages/index.ts';
 import { getRepository } from 'typeorm';
 import fm_status from '../../../../db/models/fm_status';

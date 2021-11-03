@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Api } from 'interfaces';
-import Resp from '../../Middlewares/res/resp';
+import Resp from '../../Middlewares/res';
 import fm_client from '../../../../db/models/fm_client';
 import Msg from '../../../../hooks/messages/index.ts';
 import { getConnection, getRepository, Not } from 'typeorm';
@@ -18,6 +18,8 @@ import fm_status from '../../../../db/models/fm_status';
 import fm_dir_pos from '../../../../db/models/fm_dir_pos';
 import fm_request_origin from '../../../../db/models/fm_request_origin';
 import { fm_valid_request } from '../../../../db/models/fm_valid_request';
+import fm_quotas_calculated from '../../../../db/models/fm_quotas_calculated';
+import fm_product from '../../../../db/models/fm_product';
 
 //
 export const requestOrigin = async (
@@ -287,6 +289,7 @@ export const FM_create = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
+		// validacion de data
 		validationResult(req).throw();
 
 		const {
@@ -307,7 +310,7 @@ export const FM_create = async (
 			dir_pos,
 			bank_account_num,
 			id_request_origin,
-			id_type_payment,
+			id_type_payment, //tipo de pago
 			ci_referred,
 			id_product,
 			discount,
@@ -384,8 +387,9 @@ export const FM_create = async (
 
 		const validlocation = await getRepository(fm_location).findOne(dir_pos);
 		const location = validlocation ? validlocation : await getRepository(fm_location).save(dir_pos);
+		const id_request = FM_save.id;
 
-		await getRepository(fm_dir_pos).save({ id_location: location.id, id_commerce, id_request: FM_save.id });
+		await getRepository(fm_dir_pos).save({ id_location: location.id, id_commerce, id_request });
 
 		await getRepository(fm_request).update(
 			{ id: FM_save.id },
@@ -406,6 +410,16 @@ export const FM_create = async (
 		});
 
 		await getRepository(fm_status).save(status);
+
+		const product = await getRepository(fm_product).findOne(id_product);
+
+		await getRepository(fm_quotas_calculated).save({
+			id_type_payment,
+			id_request,
+			initial,
+			quotas_total: product?.price,
+			quotas_to_pay: product?.price ? product?.price / 50 : 0,
+		});
 
 		res.status(200).json({ message: 'FM creada', info: { id: FM_save.id } });
 	} catch (err) {

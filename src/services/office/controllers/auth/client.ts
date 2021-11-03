@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import { Api } from 'interfaces';
-import Resp from '../../Middlewares/res/resp';
+import Resp from '../../Middlewares/res';
 import fm_client from '../../../../db/models/fm_client';
-import Msg from '../../hooks/messages/index.ts';
+import Msg from '../../../../hooks/messages/index.ts';
 import { getRepository } from 'typeorm';
 import bcrypt from 'bcrypt';
 import fm_phone from '../../../../db/models/fm_phone';

@@ -1,5 +1,4 @@
-const Msg = (name: string, id?: number) => {
-
+const Msg = (name: string, id?: number | string) => {
 	const base: string = ` el ${name}  ${id ? `con el id: ${id}` : ``}`;
 	const getAll: string = `todos los ${name}s`;
 	return {
