@@ -22,9 +22,6 @@ export default class fm_photo {
 	path!: string;
 
 	@Column()
-	link!: string;
-
-	@Column()
 	name!: string;
 
 	@Column()

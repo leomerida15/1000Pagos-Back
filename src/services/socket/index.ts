@@ -1,28 +1,32 @@
-// Modules
-import express, { Application } from 'express';
-import { posRoutes, preRoutes } from './Middlewares';
-import Routes from './router';
+import express from 'express';
+import { Server } from 'socket.io';
 import http from 'http';
-import socket from './router/web/index';
+import Sockets from './sockets';
+import { listDiferido, listSolic, solictudes } from './modules/diferidos';
+import { createConnection } from 'typeorm';
 
-const app: Application = express();
-const WsServer = http.createServer(app);
+const app = express();
+const server = http.createServer(app);
 
-// middleware preRoutes
-preRoutes(app);
+const httpServer = server.listen(2020);
 
-app.use(express.json());
+const io = new Server(httpServer);
 
-// Routes
-Routes(app);
+Sockets(io);
+(async () => {
+	// Base de datos
+	await createConnection();
+	console.log('DB OK');
 
-// meddleware posRutes
-posRoutes(app);
+	await listDiferido();
+	console.log('listDiferido OK');
 
-// se levanta el servidor de sockets
-socket(WsServer);
+	await listSolic();
+	console.log('listSolic OK');
 
-// Settings
-app.set('port', process.env.PORT_SOCKET || 6061);
+	// await listMu();
 
-export default app;
+	console.log(solictudes);
+})();
+
+app.use(express.static(__dirname + '/public'));

@@ -9,15 +9,16 @@ import { existsSync } from 'fs';
 import fm_request from '../../../db/models/fm_request';
 import fm_client from '../../../db/models/fm_client';
 import fm_commerce from '../../../db/models/fm_commerce';
+import fm_valid_request from '../../../db/models/fm_valid_request';
 
 export const upFileRecaudos = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
 		const { filename }: any = req.file;
-		const { legend, user } = req.body;
+		const { user } = req.body;
 		const path = await Doc.Move(filename, user);
 		const link = Doc.Route(filename, user);
 
-		const data = getRepository(fm_photo).create({ name: filename, path, link });
+		const data = getRepository(fm_photo).create({ name: filename, path });
 		const info = await getRepository(fm_photo).save(data);
 
 		res.status(200).json({ message: 'archivo subidor', info });
@@ -112,10 +113,9 @@ export const upFilesRecaudos = async (
 					: `${id_client}/${id_commerce}`;
 
 				await Doc.Move(file.filename, route_ids);
-				const link = `${process.env.HOST}static/${route_ids}/${file.filename}`;
 				const path = `static/${route_ids}/${file.filename}`;
 
-				const data = getRepository(fm_photo).create({ name: file.filename, path, link, descript });
+				const data = getRepository(fm_photo).create({ name: file.filename, path, descript });
 				const save = await getRepository(fm_photo).save(data);
 
 				info[descript] = save.id;
@@ -124,6 +124,71 @@ export const upFilesRecaudos = async (
 		await Promise.all(stop);
 
 		res.status(200).json({ message: 'archivos listos', info });
+	} catch (err) {
+		next(err);
+	}
+};
+
+// editar recaudos de diferido
+export const editRcByFm = async (
+	req: Request<Api.params, Api.Resp, fm_valid_request>,
+	res: Response,
+	next: NextFunction
+): Promise<void> => {
+	try {
+		const id_request = req.params.id;
+		let info: any = {};
+		const files: any = req.files;
+
+		const fm = await getRepository(fm_request).findOne(id_request, {
+			order: { id: 'ASC' },
+			relations: [
+				'rc_constitutive_act',
+				'rc_ref_bank',
+				'rc_rif',
+				'rc_ident_card',
+				'rc_special_contributor',
+				'rc_comp_dep',
+			],
+		});
+		if (!fm) throw { message: 'el FM suministrado no existe', code: 400 };
+
+		const { id_client, id_commerce, id_valid_request } = fm;
+
+		const description = [
+			'rc_constitutive_act',
+			'rc_ref_bank',
+			'rc_rif',
+			'rc_ident_card',
+			'rc_special_contributor',
+			'rc_comp_dep',
+		];
+
+		const stop: Promise<void>[] = files
+			.filter((file: Express.Multer.File) => {
+				const valid: string = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
+				return description.includes(valid);
+			})
+			.map(async (file: Express.Multer.File, i: number): Promise<void> => {
+				const descript: string = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
+
+				const route_ids: string = ['rc_ident_card'].includes(descript)
+					? `${id_client}`
+					: `${id_client}/${id_commerce}`;
+
+				await Doc.Move(file.filename, route_ids);
+				const path = `static/${route_ids}/${file.filename}`;
+
+				const data = getRepository(fm_photo).create({ name: file.filename, path, descript });
+				const save = await getRepository(fm_photo).save(data);
+
+				info[descript] = save.id;
+			});
+
+		await Promise.all(stop);
+
+		await getRepository(fm_request).update(id_valid_request, req.body);
+		await getRepository(fm_request).update(id_request, info);
 	} catch (err) {
 		next(err);
 	}
