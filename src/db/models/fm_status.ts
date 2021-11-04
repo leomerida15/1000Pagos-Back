@@ -20,7 +20,7 @@ export default class fm_status {
 	//fm
 	@ManyToOne(() => fm_request, (fm_request) => fm_request.status)
 	@JoinColumn({ name: 'id_request' })
-	id_request!: number | fm_request[];
+	id_request!: number | fm_request;
 
 	//depart
 	@ManyToOne(() => fm_department, (fm_department) => fm_department.status)

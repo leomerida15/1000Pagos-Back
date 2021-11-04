@@ -3,7 +3,7 @@ import Resp from '../../Middlewares/res';
 import { getRepository } from 'typeorm';
 import fm_payment_method from '../../../../db/models/fm_payment_method';
 import { Api } from 'interfaces';
-import { fm_type_payment } from '../../../../db/models/fm_type_payment';
+import fm_type_payment from '../../../../db/models/fm_type_payment';
 
 export const paymentAll = async (
 	req: Request<any, Api.Resp>,

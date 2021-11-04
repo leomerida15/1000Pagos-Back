@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import Msg from 'hooks/messages/index.ts';
-import Resp from 'services/office/Middlewares/res';
+import Msg from '../../../hooks/messages/index.ts';
+import Resp from '../../../services/office/Middlewares/res';
 import { Api } from '../../../interfaces';
 import { getRepository } from 'typeorm';
 import fm_photo from '../../../db/models/fm_photo';

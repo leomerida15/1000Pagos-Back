@@ -8,7 +8,7 @@ import {
 	editStatusByIdAdmision,
 } from '../../controllers/FM_request/index';
 
-import { getFmAdministration, editStatusByIdAdministration } from '../../controllers/adminitracion/index';
+import { getFmAdministration, editStatusByIdAdministration } from '../../controllers/adminitration/index';
 
 import { validExistingClient, validClientData, validBankAccount } from '../../Middlewares/data/auth';
 import { validCommerceData } from '../../Middlewares/data/commerce';
@@ -31,23 +31,15 @@ FM.route('/FM/client/valid').post(validExistingClient, valid_existin_client);
 FM.route('/FM/:id/commerce/valid').post(valid_exitin_commerce);
 //
 FM.route('/FM/bank/valid').post(validBankAccount, valid_bank_account);
-
-// ? entregar data GET
 //
 FM.route('/FM').get(getFm);
-
-// ? cambiar status fm
 //
 FM.route('/FM/admision/:id_FM/status').put(editStatusByIdAdmision);
-
-// ? origenes
 //
 FM.route('/FM/origins').get(requestOrigin);
-
-// ? Adminitracion
 //
 FM.route('/FM/administration').get(getFmAdministration);
-
+//
 FM.route('/FM/administration/:id_FM/status').put(editStatusByIdAdministration);
 
 export default FM;
