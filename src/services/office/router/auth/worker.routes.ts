@@ -4,7 +4,7 @@ const Worker: Router = Router();
 
 // controllers
 import { workerAll, worker, getWorkerById, editWorkerById } from '../../controllers/auth/worker';
-import { rolesAll } from '../../controllers/auth/roles';
+import { getAllRoles, editRolByWorker } from '../../controllers/auth/roles';
 
 // ? worker
 //
@@ -14,6 +14,8 @@ Worker.route('/worker/all').get(workerAll);
 //
 Worker.route('/worker/:id').get(getWorkerById).put(editWorkerById);
 //
-Worker.route('/roles/all').get(rolesAll);
+Worker.route('/roles/all').get(getAllRoles);
+//
+Worker.route('/roles/worker/:id').get(editRolByWorker);
 
 export default Worker;
