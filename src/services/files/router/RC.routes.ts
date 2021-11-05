@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { upload, uploads } from '../Middlewares/upload/index';
-import { upFileRecaudos, upFilesRecaudos } from '../controllers/1000pagos.controllers';
+import { upFilesRecaudos, editRcByFm } from '../controllers/1000pagos.controllers';
 
 const RC: Router = Router();
 
@@ -9,6 +9,6 @@ const RC: Router = Router();
 //
 RC.route('/RC').post(uploads, upFilesRecaudos);
 //
-RC.route('/RC/:id_request/diferidos').post(uploads, upFilesRecaudos);
+RC.route('/RC/admition/:id_request/diferidos').put(uploads, editRcByFm);
 //
 export default RC;

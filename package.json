@@ -15,7 +15,7 @@
 		"table": "npm run typeorm entity:create -n",
 		"migration:preData": "ts-node src/db/contents/index.ts",
 		"migration:run": "npm run typeorm migration:run",
-		"migration:create": "npm run typeorm migration:generate -- -n",
+		"migration:create": "typeorm migration:generate -- -n",
 		"migration:reverse": "npm run typeorm migration:revert",
 		"migration:show": "npm run typeorm migration:show"
 	},
