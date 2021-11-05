@@ -1,5 +1,5 @@
 import { getRepository } from 'typeorm';
-import { fm_type_payment } from '../models/fm_type_payment';
+import  fm_type_payment  from '../models/fm_type_payment';
 
 const type_payment = async (): Promise<void> => {
 	const data: fm_type_payment[] = [

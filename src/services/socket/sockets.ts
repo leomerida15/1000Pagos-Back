@@ -1,5 +1,13 @@
 import { v4 as uuid } from 'uuid';
-import { diferido, listDiferido } from './modules/diferidos';
+
+import {
+	diferido,
+	disconect,
+	listDiferido,
+	listSolic,
+	listSolicWorking,
+	solictudesTrabajando,
+} from './modules/diferidos';
 
 let notes: any[] = [];
 
@@ -15,9 +23,17 @@ export default (io: any) => {
 		socket.emit('server:loadDiferido', diferido);
 		// socket.emit('server:loadDiferido', 1);
 
-		socket.on('prueba', () => {
+		socket.on('prueba', async () => {
 			console.log('Dimas es HOLA');
-			// console.log(diferido);
+			await listSolic(socket);
+			// console.log(solictudesTrabajando);
+		});
+
+		socket.on('Trabanjando_Solic', (user: any, callback: any) => {
+			console.log('DIferidos-Solic');
+			// console.log(solictudesTrabajando.length);
+
+			callback(listSolicWorking(socket.id, user));
 		});
 
 		socket.on('cliente:loadDiferidos', async () => {
@@ -63,6 +79,9 @@ export default (io: any) => {
 
 		socket.on('disconnect', () => {
 			console.log(socket.id, 'disconnected');
+			console.log('');
+
+			disconect(socket.id);
 		});
 	});
 };
