@@ -1,6 +1,7 @@
 // app's
 import services from './services';
-import { createConnection } from 'typeorm';
+import { createConnection, getRepository } from 'typeorm';
+import fm_status from './db/models/fm_status';
 // init server
 
 createConnection()

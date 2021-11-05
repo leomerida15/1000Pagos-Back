@@ -20,6 +20,10 @@ export interface pCiudad {
 	id_estado: string | number;
 }
 
+export interface pFM {
+	id_request: string | number;
+}
+
 export interface RC {
 	id_client: string;
 	id_commerce: string;

@@ -131,13 +131,12 @@ export const upFilesRecaudos = async (
 
 // editar recaudos de diferido
 export const editRcByFm = async (
-	req: Request<Api.params, Api.Resp, fm_valid_request>,
+	req: Request<Api.pFM, Api.Resp, fm_valid_request>,
 	res: Response,
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const id_request = req.params.id;
-		let info: any = {};
+		const { id_request } = req.params;
 		const files: any = req.files;
 
 		const fm = await getRepository(fm_request).findOne(id_request, {
@@ -164,8 +163,11 @@ export const editRcByFm = async (
 			'rc_comp_dep',
 		];
 
+		let info: any = {};
+		let valids: any = {};
+
 		const stop: Promise<void>[] = files
-			.filter((file: Express.Multer.File) => {
+			.filter((file: Express.Multer.File): boolean => {
 				const valid: string = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
 				return description.includes(valid);
 			})
@@ -183,11 +185,12 @@ export const editRcByFm = async (
 				const save = await getRepository(fm_photo).save(data);
 
 				info[descript] = save.id;
+				valids[descript.replace('rc_', 'valid_')] = '';
 			});
 
 		await Promise.all(stop);
 
-		await getRepository(fm_request).update(id_valid_request, req.body);
+		await getRepository(fm_request).update(id_valid_request, valids);
 		await getRepository(fm_request).update(id_request, info);
 	} catch (err) {
 		next(err);
