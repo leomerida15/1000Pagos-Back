@@ -9,4 +9,5 @@ static
 yarn.lock
 package-lock.json
 ormconfig.json
+.vscode
 # /src/hook`
