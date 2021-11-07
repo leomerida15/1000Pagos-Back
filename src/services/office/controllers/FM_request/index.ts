@@ -351,12 +351,14 @@ export const FM_create = async (
 
 		const quotas_calculated = await getRepository(fm_quotas_calculated).save({
 			id_type_payment,
-			id_request: 1,
 			initial: id_type_payment === 2 ? initial : product.price * number_post,
 			quotas_total: id_type_payment === 2 ? (product.price * number_post) / product.quota : 1,
 			quotas_to_pay:
 				id_type_payment === 2 ? (product.price * number_post - (discount ? 50 : 0) - initial) / product.quota : 0,
 		});
+
+		console.log('valid',quotas_calculated);
+		
 
 		const FM_save = await getRepository(fm_request).save({
 			number_post,

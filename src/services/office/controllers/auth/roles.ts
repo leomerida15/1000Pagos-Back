@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import { Api } from 'interfaces';
 import Resp from '../../Middlewares/res';
-import { getRepository } from 'typeorm';
+import { getConnection, getRepository } from 'typeorm';
 import fm_roles from '../../../../db/models/fm_roles';
 import fm_worker from '../../../../db/models/fm_worker';
 import Msg from '../../../../hooks/messages/index.ts';
@@ -27,11 +27,27 @@ export const editRolByWorker = async (
 ): Promise<void> => {
 	try {
 		const { id } = req.params;
-		const info = await getRepository(fm_worker).update(id, req.body);
+		const {roles}=req.body;
+
+		console.log('id',id);
+		console.log('roles',roles);
+		
+		
+
+		if(!roles) throw {message:'no envio roles para comparar ni editar',code:400}
+		
+		await getConnection().query('DELETE FROM [MilPagos].[dbo].[fm_worker_roles_fm_roles] WHERE fmWorkerId ='+id);
+
+		const queryIds = roles.map((rol)=> `INSERT INTO [dbo].[fm_worker_roles_fm_roles] ([fmWorkerId] ,[fmRolesId]) VALUES (${id} ,${rol.id})`).join(' ');
+
+		console.log('queryIds',queryIds);
+		
+
+		await getConnection().query(queryIds)
 
 		const message: string = Msg('trabajador').edit;
 
-		Resp(req, res, { message, info });
+		Resp(req, res, { message });
 	} catch (err) {
 		next(err);
 	}

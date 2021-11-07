@@ -16,6 +16,6 @@ Worker.route('/worker/:id').get(getWorkerById).put(editWorkerById);
 //
 Worker.route('/roles/all').get(getAllRoles);
 //
-Worker.route('/roles/worker/:id').get(editRolByWorker);
+Worker.route('/roles/worker/:id').put(editRolByWorker);
 
 export default Worker;

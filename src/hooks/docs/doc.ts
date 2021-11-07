@@ -182,5 +182,6 @@ export const Path = (route: any) => {
 };
 //
 export const replace = async (name: any, newName: any): Promise<any> => {
+	await Delete(`${base}/${newName}`)
 	await fs.rename(`${base}/${name}`, `${base}/${newName}`);
 };

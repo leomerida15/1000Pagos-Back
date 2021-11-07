@@ -13,6 +13,7 @@ export default class fm_quotas_calculated {
 	@JoinColumn({ name: 'id_type_payment' })
 	id_type_payment!: number | fm_type_payment;
 
+	@Column({ nullable: true, default: null  })
 	@OneToOne(() => fm_request, (fm_request) => fm_request.id_quotas_calculat)
 	@JoinColumn({ name: 'id_request' })
 	id_request!: number | fm_request;

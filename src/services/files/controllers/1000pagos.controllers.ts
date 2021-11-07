@@ -10,6 +10,7 @@ import fm_request from '../../../db/models/fm_request';
 import fm_client from '../../../db/models/fm_client';
 import fm_commerce from '../../../db/models/fm_commerce';
 import fm_valid_request from '../../../db/models/fm_valid_request';
+import fm_status from '../../../db/models/fm_status';
 
 export const upFileRecaudos = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 	try {
@@ -138,6 +139,9 @@ export const editRcByFm = async (
 		const { id_request } = req.params;
 		const files: any = req.files;
 
+		console.log('files',req.files);
+		
+
 		const fm: any = await getRepository(fm_request).findOne(id_request, {
 			order: { id: 'ASC' },
 			relations: [
@@ -172,14 +176,30 @@ export const editRcByFm = async (
 			.map(async (file: Express.Multer.File, i: number): Promise<void> => {
 				const descript: any = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
 
-				await Doc.replace(file.filename, fm[descript].path);
+				await Doc.Delete(fm[descript].path);
+
+				const route_ids: string = ['rc_ident_card'].includes(descript)
+				? `${id_client}`
+				: `${id_client}/${id_commerce}`;
+
+				await Doc.Move(file.filename, route_ids);
+
+				const path = `static/${route_ids}/${file.filename}`;
+
+				console.log('path',path);
+				
+
+				console.log('fm[descript].id',fm[descript].id);
+				
+
+				await getRepository(fm_photo).update(fm[descript].id,{ path });
 
 				valids[descript.replace('rc_', 'valid_')] = '';
 			});
 
 		await Promise.all(stop);
 
-		await getRepository(fm_request).update(id_valid_request, valids);
+		await getRepository(fm_status).update({id_request: fm.id,id_department:1}, {id_status_request: 3});
 
 		res.status(200).json({ message: 'imagenes editadas' });
 	} catch (err) {

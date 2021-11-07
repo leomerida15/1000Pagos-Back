@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "e10f1c6b-703d-41b4-aeec-265515c8c392",
+		"_postman_id": "18e6bca3-7d98-44d9-a367-dbfb99ac96c7",
 		"name": "back-aprobaiones",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -353,6 +353,48 @@
 							"path": [
 								"roles",
 								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "rolesedit by worker",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6MiwiaWF0IjoxNjM2MzE2ODQzLCJleHAiOjE2MzYzMTg2NDN9.XuriPCeZI4Po3EZcmcYHYuh8OSGeczt7LtdYeQ9RtbQ",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"roles\":[\r\n        {\"id\":1,\"name\":\"aa\"}\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:5051/roles/worker/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5051",
+							"path": [
+								"roles",
+								"worker",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "2"
+								}
 							]
 						}
 					},
@@ -878,6 +920,51 @@
 							"path": [
 								"1000pagosRC",
 								"RC"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edir FM_RC_IMAGENES",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidHlwZSI6MiwiaWF0IjoxNjM0ODQxNDU4LCJleHAiOjE2MzQ4NDMyNTh9.ciojAu9vz6vrXo6LM7KhQedyUcuohlftCIP69x-i8Fw",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": "/C:/Users/amendoza/Pictures/1000pago/Logo-1000Pagos-Horizontal.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:6060/1000pagosRC/RC/admition/:id_request/diferidos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "6060",
+							"path": [
+								"1000pagosRC",
+								"RC",
+								"admition",
+								":id_request",
+								"diferidos"
+							],
+							"variable": [
+								{
+									"key": "id_request",
+									"value": "1"
+								}
 							]
 						}
 					},
