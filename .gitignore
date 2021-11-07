@@ -4,7 +4,6 @@
 /client
 /src/db/base
 /src/db/json/diferidos.json
-/src/hooks/docs/Doc.ts
 static
 /static
 yarn.lock
