@@ -21,11 +21,11 @@ Sockets(io);
 	console.log('DB OK');
 
 	//Lista de diferidos
-	await listDiferido();
+	if (solictudes.length <= 5) await listDiferido();
 	console.log('listDiferido OK');
 
 	//Lista de Solicitudes
-	await listSolic(io);
+	await listSolic();
 	console.log('listSolic OK');
 
 	// await listMu();

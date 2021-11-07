@@ -1,5 +1,5 @@
 import fm_status from '../../../db/models/fm_status';
-import { getConnection, getRepository } from 'typeorm';
+import { getConnection, getRepository, Any, Not } from 'typeorm';
 
 export let diferido: any[] = [];
 export let diferidoTranbajando: any[] = [];
@@ -53,84 +53,113 @@ export const oneDIferido = async (id_request: any) => {
 	}
 };
 
-export const listSolicWorking = (id_conectado: any, user: any) => {
+export const listSolicWorking = async (id_conectado: any, user: any) => {
+	console.log('solictudes.length', solictudes.length);
+	if (solictudes.length < 3) await listSolic();
 	if (solictudes.length !== 0) {
+		const obj = solictudesTrabajando.find((items) => items.id_conectado === id_conectado);
+		if (obj) return obj;
+
+		console.log('solictudes', solictudes.length);
+
 		const working = solictudes.shift();
 
-		solictudesTrabajando.push({ id_conectado, ...user, working });
+		console.log('solictudes pos', solictudes.length);
 
-		// console.log(solictudesTrabajando);
-		return solictudesTrabajando;
+		// working.id_conectado = id_conectado;
+		// working.id_user = user.id;
+		// working.email_user = user.email;
+		// working.last_user = user.last_name;
+		// working.name_user = user.name;
+
+		// solictudesTrabajando.unshift(working);
+		solictudesTrabajando.unshift({ id_conectado, ...user, working });
+		// const obj2 = solictudesTrabajando.find((items) => items.id_conectado === id_conectado);
+		console.log(working);
+		return working;
 	}
 };
 
 export const disconect = (id_sockect: any) => {
-	solictudesTrabajando = solictudesTrabajando.filter((item) => {
-		// console.log('item.id_conectado != id_sockect');
-		// console.log(`${item.id_conectado} != ${id_sockect}`);
-		// console.log(item.id_conectado != id_sockect);
+	console.log('antes del filter ', solictudesTrabajando.length);
+	console.log('solictudes', solictudes.length);
 
-		return item.id_conectado != id_sockect;
-	});
+	solictudesTrabajando = solictudesTrabajando
+		.filter((item) => {
+			console.log('item.id_conectado != id_sockect');
+			console.log(`${item.id_conectado} != ${id_sockect}`);
+			console.log(item.id_conectado != id_sockect);
 
-	console.log(solictudesTrabajando.length);
+			if (item.id_conectado != id_sockect) return true;
+
+			solictudes.unshift(item);
+			return false;
+		})
+		.map((item) => item.working);
+
+	console.log('pos del filter ', solictudesTrabajando.length);
+	console.log('pos solictudes', solictudes.length);
 };
 
-export const listSolic = async (socket: any) => {
+export const listSolic = async () => {
 	// const query = await getConnection().query(
 	// 	/*sql*/ `SELECT * FROM [MilPagos].[dbo].[fm_status] where id_department = 1 and id_status_request = 1`
 	// );
-	if (diferido.length <= 5) {
-		const query = await getRepository(fm_status).find({
-			where: { id_status_request: 1, id_department: 1 },
-			take: 10,
-			order: {
-				id: 'ASC',
-			},
-			relations: [
-				'id_request',
-				'id_request.id_client',
-				'id_request.id_client.id_location',
-				'id_request.id_client.id_location.id_estado',
-				'id_request.id_client.id_location.id_municipio',
-				'id_request.id_client.id_location.id_ciudad',
-				'id_request.id_client.id_location.id_parroquia',
-				'id_request.id_client.id_ident_type',
-				'id_request.id_valid_request',
-				'id_request.dir_pos',
-				'id_request.dir_pos.id_location',
-				'id_request.rc_constitutive_act',
-				'id_request.rc_special_contributor',
-				'id_request.rc_ref_bank',
-				'id_request.rc_comp_dep',
-				'id_request.rc_rif',
-				'id_request.rc_ident_card',
-				'id_request.id_payment_method',
-				'id_request.id_type_payment',
-				'id_request.id_commerce',
-				'id_request.id_commerce.id_ident_type',
-				'id_request.id_commerce.id_activity',
-				'id_request.id_commerce.id_location',
-				'id_request.id_commerce.id_location.id_estado',
-				'id_request.id_commerce.id_location.id_municipio',
-				'id_request.id_commerce.id_location.id_ciudad',
-				'id_request.id_commerce.id_location.id_parroquia',
-				'id_request.id_commerce.banks',
-				'id_request.id_product',
-				'id_request.id_type_request',
-				'id_request.id_request_origin',
-			],
-		});
 
-		if (!query) throw { message: 'no existen solicitudes en espera', code: 400 };
+	let ids = [
+		...solictudes.map((solictude) => solictude.id),
+		...solictudesTrabajando.map((solictude) => solictude.id),
+	];
 
-		const info: any = query.map((item) => item.id_request);
+	const query = await getRepository(fm_status).find({
+		where: { id_status_request: 1, id_department: 1, id_request: Not(ids) },
+		take: 10,
+		order: {
+			id: 'ASC',
+		},
+		relations: [
+			'id_request',
+			'id_request.id_client',
+			'id_request.id_client.id_location',
+			'id_request.id_client.id_location.id_estado',
+			'id_request.id_client.id_location.id_municipio',
+			'id_request.id_client.id_location.id_ciudad',
+			'id_request.id_client.id_location.id_parroquia',
+			'id_request.id_client.id_ident_type',
+			'id_request.id_valid_request',
+			'id_request.dir_pos',
+			'id_request.dir_pos.id_location',
+			'id_request.rc_constitutive_act',
+			'id_request.rc_special_contributor',
+			'id_request.rc_ref_bank',
+			'id_request.rc_comp_dep',
+			'id_request.rc_rif',
+			'id_request.rc_ident_card',
+			'id_request.id_payment_method',
+			'id_request.id_type_payment',
+			'id_request.id_commerce',
+			'id_request.id_commerce.id_ident_type',
+			'id_request.id_commerce.id_activity',
+			'id_request.id_commerce.id_location',
+			'id_request.id_commerce.id_location.id_estado',
+			'id_request.id_commerce.id_location.id_municipio',
+			'id_request.id_commerce.id_location.id_ciudad',
+			'id_request.id_commerce.id_location.id_parroquia',
+			'id_request.id_commerce.banks',
+			'id_request.id_product',
+			'id_request.id_type_request',
+			'id_request.id_request_origin',
+		],
+	});
 
-		solictudes = info;
-		// diferidos = query.map((item) => item.id_request);
+	if (!query) throw { message: 'no existen solicitudes en espera', code: 400 };
 
-		return solictudes;
-	}
+	const info: any = query.map((item) => item.id_request);
+
+	solictudes.push(info);
+	// diferidos = query.map((item) => item.id_request);
+
+	return solictudes;
 };
 
 export const getDiferido = async (id_request: number) => {
@@ -168,7 +197,7 @@ export const getDiferido = async (id_request: number) => {
 		id_valid_request,
 	};
 
-	console.log('resp', resp);
+	// console.log('resp', resp);
 
 	return resp;
 };

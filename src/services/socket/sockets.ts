@@ -17,24 +17,19 @@ export default (io: any) => {
 		// console.log(socket.handshake.url);
 		console.log('nuevo socket connectado:', socket.id);
 
-		// Send all messages to the client
-		// socket.emit('server:loadnotes', notes);
-		// io.emit('server:loadDiferido', diferidos);
-		// console.log(diferidos);
 		socket.emit('server:loadDiferido', diferido);
-		// socket.emit('server:loadDiferido', 1);
 
 		socket.on('prueba', async () => {
 			console.log('Dimas es HOLA');
-			await listSolic(socket);
+			// await listSolic();
 			// console.log(solictudesTrabajando);
 		});
 
-		socket.on('Trabanjando_Solic', (user: any, callback: any) => {
+		socket.on('Trabanjando_Solic', async (user: any, callback: any) => {
 			console.log('DIferidos-Solic');
 			// console.log(solictudesTrabajando.length);
 
-			callback(listSolicWorking(socket.id, user));
+			callback(await listSolicWorking(socket.id, user));
 		});
 
 		socket.on('cliente:loadDiferidos', async () => {
@@ -44,11 +39,6 @@ export default (io: any) => {
 
 			// console.log(diferido);
 		});
-
-		// Send all diferidos
-
-		// Send all User Mu
-		socket.emit('server:UserMu');
 
 		socket.on('client:newnote', (newNote: any) => {
 			const note = { ...newNote, id: uuid() };
@@ -86,8 +76,8 @@ export default (io: any) => {
 		});
 
 		socket.on('Editar_diferido', async (id_request: number, callback: any) => {
-			console.log('id_request', id_request);
-			console.log('');
+			// console.log('id_request', id_request);
+			// console.log('');
 
 			const diferido = await getDiferido(id_request);
 			callback(diferido);
