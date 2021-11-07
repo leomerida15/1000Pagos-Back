@@ -24,6 +24,58 @@ export const listDiferido = async () => {
 	return diferido;
 };
 
+export const oneDIferido = async (id_request: any) => {
+	// const query = await getConnection().query(
+	// 	/*sql*/ `SELECT * FROM [MilPagos].[dbo].[fm_status] where id_department = 1 and id_status_request = 1`
+	// );
+	if (diferido.length <= 5) {
+		const query = await getRepository(fm_status).findOne({
+			where: { id_request },
+			relations: [
+				'id_request',
+				'id_request.id_client',
+				'id_request.id_client.id_ident_type',
+				'id_request.id_valid_request',
+				'id_request.rc_constitutive_act',
+				'id_request.rc_special_contributor',
+				'id_request.rc_ref_bank',
+				'id_request.rc_comp_dep',
+				'id_request.rc_rif',
+				'id_request.rc_ident_card',
+			],
+		});
+
+		if (!query) throw { message: 'no existen solicitudes en espera', code: 400 };
+
+		diferidoTranbajando.push(query.id_request);
+
+		return diferidoTranbajando;
+	}
+};
+
+export const listSolicWorking = (id_conectado: any, user: any) => {
+	if (solictudes.length !== 0) {
+		const working = solictudes.shift();
+
+		solictudesTrabajando.push({ id_conectado, ...user, working });
+
+		// console.log(solictudesTrabajando);
+		return solictudesTrabajando;
+	}
+};
+
+export const disconect = (id_sockect: any) => {
+	solictudesTrabajando = solictudesTrabajando.filter((item) => {
+		// console.log('item.id_conectado != id_sockect');
+		// console.log(`${item.id_conectado} != ${id_sockect}`);
+		// console.log(item.id_conectado != id_sockect);
+
+		return item.id_conectado != id_sockect;
+	});
+
+	console.log(solictudesTrabajando.length);
+};
+
 export const listSolic = async (socket: any) => {
 	// const query = await getConnection().query(
 	// 	/*sql*/ `SELECT * FROM [MilPagos].[dbo].[fm_status] where id_department = 1 and id_status_request = 1`
@@ -81,25 +133,42 @@ export const listSolic = async (socket: any) => {
 	}
 };
 
-export const listSolicWorking = (id_conectado: any, user: any) => {
-	if (solictudes.length !== 0) {
-		const working = solictudes.shift();
-
-		solictudesTrabajando.push({ id_conectado, ...user, working });
-
-		// console.log(solictudesTrabajando);
-		return solictudesTrabajando;
-	}
-};
-
-export const disconect = (id_sockect: any) => {
-	solictudesTrabajando = solictudesTrabajando.filter((item) => {
-		console.log('item.id_conectado != id_sockect');
-		console.log(`${item.id_conectado} != ${id_sockect}`);
-		console.log(item.id_conectado != id_sockect);
-
-		return item.id_conectado != id_sockect;
+export const getDiferido = async (id_request: number) => {
+	let query: any = await getRepository(fm_status).findOne({
+		where: { id_request },
+		relations: [
+			'id_request',
+			'id_request.id_valid_request',
+			'id_request.rc_constitutive_act',
+			'id_request.rc_special_contributor',
+			'id_request.rc_ref_bank',
+			'id_request.rc_comp_dep',
+			'id_request.rc_rif',
+			'id_request.rc_ident_card',
+		],
 	});
 
-	console.log(solictudesTrabajando.length);
+	if (!query) throw { message: 'el id soministrado no extie', code: 400 };
+
+	let id_valid_request: any = {};
+	Object.keys(query.id_request.id_valid_request)
+		.filter((key) => {
+			return query.id_request.id_valid_request[key].length;
+		})
+		.forEach((key) => (id_valid_request[key] = query.id_request.id_valid_request[key]));
+
+	let imgs: any = {};
+
+	Object.keys(id_valid_request)
+		.map((valid) => valid.replace('valid_', 'rc_'))
+		.forEach((key) => (imgs[key] = query.id_request[key]));
+
+	const resp = {
+		...imgs,
+		id_valid_request,
+	};
+
+	console.log('resp', resp);
+
+	return resp;
 };

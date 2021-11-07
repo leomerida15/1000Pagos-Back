@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import {
 	diferido,
 	disconect,
+	getDiferido,
 	listDiferido,
 	listSolic,
 	listSolicWorking,
@@ -82,6 +83,14 @@ export default (io: any) => {
 			console.log('');
 
 			disconect(socket.id);
+		});
+
+		socket.on('Editar_diferido', async (id_request: number, callback: any) => {
+			console.log('id_request', id_request);
+			console.log('');
+
+			const diferido = await getDiferido(id_request);
+			callback(diferido);
 		});
 	});
 };
