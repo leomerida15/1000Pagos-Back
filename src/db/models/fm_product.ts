@@ -32,6 +32,9 @@ export default class fm_product {
 	@JoinTable()
 	photos?: fm_photo[];
 
+	@Column({ name: 'quota', default: 50 })
+	quota!: number;
+
 	@OneToMany(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_product)
 	@JoinColumn({ name: 'dir_pos' })
 	dir_pos?: number;

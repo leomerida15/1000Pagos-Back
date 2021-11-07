@@ -331,12 +331,6 @@ export const FM_create = async (
 			where: { id_client: Not(id_client) },
 		});
 
-		// const valid_bank_commerce = await getConnection()
-		// 	.createQueryBuilder()
-		// 	.from(fm_bank_commerce, 'fm_bank_commerce')
-		// 	.where('fm_bank_commerce.id_client NOT IN (:ids)', obj)
-		// 	.getMany();
-
 		if (valid_bank_commerce.length) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		else {
 			await getRepository(fm_bank_commerce).save({
@@ -355,7 +349,16 @@ export const FM_create = async (
 			valid_ident_card: '',
 		});
 
-		const FM = await getRepository(fm_request).save({
+		const quotas_calculated = await getRepository(fm_quotas_calculated).save({
+			id_type_payment,
+			id_request: 1,
+			initial: id_type_payment === 2 ? initial : product.price * number_post,
+			quotas_total: id_type_payment === 2 ? (product.price * number_post) / product.quota : 1,
+			quotas_to_pay:
+				id_type_payment === 2 ? (product.price * number_post - (discount ? 50 : 0) - initial) / product.quota : 0,
+		});
+
+		const FM_save = await getRepository(fm_request).save({
 			number_post,
 			bank_account_num,
 			rc_constitutive_act,
@@ -380,9 +383,10 @@ export const FM_create = async (
 			discount,
 			nro_comp_dep,
 			pagadero,
+			id_quotas_calculat: quotas_calculated.id,
 		});
 
-		const FM_save = await getRepository(fm_request).save(FM);
+		await getRepository(fm_quotas_calculated).update({ id: quotas_calculated.id }, { id_request: FM_save.id });
 
 		const validlocation = await getRepository(fm_location).findOne(dir_pos);
 		const location = validlocation ? validlocation : await getRepository(fm_location).save(dir_pos);
@@ -401,22 +405,11 @@ export const FM_create = async (
 			const id_request = FM_save.id;
 			const id_department = department.id;
 			const id_status_request = 1;
-			return {
-				id_request,
-				id_department,
-				id_status_request,
-			};
+			//
+			return { id_request, id_department, id_status_request };
 		});
 
 		await getRepository(fm_status).save(status);
-
-		await getRepository(fm_quotas_calculated).save({
-			id_type_payment,
-			id_request,
-			initial,
-			quotas_total: product.price,
-			quotas_to_pay: (product.price - (discount ? 50 : 0)) / 50,
-		});
 
 		res.status(200).json({ message: 'FM creada', info: { id: FM_save.id } });
 	} catch (err) {

@@ -49,7 +49,7 @@ export default class fm_request {
 	@Column({ name: 'pagadero' })
 	pagadero!: boolean; //paga despues
 
-	@OneToOne(() => fm_quotas_calculat, (fm_quotas_calculat) => fm_quotas_calculat.id_request)
+	@OneToOne(() => fm_quotas_calculat)
 	@JoinColumn({ name: 'id_quotas_calculat' })
 	id_quotas_calculat!: number | fm_quotas_calculat;
 

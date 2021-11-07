@@ -16,7 +16,6 @@ export const upFileRecaudos = async (req: Request, res: Response, next: NextFunc
 		const { filename }: any = req.file;
 		const { user } = req.body;
 		const path = await Doc.Move(filename, user);
-		const link = Doc.Route(filename, user);
 
 		const data = getRepository(fm_photo).create({ name: filename, path });
 		const info = await getRepository(fm_photo).save(data);
@@ -139,7 +138,7 @@ export const editRcByFm = async (
 		const { id_request } = req.params;
 		const files: any = req.files;
 
-		const fm = await getRepository(fm_request).findOne(id_request, {
+		const fm: any = await getRepository(fm_request).findOne(id_request, {
 			order: { id: 'ASC' },
 			relations: [
 				'rc_constitutive_act',
@@ -163,7 +162,6 @@ export const editRcByFm = async (
 			'rc_comp_dep',
 		];
 
-		let info: any = {};
 		let valids: any = {};
 
 		const stop: Promise<void>[] = files
@@ -172,26 +170,18 @@ export const editRcByFm = async (
 				return description.includes(valid);
 			})
 			.map(async (file: Express.Multer.File, i: number): Promise<void> => {
-				const descript: string = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
+				const descript: any = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
 
-				const route_ids: string = ['rc_ident_card'].includes(descript)
-					? `${id_client}`
-					: `${id_client}/${id_commerce}`;
+				await Doc.replace(file.filename, fm[descript].path);
 
-				await Doc.Move(file.filename, route_ids);
-				const path = `static/${route_ids}/${file.filename}`;
-
-				const data = getRepository(fm_photo).create({ name: file.filename, path, descript });
-				const save = await getRepository(fm_photo).save(data);
-
-				info[descript] = save.id;
 				valids[descript.replace('rc_', 'valid_')] = '';
 			});
 
 		await Promise.all(stop);
 
 		await getRepository(fm_request).update(id_valid_request, valids);
-		await getRepository(fm_request).update(id_request, info);
+
+		res.status(200).json({ message: 'imagenes editadas' });
 	} catch (err) {
 		next(err);
 	}
