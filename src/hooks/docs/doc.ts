@@ -7,7 +7,6 @@ import fs from 'fs/promises';
 import path from 'path';
 import { host } from '../host';
 import { v4 as uuidv4 } from 'uuid';
-import { existsSync } from 'fs';
 // import svg2png from 'svg2png';
 
 export const base: string = path.resolve('static');
@@ -29,7 +28,9 @@ export const ToFile: any = async (file: string | string[], title: string): Promi
 };
 //
 export const fileExistin = async (folder: string) => {
-	if (!existsSync(`${base}/${folder}`)) {
+	try {
+		await fs.lstat(`${base}/${folder}`);
+	} catch (err) {
 		await fs.mkdir(`${base}/${folder}`);
 	}
 };
@@ -178,8 +179,4 @@ export const Path = (route: any) => {
 	const direction: string = path.join(base, split);
 
 	return direction;
-};
-//
-export const replace = async (name: any, newName: any): Promise<any> => {
-	await fs.rename(`${base}/${name}`, `${base}/${newName}`);
 };
