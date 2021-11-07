@@ -16,7 +16,6 @@ export const upFileRecaudos = async (req: Request, res: Response, next: NextFunc
 		const { filename }: any = req.file;
 		const { user } = req.body;
 		const path = await Doc.Move(filename, user);
-		const link = Doc.Route(filename, user);
 
 		const data = getRepository(fm_photo).create({ name: filename, path });
 		const info = await getRepository(fm_photo).save(data);
