@@ -13,4 +13,5 @@ ormconfig.json
 dockergile
 .env
 .vscode
+.gitlab-ci.yml
 # /src/hook`
