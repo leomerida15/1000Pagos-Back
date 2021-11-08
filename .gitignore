@@ -1,16 +1,12 @@
 # 
 /node_modules
-/dist
-/client
 /src/db/base
-/src/db/json/diferidos.json
 static
-/static
 yarn.lock
 package-lock.json
 ormconfig.json
 .dockerignore
-dockergile
+dockerfile
 .env
 .vscode
 .gitlab-ci.yml
