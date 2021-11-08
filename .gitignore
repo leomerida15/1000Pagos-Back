@@ -9,5 +9,8 @@ static
 yarn.lock
 package-lock.json
 ormconfig.json
+.dockerignore
+dockergile
+.env
 .vscode
 # /src/hook`

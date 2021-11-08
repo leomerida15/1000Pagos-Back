@@ -8,7 +8,7 @@ import { createConnection } from 'typeorm';
 const app = express();
 const server = http.createServer(app);
 
-const httpServer = server.listen(777);
+const httpServer = server.listen(process.env.PORT_SOCKET || 777);
 
 const io = new Server(httpServer);
 
