@@ -10,7 +10,7 @@ import { Application } from 'express';
 /** Middleware PreRoutes */
 export const preRoutes: any = (app: Application): void => {
 	app.use(cors);
-	app.use(token);
+	// app.use(token);
 };
 
 /** Middleware PostRoutes */

@@ -29,7 +29,7 @@ export default class fm_photo {
 
 	@OneToMany(() => fm_request, (fm_request) => fm_request)
 	@JoinColumn()
-	requests!: fm_request;
+	requests?: fm_request;
 
 	@CreateDateColumn({ select: false })
 	createdAt?: Date;

@@ -8,5 +8,5 @@ import Global from './global.routes';
 //
 export default (app: Application) => {
 	app.use('/1000pagosRC', RC);
-	app.use('/global', Global);
+	app.use(Global);
 };

@@ -1,3 +1,3 @@
-const list: string[] = ['log', 'commerce', 'product', 'user'];
+const list: string[] = [''];
 
 export default list;

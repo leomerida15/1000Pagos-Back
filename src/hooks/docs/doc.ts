@@ -7,6 +7,12 @@ import fs from 'fs/promises';
 import path from 'path';
 import { host } from '../host';
 import { v4 as uuidv4 } from 'uuid';
+
+// @ts-expect-error
+import { default as pdfConverter } from 'pdf-poppler';
+
+import Jimp from 'jimp';
+
 // import svg2png from 'svg2png';
 
 export const base: string = path.resolve('static');
@@ -182,6 +188,40 @@ export const Path = (route: any) => {
 };
 //
 export const replace = async (name: any, newName: any): Promise<any> => {
-	await Delete(`${base}/${newName}`)
+	await Delete(`${base}/${newName}`);
 	await fs.rename(`${base}/${name}`, `${base}/${newName}`);
+};
+//
+
+export const toConvert = (to: string) => {};
+//
+export const fromConvert = (from: string): any => {};
+//
+export const Convert = async (file: any, to: string): Promise<void> => {
+	// console.log('file', file);
+
+	const from: string = file.split('.')[file.split('.').length - 1];
+	const filePath: string = path.join(base, file);
+
+	if (from === 'pdf') {
+		let option = {
+			format: 'jpg',
+			out_dir: base,
+			out_prefix: path.basename(filePath, path.extname(filePath)),
+			page: 1,
+		};
+		// option.out_dir value is the path where the image will be saved
+
+		await pdfConverter.convert(filePath, option);
+	} else if (from == 'png') {
+		// open a file called "lenna.png"
+		const lenna = await Jimp.read(filePath);
+		lenna
+			.resize(256, 256) // resize
+			.quality(60) // set JPEG quality
+			.greyscale() // set greyscale
+			.write(filePath.replace('.png', '.jpg')); // save
+	}
+
+	await Delete(file);
 };
