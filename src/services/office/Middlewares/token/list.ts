@@ -7,7 +7,6 @@ const list: string[] = [
 	'worker',
 	'Location',
 	'FM',
-	'ident_type',
 	'activity',
 	'status',
 	'products',

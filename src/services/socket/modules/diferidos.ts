@@ -1,12 +1,12 @@
 import fm_status from '../../../db/models/fm_status';
 import { getConnection, getRepository, Any, Not } from 'typeorm';
 
-export let diferido: any[] = [];
-export let diferidoTranbajando: any[] = [];
+export let diferidos: any[] = [];
+export let diferidosTranbajando: any[] = [];
 export let solictudes: any[] = [];
 export let solictudesTrabajando: any[] = [];
 
-export const listDiferido = async () => {
+export const listdiferidos = async () => {
 	const query = await getConnection()
 		.query(/*sql*/ `SELECT r.id ,r.code, cc.name as nameComer, c.name as nameClient, c.last_name as lastnameClient, c.email , i.name as identTypeComer, cc.ident_num as identNumComer , r.updatedAt
 			FROM [MilPagos].[dbo].[fm_status]
@@ -18,17 +18,17 @@ export const listDiferido = async () => {
 
 			where id_department = 1 and id_status_request = 4`);
 
-	diferido = query;
-	// diferidos = query.map((item) => item.id_request);
+	diferidos = query;
+	// diferidoss = query.map((item) => item.id_request);
 
-	return diferido;
+	return diferidos;
 };
 
-export const oneDIferido = async (id_request: any) => {
+export const onediferidos = async (id_request: any) => {
 	// const query = await getConnection().query(
 	// 	/*sql*/ `SELECT * FROM [MilPagos].[dbo].[fm_status] where id_department = 1 and id_status_request = 1`
 	// );
-	if (diferido.length <= 5) {
+	if (diferidos.length <= 5) {
 		const query = await getRepository(fm_status).findOne({
 			where: { id_request },
 			relations: [
@@ -47,9 +47,9 @@ export const oneDIferido = async (id_request: any) => {
 
 		if (!query) throw { message: 'no existen solicitudes en espera', code: 400 };
 
-		diferidoTranbajando.push(query.id_request);
+		diferidosTranbajando.push(query.id_request);
 
-		return diferidoTranbajando;
+		return diferidosTranbajando;
 	}
 };
 
@@ -157,12 +157,12 @@ export const listSolic = async () => {
 	const info: any = query.map((item) => item.id_request);
 
 	solictudes.push(info);
-	// diferidos = query.map((item) => item.id_request);
+	// diferidoss = query.map((item) => item.id_request);
 
 	return solictudes;
 };
 
-export const getDiferido = async (id_request: number) => {
+export const getdiferidos = async (id_request: number) => {
 	let query: any = await getRepository(fm_status).findOne({
 		where: { id_request },
 		relations: [
@@ -201,3 +201,10 @@ export const getDiferido = async (id_request: number) => {
 
 	return resp;
 };
+
+export const getDash = async (id_request: number) => ({
+	solictudes,
+	solictudesTrabajando,
+	diferidos,
+	diferidosTranbajando,
+});

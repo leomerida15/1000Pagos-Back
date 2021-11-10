@@ -1,10 +1,11 @@
 import { v4 as uuid } from 'uuid';
 
 import {
-	diferido,
+	diferidos,
 	disconect,
-	getDiferido,
-	listDiferido,
+	getdiferidos,
+	listdiferidos,
+	getDash,
 	listSolic,
 	listSolicWorking,
 	solictudesTrabajando,
@@ -17,7 +18,7 @@ export default (io: any) => {
 		// console.log(socket.handshake.url);
 		console.log('nuevo socket connectado:', socket.id);
 
-		socket.emit('server:loadDiferido', diferido);
+		socket.emit('server:loaddiferidos', diferidos);
 
 		socket.on('prueba', async () => {
 			console.log('Dimas es HOLA');
@@ -26,18 +27,18 @@ export default (io: any) => {
 		});
 
 		socket.on('Trabanjando_Solic', async (user: any, callback: any) => {
-			console.log('DIferidos-Solic');
+			console.log('diferidoss-Solic');
 			// console.log(solictudesTrabajando.length);
 
 			callback(await listSolicWorking(socket.id, user));
 		});
 
-		socket.on('cliente:loadDiferidos', async () => {
+		socket.on('cliente:loaddiferidoss', async () => {
 			// console.log('Dimas es gayyyyy');
-			await listDiferido();
-			io.emit('server:loadDiferidos', diferido);
+			await listdiferidos();
+			io.emit('server:loaddiferidoss', diferidos);
 
-			// console.log(diferido);
+			// console.log(diferidos);
 		});
 
 		socket.on('client:newnote', (newNote: any) => {
@@ -75,12 +76,20 @@ export default (io: any) => {
 			disconect(socket.id);
 		});
 
-		socket.on('Editar_diferido', async (id_request: number, callback: any) => {
+		socket.on('Editar_diferidos', async (id_request: number, callback: any) => {
 			// console.log('id_request', id_request);
 			// console.log('');
 
-			const diferido = await getDiferido(id_request);
-			callback(diferido);
+			const diferidos = await getdiferidos(id_request);
+			callback(diferidos);
+		});
+
+		socket.on('dash_data', (id_request: number, callback: any) => {
+			// console.log('id_request', id_request);
+			// console.log('');
+
+			const dash = getDash(id_request);
+			callback(dash);
 		});
 	});
 };
