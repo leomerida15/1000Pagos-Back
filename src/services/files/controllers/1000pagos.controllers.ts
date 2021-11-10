@@ -94,9 +94,13 @@ export const upFilesRecaudos = async (
 		}
 
 		if (!existsSync(`${base}/${id_client}`)) {
+			console.log('carpeta del cliente', id_client);
+
 			await fs.mkdir(`${base}/${id_client}`);
 		}
 		if (!existsSync(`${base}/${id_client}/${id_commerce}`)) {
+			console.log('carpeta del comercio', id_commerce);
+
 			await fs.mkdir(`${base}/${id_client}/${id_commerce}`);
 		}
 
@@ -139,8 +143,7 @@ export const editRcByFm = async (
 		const { id_request } = req.params;
 		const files: any = req.files;
 
-		console.log('files',req.files);
-		
+		console.log('files', req.files);
 
 		const fm: any = await getRepository(fm_request).findOne(id_request, {
 			order: { id: 'ASC' },
@@ -179,27 +182,25 @@ export const editRcByFm = async (
 				await Doc.Delete(fm[descript].path);
 
 				const route_ids: string = ['rc_ident_card'].includes(descript)
-				? `${id_client}`
-				: `${id_client}/${id_commerce}`;
+					? `${id_client}`
+					: `${id_client}/${id_commerce}`;
 
 				await Doc.Move(file.filename, route_ids);
 
 				const path = `static/${route_ids}/${file.filename}`;
 
-				console.log('path',path);
-				
+				console.log('path', path);
 
-				console.log('fm[descript].id',fm[descript].id);
-				
+				console.log('fm[descript].id', fm[descript].id);
 
-				await getRepository(fm_photo).update(fm[descript].id,{ path });
+				await getRepository(fm_photo).update(fm[descript].id, { path });
 
 				valids[descript.replace('rc_', 'valid_')] = '';
 			});
 
 		await Promise.all(stop);
 
-		await getRepository(fm_status).update({id_request: fm.id,id_department:1}, {id_status_request: 3});
+		await getRepository(fm_status).update({ id_request: fm.id, id_department: 1 }, { id_status_request: 3 });
 
 		res.status(200).json({ message: 'imagenes editadas' });
 	} catch (err) {

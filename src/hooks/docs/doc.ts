@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { default as pdfConverter } from 'pdf-poppler';
 
 import Jimp from 'jimp';
+import { existsSync } from 'fs';
 
 // import svg2png from 'svg2png';
 
@@ -34,9 +35,7 @@ export const ToFile: any = async (file: string | string[], title: string): Promi
 };
 //
 export const fileExistin = async (folder: string) => {
-	try {
-		await fs.lstat(`${base}/${folder}`);
-	} catch (err) {
+	if (!existsSync(`${base}/${folder}`)) {
 		await fs.mkdir(`${base}/${folder}`);
 	}
 };

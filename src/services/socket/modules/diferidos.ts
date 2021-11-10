@@ -202,9 +202,9 @@ export const getDiferido = async (id_request: number) => {
 	return resp;
 };
 
-export const getDash = async () => ({
-	solictudes: solictudes.length,
-	solictudesTrabajando: solictudesTrabajando.length,
-	diferidos: diferido.length,
-	diferidosTranbajando: diferidoTranbajando.length,
-});
+// export const getDash = async () => ({
+// 	solictudes: solictudes.length,
+// 	solictudesTrabajando: solictudesTrabajando.length,
+// 	diferidos: diferido.length,
+// 	diferidosTranbajando: diferidoTranbajando.length,
+// });
