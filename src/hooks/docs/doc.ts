@@ -205,7 +205,7 @@ export const Convert = async (file: any, to: string): Promise<void> => {
 
 	if (from === 'pdf') {
 		let option = {
-			format: 'jpg',
+			format: to,
 			out_dir: base,
 			out_prefix: path.basename(filePath, path.extname(filePath)),
 			page: 1,
@@ -220,7 +220,7 @@ export const Convert = async (file: any, to: string): Promise<void> => {
 			.resize(256, 256) // resize
 			.quality(60) // set JPEG quality
 			.greyscale() // set greyscale
-			.write(filePath.replace('.png', '.jpg')); // save
+			.write(filePath.replace('.png', '.' + to)); // save
 	}
 
 	await Delete(file);
