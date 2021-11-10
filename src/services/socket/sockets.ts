@@ -88,7 +88,7 @@ export default (io: any) => {
 			// console.log('id_request', id_request);
 			// console.log('');
 
-			const dash = getDash(id_request);
+			const dash = getDash();
 			callback(dash);
 		});
 	});
