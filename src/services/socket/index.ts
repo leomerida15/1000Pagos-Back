@@ -2,7 +2,7 @@ import express from 'express';
 import { Server } from 'socket.io';
 import http from 'http';
 import Sockets from './sockets';
-import { diferido, listDiferido, listSolic, listSolicWorking, solictudes } from './modules/diferidos';
+import { diferidos, listdiferidos, listSolic, listSolicWorking, solictudes } from './modules/diferidos';
 import { createConnection } from 'typeorm';
 
 const app = express();
@@ -21,8 +21,8 @@ Sockets(io);
 	console.log('DB OK');
 
 	//Lista de diferidos
-	if (solictudes.length <= 5) await listDiferido();
-	console.log('listDiferido OK');
+	if (solictudes.length <= 5) await listdiferidos();
+	console.log('listdiferidos OK');
 
 	//Lista de Solicitudes
 	await listSolic();
