@@ -5,13 +5,13 @@ import fm_department from '../models/fm_department';
 const department = async (): Promise<void> => {
 	const data: fm_department[] = [
 		{
-			name: 'aceptacion',
+			name: 'Admision',
 		},
 		{
-			name: 'adminitracion',
+			name: 'Administracion',
 		},
 		{
-			name: 'activacion',
+			name: 'Activacion',
 		},
 	];
 
