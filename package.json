@@ -55,6 +55,7 @@
 		"nodemon": "^2.0.14",
 		"pdf-poppler": "^0.2.1",
 		"pdf2pic": "^2.1.4",
+		"pg": "^8.7.1",
 		"reflect-metadata": "^0.1.13",
 		"sequelize": "^6.6.1",
 		"socket.io": "^4.2.0",

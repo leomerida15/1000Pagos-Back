@@ -7,6 +7,7 @@ import { Api } from 'interfaces';
 import fm_activity from '../../../../db/models/fm_activity';
 import fm_status_request from '../../../../db/models/fm_status_request';
 import fm_company from '../../../../db/models/fm_company';
+import fm_department from '../../../../db/models/fm_department';
 
 export const getAllIdent_type = async (
 	req: Request<any, any, Api.Resp>,
@@ -65,6 +66,22 @@ export const getAllCompanys = async (
 		const info = await getRepository(fm_company).find();
 
 		const message: string = Msg('compañia').getAll;
+
+		Resp(req, res, { message, info });
+	} catch (err) {
+		next(err);
+	}
+};
+
+export const getAllDeparments = async (
+	req: Request<any, any, Api.Resp>,
+	res: Response<Api.Resp>,
+	next: NextFunction
+): Promise<void> => {
+	try {
+		const info = await getRepository(fm_department).find();
+
+		const message: string = Msg('departamento').getAll;
 
 		Resp(req, res, { message, info });
 	} catch (err) {
