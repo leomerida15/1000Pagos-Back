@@ -8,7 +8,7 @@ const Global: Router = Router();
 // RC
 // RC.route('/RC').post(upload, upFileRecaudos);
 //
-Global.route('/global/images').post(uploads, createImages);
+Global.route('/global/images').post(uploads, convert, createImages);
 //
 Global.route('/global/image').post(upload, convert, createImage);
 //
