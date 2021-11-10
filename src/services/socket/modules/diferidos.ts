@@ -202,9 +202,9 @@ export const getdiferidos = async (id_request: number) => {
 	return resp;
 };
 
-export const getDash = async (id_request: number) => ({
-	solictudes,
-	solictudesTrabajando,
-	diferidos,
-	diferidosTranbajando,
+export const getDash = async () => ({
+	solictudes: solictudes.length,
+	solictudesTrabajando: solictudesTrabajando.length,
+	diferidos: diferidos.length,
+	diferidosTranbajando: diferidosTranbajando.length,
 });

@@ -18,7 +18,7 @@ export const getAllIdent_type = async (
 
 		const message: string = Msg('identidad').getAll;
 
-		Resp(req, res, { message, info });
+		res.status(200).json({ message, info });
 	} catch (err) {
 		next(err);
 	}
