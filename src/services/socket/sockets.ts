@@ -8,7 +8,7 @@ import {
 	listSolic,
 	listSolicWorking,
 	solictudesTrabajando,
-	// getDash,
+	getDash,
 } from './modules/diferidos';
 
 let notes: any[] = [];
@@ -84,12 +84,12 @@ export default (io: any) => {
 			callback(diferido);
 		});
 
-		// socket.on('dash_data', (id_request: number, callback: any) => {
-		// 	// console.log('id_request', id_request);
-		// 	// console.log('');
+		socket.on('dash_data', (id_request: number, callback: any) => {
+			// console.log('id_request', id_request);
+			// console.log('');
 
-		// 	const dash = getDash();
-		// 	callback(dash);
-		// });
+			const dash = getDash();
+			callback(dash);
+		});
 	});
 };
