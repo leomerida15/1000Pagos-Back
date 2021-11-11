@@ -9,6 +9,7 @@ import {
 	listSolicWorking,
 	solictudesTrabajando,
 	getDash,
+	solictudes,
 } from './modules/diferidos';
 
 let notes: any[] = [];
@@ -23,7 +24,6 @@ export default (io: any) => {
 		socket.on('prueba', async () => {
 			console.log('Dimas es HOLA');
 			// await listSolic();
-			// console.log(solictudesTrabajando);
 		});
 
 		socket.on('Trabanjando_Solic', async (user: any, callback: any) => {
@@ -69,6 +69,13 @@ export default (io: any) => {
 			io.emit('server:loadnotes', notes);
 		});
 
+		socket.on('cliente:disconnect', () => {
+			console.log(socket.id, 'disconnected');
+			console.log('');
+
+			disconect(socket.id);
+		});
+
 		socket.on('disconnect', () => {
 			console.log(socket.id, 'disconnected');
 			console.log('');
@@ -84,12 +91,27 @@ export default (io: any) => {
 			callback(diferido);
 		});
 
-		socket.on('dash_data', (id_request: number, callback: any) => {
-			// console.log('id_request', id_request);
-			// console.log('');
-
+		socket.on('cliente:dashdata', (user: any, callback: any) => {
+			// console.log('Usuario de peticion: ', user);
 			const dash = getDash();
+
+			// console.log('Informacion de tabla', dash);
 			callback(dash);
+		});
+
+		socket.emit('server:dashdata', (user: any, callback: any) => {
+			// console.log('Usuario de peticion: ', user);
+			const dash = getDash();
+
+			// console.log('Informacion de tabla', dash);
+			callback(dash);
+		});
+		socket.on('cliente:dashdatasiempre', async () => {
+			// console.log('Dimas es gayyyyy');
+			const todos = await getDash();
+			io.emit('server:dashdata', todos);
+
+			// console.log(diferido);
 		});
 	});
 };
