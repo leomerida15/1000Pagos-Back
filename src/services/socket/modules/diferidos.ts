@@ -54,13 +54,16 @@ export const oneDIferido = async (id_request: any) => {
 };
 
 export const listSolicWorking = async (id_conectado: any, user: any) => {
-	console.log('solictudes.length', solictudes.length);
-	if (solictudes.length < 3) await listSolic();
+	if (solictudes.length < 2) await listSolic();
 	if (solictudes.length !== 0) {
-		const obj = solictudesTrabajando.find((items) => items.id_conectado === id_conectado);
+		const obj = solictudesTrabajando.find((items) => {
+			console.log(`items.id_conectado === id_conectado`, items.id_conectado === id_conectado);
+
+			return items.id_conectado === id_conectado;
+		});
 		if (obj) return obj;
 
-		console.log('solictudes', solictudes.length);
+		console.log('solictudes.length', solictudes.length);
 
 		const working = solictudes.shift();
 
@@ -75,7 +78,7 @@ export const listSolicWorking = async (id_conectado: any, user: any) => {
 		// solictudesTrabajando.unshift(working);
 		solictudesTrabajando.unshift({ id_conectado, ...user, working });
 		// const obj2 = solictudesTrabajando.find((items) => items.id_conectado === id_conectado);
-		console.log(working);
+		// console.log(working);
 		return working;
 	}
 };
@@ -83,6 +86,7 @@ export const listSolicWorking = async (id_conectado: any, user: any) => {
 export const disconect = (id_sockect: any) => {
 	console.log('antes del filter ', solictudesTrabajando.length);
 	console.log('solictudes', solictudes.length);
+	console.log('solictudesTrabajando', solictudesTrabajando);
 
 	solictudesTrabajando = solictudesTrabajando
 		.filter((item) => {
@@ -97,8 +101,8 @@ export const disconect = (id_sockect: any) => {
 		})
 		.map((item) => item.working);
 
-	console.log('pos del filter ', solictudesTrabajando.length);
-	console.log('pos solictudes', solictudes.length);
+	// console.log('pos del filter ', solictudesTrabajando.length);
+	// console.log('pos solictudes', solictudes.length);
 };
 
 export const listSolic = async () => {
@@ -112,7 +116,7 @@ export const listSolic = async () => {
 	];
 
 	const query = await getRepository(fm_status).find({
-		where: { id_status_request: 1, id_department: 1, id_request: Not(ids) },
+		where: { id_status_request: 1, id_department: 1 },
 		take: 10,
 		order: {
 			id: 'ASC',
@@ -156,7 +160,7 @@ export const listSolic = async () => {
 
 	const info: any = query.map((item) => item.id_request);
 
-	solictudes.push(info);
+	solictudes = info;
 	// diferidos = query.map((item) => item.id_request);
 
 	return solictudes;
@@ -202,7 +206,7 @@ export const getDiferido = async (id_request: number) => {
 	return resp;
 };
 
-export const getDash = async () => ({
+export const getDash = () => ({
 	solictudes: solictudes.length,
 	solictudesTrabajando: solictudesTrabajando.length,
 	diferidos: diferido.length,
