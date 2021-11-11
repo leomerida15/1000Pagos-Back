@@ -52,6 +52,8 @@ const convert = async (req: Request, res: Response, next: NextFunction) => {
 		await Promise.all(stop);
 	}
 
+	// console.log('req.files',req.files);
+
 	next();
 };
 

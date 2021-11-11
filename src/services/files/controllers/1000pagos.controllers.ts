@@ -94,12 +94,12 @@ export const upFilesRecaudos = async (
 		}
 
 		if (!existsSync(`${base}/${id_client}`)) {
-			console.log('carpeta del cliente', id_client);
+			// console.log('carpeta del cliente', id_client);
 
 			await fs.mkdir(`${base}/${id_client}`);
 		}
 		if (!existsSync(`${base}/${id_client}/${id_commerce}`)) {
-			console.log('carpeta del comercio', id_commerce);
+			// console.log('carpeta del comercio', id_commerce);
 
 			await fs.mkdir(`${base}/${id_client}/${id_commerce}`);
 		}
@@ -107,6 +107,8 @@ export const upFilesRecaudos = async (
 		const stop: Promise<void>[] = files
 			.filter((file: Express.Multer.File) => {
 				const valid: string = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
+				// console.log(' description.includes(valid)', description.includes(valid));
+
 				return description.includes(valid);
 			})
 			.map(async (file: Express.Multer.File, i: number): Promise<void> => {
