@@ -76,7 +76,7 @@ export const listSolicWorking = async (id_conectado: any, user: any) => {
 		// working.name_user = user.name;
 
 		// solictudesTrabajando.unshift(working);
-		solictudesTrabajando.unshift({ id_conectado, ...user, working });
+		solictudesTrabajando.unshift({ id_conectado, ...user, ...working });
 		// const obj2 = solictudesTrabajando.find((items) => items.id_conectado === id_conectado);
 		// console.log(working);
 		return working;
