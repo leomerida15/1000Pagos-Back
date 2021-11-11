@@ -107,7 +107,7 @@ export const upFilesRecaudos = async (
 		const stop: Promise<void>[] = files
 			.filter((file: Express.Multer.File) => {
 				const valid: string = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
-				// console.log(' description.includes(valid)', description.includes(valid));
+				// console.log(' description.includes(val`id)', description.includes(valid));
 
 				return description.includes(valid);
 			})
