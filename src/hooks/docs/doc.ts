@@ -202,6 +202,10 @@ export const Convert = async (file: any, to: string): Promise<void> => {
 	const from: string = file.split('.')[file.split('.').length - 1];
 	const filePath: string = path.join(base, file);
 
+	// console.log('file', file);
+
+	// console.log('path.basename(filePath, path.extname(filePath))', path.basename(filePath, path.extname(filePath)));
+
 	if (from === 'pdf') {
 		let option = {
 			format: to,
@@ -209,9 +213,13 @@ export const Convert = async (file: any, to: string): Promise<void> => {
 			out_prefix: path.basename(filePath, path.extname(filePath)),
 			page: 1,
 		};
+
+		// await fs.rename();
 		// option.out_dir value is the path where the image will be saved
 
 		await pdfConverter.convert(filePath, option);
+		const file = `${path.basename(filePath, path.extname(filePath))}-1.jpg`;
+		await fs.rename(path.join(base, file), path.join(base, file).replace('-1.jpg', '.jpg'));
 	} else if (from == 'png') {
 		// open a file called "lenna.png"
 		const lenna = await Jimp.read(filePath);
