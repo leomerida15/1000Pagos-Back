@@ -67,7 +67,7 @@ export const listSolicWorking = async (id_conectado: any, user: any) => {
 
 		const working = solictudes.shift();
 
-		console.log('solictudes pos', solictudes.length);
+		console.log('solictudes pos', solictudes[0]);
 
 		// working.id_conectado = id_conectado;
 		// working.id_user = user.id;
@@ -76,7 +76,7 @@ export const listSolicWorking = async (id_conectado: any, user: any) => {
 		// working.name_user = user.name;
 
 		// solictudesTrabajando.unshift(working);
-		solictudesTrabajando.unshift({ id_conectado, ...user, working });
+		solictudesTrabajando.unshift({ id_conectado, ...user, ...working });
 		// const obj2 = solictudesTrabajando.find((items) => items.id_conectado === id_conectado);
 		// console.log(working);
 		return working;
@@ -88,18 +88,17 @@ export const disconect = (id_sockect: any) => {
 	console.log('solictudes', solictudes.length);
 	console.log('solictudesTrabajando', solictudesTrabajando);
 
-	solictudesTrabajando = solictudesTrabajando
-		.filter((item) => {
-			console.log('item.id_conectado != id_sockect');
-			console.log(`${item.id_conectado} != ${id_sockect}`);
-			console.log(item.id_conectado != id_sockect);
+	solictudesTrabajando = solictudesTrabajando.filter((item) => {
+		console.log('item.id_conectado != id_sockect');
+		console.log(`${item.id_conectado} != ${id_sockect}`);
+		console.log(item.id_conectado != id_sockect);
 
-			if (item.id_conectado != id_sockect) return true;
+		if (item.id_conectado != id_sockect) return true;
 
-			solictudes.unshift(item);
-			return false;
-		})
-		.map((item) => item.working);
+		solictudes.unshift(item);
+		return false;
+	});
+	// .map((item) => item.working);
 
 	// console.log('pos del filter ', solictudesTrabajando.length);
 	// console.log('pos solictudes', solictudes.length);
