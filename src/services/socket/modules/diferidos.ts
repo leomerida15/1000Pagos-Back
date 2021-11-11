@@ -98,8 +98,8 @@ export const disconect = (id_sockect: any) => {
 
 			solictudes.unshift(item);
 			return false;
-		})
-		.map((item) => item.working);
+		});
+		//.map((item) => item.working);
 
 	// console.log('pos del filter ', solictudesTrabajando.length);
 	// console.log('pos solictudes', solictudes.length);
