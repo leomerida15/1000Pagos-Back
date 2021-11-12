@@ -145,7 +145,7 @@ export const editRcByFm = async (
 		const { id_request } = req.params;
 		const files: any = req.files;
 
-		console.log('files', req.files);
+		//console.log('files', req.files);
 
 		const fm: any = await getRepository(fm_request).findOne(id_request, {
 			order: { id: 'ASC' },
@@ -161,6 +161,9 @@ export const editRcByFm = async (
 		if (!fm) throw { message: 'el FM suministrado no existe', code: 400 };
 
 		const { id_client, id_commerce, id_valid_request } = fm;
+
+		console.log('id_client}/${id_commerce',id_client,id_commerce);
+		
 
 		const description = [
 			'rc_constitutive_act',
@@ -187,7 +190,7 @@ export const editRcByFm = async (
 					? `${id_client}`
 					: `${id_client}/${id_commerce}`;
 
-				await Doc.Move(file.filename, route_ids);
+				//await Doc.Move(file.filename, route_ids);
 
 				const path = `static/${route_ids}/${file.filename}`;
 
