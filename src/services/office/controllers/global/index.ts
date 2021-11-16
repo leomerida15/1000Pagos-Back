@@ -67,7 +67,7 @@ export const getAllCompanys = async (
 
 		const message: string = Msg('compañia').getAll;
 
-		Resp(req, res, { message, info });
+		res.status(200).json({ message, info });
 	} catch (err) {
 		next(err);
 	}
