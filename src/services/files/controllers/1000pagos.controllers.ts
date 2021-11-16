@@ -162,8 +162,7 @@ export const editRcByFm = async (
 
 		const { id_client, id_commerce, id_valid_request } = fm;
 
-		console.log('id_client}/${id_commerce',id_client,id_commerce);
-		
+		// console.log('id_client}/${id_commerce',id_client,id_commerce);
 
 		const description = [
 			'rc_constitutive_act',
@@ -194,9 +193,9 @@ export const editRcByFm = async (
 
 				const path = `static/${route_ids}/${file.filename}`;
 
-				console.log('path', path);
+				// console.log('path', path);
 
-				console.log('fm[descript].id', fm[descript].id);
+				// console.log('fm[descript].id', fm[descript].id);
 
 				await getRepository(fm_photo).update(fm[descript].id, { path });
 

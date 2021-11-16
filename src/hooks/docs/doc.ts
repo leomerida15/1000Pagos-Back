@@ -236,7 +236,11 @@ export const Convert = async (file: any, to: string): Promise<void> => {
 			.greyscale() // set greyscale
 			.write(filePath.replace('.png', '.' + to)); // save
 		remove = true;
+	} else if (from === 'jpeg') {
+		// open a file called "lenna.png"
+
+		await fs.rename(path.join(base, file), path.join(base, file).replace('.jpeg', '.jpg'));
 	}
 
-	if (remove) await Delete(file);
+	if (remove) await Delete(path.join(base, file));
 };
