@@ -316,7 +316,6 @@ export const FM_create = async (
 			discount,
 			nro_comp_dep,
 			pagadero,
-			initial,
 		}: any = req.body;
 
 		const product = await getRepository(fm_product).findOne(id_product);
@@ -349,16 +348,43 @@ export const FM_create = async (
 			valid_ident_card: '',
 		});
 
+		const initial = ((): number => {
+			if (id_type_payment === 2) {
+				const { initial }: any = req.body;
+				return initial;
+			} else {
+				return product.price * number_post;
+			}
+		})();
+
+		const quotas_total = ((): number => {
+			if (id_type_payment === 2) {
+				const monto = product.price * number_post;
+				return (monto - 50) / product.quota;
+			} else {
+				return 1;
+			}
+		})();
+
+		const quotas_to_pay = ((): number => {
+			if (id_type_payment === 2) {
+				const monto = product.price * number_post;
+				const { initial }: any = req.body;
+
+				return (monto - (discount ? 50 : 0) - initial) / product.quota;
+			} else {
+				return 0;
+			}
+		})();
+
 		const quotas_calculated = await getRepository(fm_quotas_calculated).save({
 			id_type_payment,
-			initial: id_type_payment === 2 ? initial : product.price * number_post,
-			quotas_total: id_type_payment === 2 ? (product.price * number_post) / product.quota : 1,
-			quotas_to_pay:
-				id_type_payment === 2 ? (product.price * number_post - (discount ? 50 : 0) - initial) / product.quota : 0,
+			initial,
+			quotas_total,
+			quotas_to_pay,
 		});
 
-		console.log('valid',quotas_calculated);
-		
+		console.log('valid', quotas_calculated);
 
 		const FM_save = await getRepository(fm_request).save({
 			number_post,

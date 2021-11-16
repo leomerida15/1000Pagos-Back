@@ -206,6 +206,7 @@ export const Convert = async (file: any, to: string): Promise<void> => {
 
 	// console.log('path.basename(filePath, path.extname(filePath))', path.basename(filePath, path.extname(filePath)));
 
+	let remove: boolean = false;
 	if (from === 'pdf') {
 		let option = {
 			format: to,
@@ -220,7 +221,8 @@ export const Convert = async (file: any, to: string): Promise<void> => {
 		await pdfConverter.convert(filePath, option);
 		const file = `${path.basename(filePath, path.extname(filePath))}-1.jpg`;
 		await fs.rename(path.join(base, file), path.join(base, file).replace('-1.jpg', '.jpg'));
-	} else if (from == 'png') {
+		remove = true;
+	} else if (from === 'png') {
 		// open a file called "lenna.png"
 		const lenna = await Jimp.read(filePath);
 		lenna
@@ -228,7 +230,8 @@ export const Convert = async (file: any, to: string): Promise<void> => {
 			.quality(60) // set JPEG quality
 			.greyscale() // set greyscale
 			.write(filePath.replace('.png', '.' + to)); // save
+		remove = true;
 	}
 
-	await Delete(file);
+	if (remove) await Delete(file);
 };
