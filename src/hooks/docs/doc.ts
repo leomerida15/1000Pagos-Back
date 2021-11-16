@@ -65,6 +65,11 @@ export const IDs = (files: string[]) => files.map((file: string) => file.split('
 //
 export const Move = async (file: string, folder: string) => {
 	if (folder) await fileExistin(folder);
+	console.log('Mover imagen');
+
+	console.log('path.join(base, file)', path.join(base, file));
+
+	console.log(' path.join(base, folder, file)', path.join(base, folder, file));
 
 	await fs.rename(path.join(base, file), path.join(base, folder, file));
 	return `${host}/${folder}/${file}`;
