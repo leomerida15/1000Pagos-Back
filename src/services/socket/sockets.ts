@@ -10,6 +10,10 @@ import {
 	solictudesTrabajando,
 	getDash,
 	solictudes,
+	All_Info,
+	allSolic,
+	allTerm,
+	listDiferidoWorking,
 } from './modules/diferidos';
 
 let notes: any[] = [];
@@ -35,10 +39,21 @@ export default (io: any) => {
 
 		socket.on('cliente:loadDiferidos', async () => {
 			// console.log('Dimas es gayyyyy');
-			await listDiferido();
+			if (diferido.length <= 1) await listDiferido();
 			io.emit('server:loadDiferidos', diferido);
+			getDash();
+			All_Info();
 
 			// console.log(diferido);
+		});
+
+		////Devuelve Toda las cantidades de Admision
+
+		socket.on('cliente:Todos', async (data: any, callback: any) => {
+			const todos = await All_Info();
+			callback(todos);
+
+			console.log('Toy aqui probando', todos);
 		});
 
 		socket.on('client:newnote', (newNote: any) => {
@@ -78,30 +93,30 @@ export default (io: any) => {
 
 		socket.on('disconnect', () => {
 			console.log(socket.id, 'disconnected');
-			console.log('');
+			console.log('FUera');
 
 			disconect(socket.id);
 		});
 
 		socket.on('Editar_diferido', async (id_request: number, callback: any) => {
 			// console.log('id_request', id_request);
-			// console.log('');
+			// console.log(''); listDiferido
 
 			const diferido = await getDiferido(id_request);
 			callback(diferido);
 		});
 
-		socket.on('cliente:dashdata', (user: any, callback: any) => {
+		socket.on('cliente:dashdata', async (user: any, callback: any) => {
 			// console.log('Usuario de peticion: ', user);
-			const dash = getDash();
+			const dash = await getDash();
 
 			// console.log('Informacion de tabla', dash);
 			callback(dash);
 		});
 
-		socket.emit('server:dashdata', (user: any, callback: any) => {
+		socket.emit('server:dashdata', async (user: any, callback: any) => {
 			// console.log('Usuario de peticion: ', user);
-			const dash = getDash();
+			const dash = await getDash();
 
 			// console.log('Informacion de tabla', dash);
 			callback(dash);
@@ -112,6 +127,12 @@ export default (io: any) => {
 			io.emit('server:dashdata', todos);
 
 			// console.log(diferido);
+		});
+
+		socket.on('cliente:trabanjandoDiferido', async (user: any, id: any) => {
+			await listDiferidoWorking(socket.id, user, id);
+
+			io.emit('server:loadDiferido', diferido);
 		});
 	});
 };
