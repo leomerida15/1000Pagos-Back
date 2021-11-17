@@ -28,8 +28,6 @@ const convert = async (req: Request, res: Response, next: NextFunction) => {
 		let files: any = req.files;
 
 		const stop: Promise<void>[] = files.map(async (file: any, i: number) => {
-			//
-			//
 			await Doc.Convert(file.filename, 'jpg');
 
 			let filename = file.filename.split('.');

@@ -69,7 +69,7 @@ export const listSolicWorking = async (id_conectado: any, user: any) => {
 
 		const working = solictudes.shift();
 
-		console.log('solictudes pos', solictudes.length);
+		console.log('solictudes pos', solictudes[0]);
 
 		// working.id_conectado = id_conectado;
 		// working.id_user = user.id;
