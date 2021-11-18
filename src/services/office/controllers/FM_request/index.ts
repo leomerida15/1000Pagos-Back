@@ -254,7 +254,7 @@ export const valid_bank_account = async (
 		const { bank_account_num, email }: any = req.body;
 
 		const bank: any = await getRepository(fm_bank).findOne({
-			select: ['name'],
+			select: ['name', 'id'],
 			where: { code: bank_account_num.slice(0, 4) },
 		});
 		if (!bank) throw { message: 'el banco no existe' };
@@ -262,10 +262,7 @@ export const valid_bank_account = async (
 		let valid_bank_commerce: any;
 		const client: any = await getRepository(fm_client).findOne({ email });
 
-		const obj = {
-			bank_account_num,
-			id_bank: bank.id,
-		};
+		const obj = { bank_account_num, id_bank: bank.id };
 
 		if (!client) {
 			valid_bank_commerce = await getRepository(fm_bank_commerce).findOne(obj);
