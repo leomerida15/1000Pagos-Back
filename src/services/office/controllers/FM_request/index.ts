@@ -53,8 +53,6 @@ export const fm_create_client = async (
 			where: { email, id_ident_type, ident_num },
 		});
 
-		console.log('hola');
-
 		let message: string = ``;
 
 		if (!client) {

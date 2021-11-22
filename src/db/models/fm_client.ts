@@ -54,6 +54,12 @@ export default class fm_client {
 	@JoinColumn({ name: 'rc_ident_card' })
 	rc_ident_card!: null | number | fm_photo;
 
+	@Column({ name: 'ref_person_1' })
+	ref_person_1!: string;
+
+	@Column({ name: 'ref_person_2' })
+	ref_person_2!: string;
+
 	@OneToMany(() => fm_phone, (fm_phone) => fm_phone.id_client)
 	@JoinColumn({ name: 'phones' })
 	phones?: fm_phone[];
