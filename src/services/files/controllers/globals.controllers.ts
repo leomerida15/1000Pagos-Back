@@ -31,11 +31,13 @@ export const createImages = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const info = await getRepository(fm_photo).save(req.body);
+		console.log('files', req.files);
+
+		// const info = await getRepository(fm_photo).save(req.body);
 
 		const message: string = Msg('Imagenes').create;
 
-		Resp(req, res, { message, info });
+		res.status(200).json({ message, info: req.files });
 	} catch (err) {
 		next(err);
 	}
