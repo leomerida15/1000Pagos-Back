@@ -53,7 +53,7 @@ export default (io: any) => {
 			const todos = await All_Info();
 			callback(todos);
 
-			console.log('Toy aqui probando', todos);
+			// console.log('Toy aqui probando', todos);
 		});
 
 		socket.on('client:newnote', (newNote: any) => {
@@ -63,7 +63,7 @@ export default (io: any) => {
 		});
 
 		socket.on('client:deletenote', (noteId: any) => {
-			console.log(noteId);
+			// console.log(noteId);
 			notes = notes.filter((note) => note.id !== noteId);
 			io.emit('server:loadnotes', notes);
 		});

@@ -71,16 +71,10 @@ export const listSolicWorking = async (id_conectado: any, user: any) => {
 
 		console.log('solictudes pos', solictudes[0]);
 
-		// working.id_conectado = id_conectado;
-		// working.id_user = user.id;
-		// working.email_user = user.email;
-		// working.last_user = user.last_name;
-		// working.name_user = user.name;
-
 		// solictudesTrabajando.unshift(working);
 		solictudesTrabajando.unshift({ id_conectado, ...user, ...working });
 		// const obj2 = solictudesTrabajando.find((items) => items.id_conectado === id_conectado);
-		// console.log(working);
+		console.log('Jisus este es el que pao', working);
 		return working;
 	}
 };
@@ -107,11 +101,11 @@ export const listDiferidoWorking = async (id_conectado: any, user: any, id_dife:
 		console.log('Valor I', i);
 		const resp = diferido[i];
 
-		console.log('DIferido', resp);
+		// console.log('DIferido', resp);
 
 		diferido.splice(i, 1);
 
-		console.log('Lista de Diferidos', diferido);
+		// console.log('Lista de Diferidos', diferido);
 
 		// diferidoTranbajando.unshift({ id_conectado, ...user, ...working2 });
 		diferidoTranbajando.unshift({ id_conectado, ...user, ...resp });
@@ -128,7 +122,7 @@ export const disconect = (id_sockect: any) => {
 	solictudesTrabajando = solictudesTrabajando.filter((item) => {
 		if (item.id_conectado != id_sockect) return true;
 
-		const { id_conectado, id, email, last_name, name, ...working } = item;
+		const { id_conectado, email, last_name, name, ...working } = item;
 
 		solictudes.unshift(working);
 		// console.log('SOlicitud Trabjando', solictudesTrabajando);
