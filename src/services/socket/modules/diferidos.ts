@@ -137,6 +137,41 @@ export const disconect = (id_sockect: any) => {
 		diferido.unshift(working2);
 		return false;
 	});
+
+	listDiferido();
+
+	All_Info();
+
+	getDash();
+
+	console.log('ARMANDO ESTAS AQUI');
+};
+
+export const disconectsolic = async (id_sockect: any) => {
+	solictudesTrabajando = solictudesTrabajando.filter((item) => {
+		if (item.id_conectado != id_sockect) return true;
+
+		const { id_conectado, email, last_name, name, ...working } = item;
+
+		// solictudes.unshift(working);
+		// console.log('SOlicitud Trabjando', solictudesTrabajando);
+		return false;
+	});
+
+	diferidoTranbajando = diferidoTranbajando.filter((item) => {
+		if (item.id_conectado != id_sockect) return true;
+
+		const { id_conectado, email, last_name, name, ...working2 } = item;
+
+		// diferido.unshift(working2);
+		return false;
+	});
+
+	await listDiferido();
+
+	await All_Info();
+
+	await getDash();
 };
 
 export const listSolic = async () => {
@@ -253,7 +288,7 @@ export const All_Info = async () => {
 	});
 
 	let terminadas: any = await getRepository(fm_status).count({
-		where: { id_status_request: 3, id_department: 2 },
+		where: { id_status_request: 3, id_department: 1 },
 	});
 
 	let diferidos: any = await getRepository(fm_status).count({
