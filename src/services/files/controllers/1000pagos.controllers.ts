@@ -37,46 +37,41 @@ export const upFilesRecaudos = async (
 		const files: any = req.files;
 		let info: any = {};
 
+		// definimos los ids de cliente y comercio
 		const { id_client, id_commerce }: any = req.body;
 
-		const client = await getRepository(fm_client).findOne(id_client);
-		if (!client) throw { message: 'el cliente suministrado no existe', code: 400 };
+		// lista dereacudos
+		const description = ['rc_ref_bank', 'rc_rif', 'rc_ident_card', 'rc_special_contributor', 'rc_comp_dep'];
 
-		const commerce = await getRepository(fm_commerce).findOne(id_client);
-		if (!commerce) throw { message: 'el comercio suministrado no existe', code: 400 };
-
-		const description = [
-			'rc_constitutive_act',
-			'rc_ref_bank',
-			'rc_rif',
-			'rc_ident_card',
-			'rc_special_contributor',
-			'rc_comp_dep',
-		];
-
+		// query que retorna el ultimo fm con ese comercio y cliente
 		const fm = await getRepository(fm_request).findOne({
-			where: { id_client },
+			where: { id_client, id_commerce },
 			order: { id: 'ASC' },
 			relations: [
-				'rc_constitutive_act',
 				'rc_ref_bank',
-				'rc_rif',
-				'rc_ident_card',
-				'rc_special_contributor',
+				'id_client',
+				'id_client.rc_ident_card',
+				'id_commerce',
+				'id_commerce.rc_constitutive_act',
+				'id_commerce.rc_rif',
+				'id_commerce.rc_special_contributor',
 				'rc_comp_dep',
 			],
 		});
+		if (!fm) throw { message: 'no existe fm con esos datos', code: 400 };
 
-		if (client && fm) {
-			const { rc_special_contributor, rc_ref_bank, rc_rif, rc_constitutive_act, rc_ident_card }: any = fm;
+		if (fm.id_client && fm) {
+			const { id_commerce, id_client } = fm;
+			const { rc_ident_card }: any = id_client;
+			const { rc_special_contributor, rc_constitutive_act, rc_ref_bank, rc_rif }: any = id_commerce;
 
-			if (commerce) {
+			if (fm.id_commerce) {
 				info = {
 					rc_ident_card: rc_ident_card && rc_ident_card.id,
 					rc_rif: rc_rif && rc_rif.id,
 					rc_special_contributor: rc_special_contributor && rc_special_contributor.id,
 					rc_ref_bank: rc_ref_bank && rc_ref_bank.id,
-					rc_constitutive_act: rc_constitutive_act && rc_constitutive_act.id,
+					rc_constitutive_act: rc_constitutive_act && rc_constitutive_act.map((item: any) => item.id),
 				};
 			} else {
 				info = {
@@ -85,29 +80,25 @@ export const upFilesRecaudos = async (
 			}
 		}
 
-		const valid_description: any[] = files.filter((file: Express.Multer.File) =>
-			description.includes(file.originalname)
-		);
+		// validamos la lista de imagenes
+		const v_descript = files.images.filter((file: any) => description.includes(file.originalname)).length;
 
-		if (valid_description.length) {
-			throw { message: `${valid_description.length} imagenes no tiene un nombre referente a un recaudo` };
+		// filtramos si envia imagenes con nobres no validos
+		if (v_descript) throw { message: `${v_descript} imagenes no tiene un nombre referente a un recaudo` };
+
+		// validamos que exista la carpeta corespondiente
+		if (!existsSync(`${base}/${id_client}`)) await fs.mkdir(`${base}/${id_client}`);
+
+		if (!existsSync(`${base}/${id_client}/${id_commerce}`)) await fs.mkdir(`${base}/${id_client}/${id_commerce}`);
+
+		if (!existsSync(`${base}/${id_client}/${id_commerce}/constitutive_act`)) {
+			await fs.mkdir(`${base}/${id_client}/${id_commerce}/constitutive_act`);
 		}
 
-		if (!existsSync(`${base}/${id_client}`)) {
-			// console.log('carpeta del cliente', id_client);
-
-			await fs.mkdir(`${base}/${id_client}`);
-		}
-		if (!existsSync(`${base}/${id_client}/${id_commerce}`)) {
-			// console.log('carpeta del comercio', id_commerce);
-
-			await fs.mkdir(`${base}/${id_client}/${id_commerce}`);
-		}
-
-		const stop: Promise<void>[] = files
+		const stop: Promise<void>[] = files.images
 			.filter((file: Express.Multer.File) => {
 				const valid: string = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
-				// console.log(' description.includes(valid)', description.includes(valid));
+				// console.log(' description.includes(val`id)', description.includes(valid));
 
 				return description.includes(valid);
 			})
@@ -127,7 +118,17 @@ export const upFilesRecaudos = async (
 				info[descript] = save.id;
 			});
 
-		await Promise.all(stop);
+		const stop2 = files.constitutive_act.map(async (file: Express.Multer.File, i: number): Promise<void> => {
+			await Doc.Move(file.filename, `${base}/${id_client}/${id_commerce}/constitutive_act`);
+			const path = `static/${base}/${id_client}/${id_commerce}/constitutive_act/${file.filename}`;
+
+			const data = getRepository(fm_photo).create({ name: file.filename, path, descript: 'rc_constitutive_act' });
+			const save = await getRepository(fm_photo).save(data);
+
+			info.rc_constitutive_act.push(save.id);
+		});
+
+		await Promise.all([...stop, ...stop2]);
 
 		res.status(200).json({ message: 'archivos listos', info });
 	} catch (err) {
@@ -145,7 +146,7 @@ export const editRcByFm = async (
 		const { id_request } = req.params;
 		const files: any = req.files;
 
-		console.log('files', req.files);
+		//console.log('files', req.files);
 
 		const fm: any = await getRepository(fm_request).findOne(id_request, {
 			order: { id: 'ASC' },
@@ -160,7 +161,9 @@ export const editRcByFm = async (
 		});
 		if (!fm) throw { message: 'el FM suministrado no existe', code: 400 };
 
-		const { id_client, id_commerce, id_valid_request } = fm;
+		const { id_client, id_commerce } = fm;
+
+		// console.log('id_client}/${id_commerce',id_client,id_commerce);
 
 		const description = [
 			'rc_constitutive_act',
@@ -187,13 +190,13 @@ export const editRcByFm = async (
 					? `${id_client}`
 					: `${id_client}/${id_commerce}`;
 
-				await Doc.Move(file.filename, route_ids);
+				//await Doc.Move(file.filename, route_ids);
 
 				const path = `static/${route_ids}/${file.filename}`;
 
-				console.log('path', path);
+				// console.log('path', path);
 
-				console.log('fm[descript].id', fm[descript].id);
+				// console.log('fm[descript].id', fm[descript].id);
 
 				await getRepository(fm_photo).update(fm[descript].id, { path });
 

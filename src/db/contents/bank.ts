@@ -3,7 +3,7 @@ import fm_bank from '../models/fm_bank';
 
 const bank = async (): Promise<void> => {
 	const data: fm_bank[] = [
-		{ code: '0102', name: 'Banco de Venezuela S.A.C.ABanco Universal' },
+		{ code: '0102', name: 'Banco de Venezuela S.A.C.A Banco Universal' },
 		{ code: '0104', name: 'Venezolano de Crédito S.A.Banco Universal' },
 		{ code: '0105', name: 'Banco Mercantil, C.A S.A.C.A.Banco Universal' },
 		{ code: '0108', name: 'Banco Provincial, S.A.Banco Universal' },

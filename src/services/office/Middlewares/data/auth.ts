@@ -1,11 +1,11 @@
-import { check, oneOf, ValidationChain } from 'express-validator';
+import { check, ValidationChain } from 'express-validator';
 import { NoSQL } from './index';
 
 export const RegisterData: ValidationChain[] = [
 	//
-	check('name', 'nombre invalido').exists({ checkFalsy: true, checkNull: true }).isAlpha().custom(NoSQL),
+	check('name', 'nombre invalido').exists({ checkFalsy: true, checkNull: true }).isString().custom(NoSQL),
 	//
-	check('last_name', 'nombre invalido').exists({ checkFalsy: true, checkNull: true }).isAlpha().custom(NoSQL),
+	check('last_name', 'nombre invalido').exists({ checkFalsy: true, checkNull: true }).isString().custom(NoSQL),
 	//
 	check('password', 'la contraseña debe tener 1 numero, 1 mayuscula, 1 simbolo y un minimo de 6 caracteres')
 		.exists({ checkFalsy: true, checkNull: false })
@@ -81,7 +81,7 @@ export const PassMailData: ValidationChain[] = [
 
 export const validClientData: ValidationChain[] = [
 	//
-	check('name', 'nombre invalido').exists({ checkFalsy: true, checkNull: true }).isAlpha().custom(NoSQL),
+	check('name', 'nombre invalido').exists({ checkFalsy: true, checkNull: true }).isString().custom(NoSQL),
 	//
 	check('id_ident_type', 'el tipo de documento de identidad no es valido')
 		.exists({ checkFalsy: true, checkNull: true })

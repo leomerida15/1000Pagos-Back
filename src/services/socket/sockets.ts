@@ -9,6 +9,11 @@ import {
 	listSolicWorking,
 	solictudesTrabajando,
 	getDash,
+	solictudes,
+	All_Info,
+	allSolic,
+	allTerm,
+	listDiferidoWorking,
 } from './modules/diferidos';
 
 let notes: any[] = [];
@@ -23,7 +28,6 @@ export default (io: any) => {
 		socket.on('prueba', async () => {
 			console.log('Dimas es HOLA');
 			// await listSolic();
-			// console.log(solictudesTrabajando);
 		});
 
 		socket.on('Trabanjando_Solic', async (user: any, callback: any) => {
@@ -35,10 +39,21 @@ export default (io: any) => {
 
 		socket.on('cliente:loadDiferidos', async () => {
 			// console.log('Dimas es gayyyyy');
-			await listDiferido();
+			if (diferido.length <= 1) await listDiferido();
 			io.emit('server:loadDiferidos', diferido);
+			getDash();
+			All_Info();
 
 			// console.log(diferido);
+		});
+
+		////Devuelve Toda las cantidades de Admision
+
+		socket.on('cliente:Todos', async (data: any, callback: any) => {
+			const todos = await All_Info();
+			callback(todos);
+
+			// console.log('Toy aqui probando', todos);
 		});
 
 		socket.on('client:newnote', (newNote: any) => {
@@ -48,7 +63,7 @@ export default (io: any) => {
 		});
 
 		socket.on('client:deletenote', (noteId: any) => {
-			console.log(noteId);
+			// console.log(noteId);
 			notes = notes.filter((note) => note.id !== noteId);
 			io.emit('server:loadnotes', notes);
 		});
@@ -69,27 +84,55 @@ export default (io: any) => {
 			io.emit('server:loadnotes', notes);
 		});
 
-		socket.on('disconnect', () => {
+		socket.on('cliente:disconnect', () => {
 			console.log(socket.id, 'disconnected');
 			console.log('');
 
 			disconect(socket.id);
 		});
 
+		socket.on('disconnect', () => {
+			console.log(socket.id, 'disconnected');
+			console.log('FUera');
+
+			disconect(socket.id);
+		});
+
 		socket.on('Editar_diferido', async (id_request: number, callback: any) => {
 			// console.log('id_request', id_request);
-			// console.log('');
+			// console.log(''); listDiferido
 
 			const diferido = await getDiferido(id_request);
 			callback(diferido);
 		});
 
-		socket.on('dash_data', (id_request: number, callback: any) => {
-			// console.log('id_request', id_request);
-			// console.log('');
+		socket.on('cliente:dashdata', async (user: any, callback: any) => {
+			// console.log('Usuario de peticion: ', user);
+			const dash = await getDash();
 
-			const dash = getDash();
+			// console.log('Informacion de tabla', dash);
 			callback(dash);
+		});
+
+		socket.emit('server:dashdata', async (user: any, callback: any) => {
+			// console.log('Usuario de peticion: ', user);
+			const dash = await getDash();
+
+			// console.log('Informacion de tabla', dash);
+			callback(dash);
+		});
+		socket.on('cliente:dashdatasiempre', async () => {
+			// console.log('Dimas es gayyyyy');
+			const todos = await getDash();
+			io.emit('server:dashdata', todos);
+
+			// console.log(diferido);
+		});
+
+		socket.on('cliente:trabanjandoDiferido', async (user: any, id: any) => {
+			await listDiferidoWorking(socket.id, user, id);
+
+			io.emit('server:loadDiferido', diferido);
 		});
 	});
 };

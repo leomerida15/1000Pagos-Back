@@ -2,32 +2,16 @@ import { NextFunction, Request, Response } from 'express';
 import { Doc } from '../../../../hooks/docs';
 
 const convert = async (req: Request, res: Response, next: NextFunction) => {
-	if (req.file) {
-		await Doc.Convert(req.file.filename, 'jpg');
+	// console.log('req.files', req.files);
 
-		let filename = req.file.filename.split('.');
-		filename[filename.length - 1] = 'jpg';
+	let files: any = req.files;
 
-		req.file.filename = filename.join('.');
+	if (files.image) {
+		const stop: Promise<void>[] = files.image.map(async (file: any, i: number) => {
+			console.log('file', file);
 
-		let filepath = req.file.path.split('.');
-		filepath[filepath.length - 1] = 'jpg';
-
-		req.file.path = filepath.join('.');
-
-		req.file.mimetype = req.file.mimetype.replace(
-			req.file.filename.split('.')[req.file.filename.split('.').length - 1],
-			'jpg'
-		);
-
-		let originalname = req.file.originalname.split('.');
-		originalname[originalname.length - 1] = 'jpg';
-
-		req.file.originalname = originalname.join('.');
-	} else if (req.files) {
-		let files: any = req.files;
-
-		const stop: Promise<void>[] = files.map(async (file: any, i: number) => {
+			//
+			//
 			await Doc.Convert(file.filename, 'jpg');
 
 			let filename = file.filename.split('.');
@@ -52,7 +36,41 @@ const convert = async (req: Request, res: Response, next: NextFunction) => {
 		await Promise.all(stop);
 	}
 
-	// console.log('req.files',req.files);
+	if (files.images) {
+		const stop: Promise<void>[] = files.images.map(async (file: any, i: number) => {
+			try {
+				console.log('file', file.filename, i);
+
+				//
+				await Doc.Convert(file.filename, 'jpg');
+
+				let filename = file.filename.split('.');
+				filename[filename.length - 1] = 'jpg';
+
+				files[i].filename = filename.join('.');
+
+				let filepath = file.path.split('.');
+				filepath[filepath.length - 1] = 'jpg';
+
+				files[i].path = filepath.join('.');
+
+				file.mimetype = file.mimetype.replace(
+					file.filename.split('.')[file.filename.split('.').length - 1],
+					'jpg'
+				);
+				// files[i].mimetype = file.mimetype;
+
+				// let originalname = file.originalname.split('.');
+				// originalname[originalname.length - 1] = 'jpg';
+
+				// files[i].originalname = originalname.join('.');
+			} catch (err) {
+				console.log('|------------|>  err', i);
+			}
+		});
+
+		await Promise.all(stop);
+	}
 
 	next();
 };

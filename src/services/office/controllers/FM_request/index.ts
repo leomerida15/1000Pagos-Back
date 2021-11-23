@@ -20,6 +20,7 @@ import fm_request_origin from '../../../../db/models/fm_request_origin';
 import fm_valid_request from '../../../../db/models/fm_valid_request';
 import fm_quotas_calculated from '../../../../db/models/fm_quotas_calculated';
 import fm_product from '../../../../db/models/fm_product';
+import { fm_commerce_constitutive_act } from '../../../../db/models/fm_commerce_constitutive_act';
 
 //
 export const requestOrigin = async (
@@ -37,7 +38,7 @@ export const requestOrigin = async (
 };
 
 // crear al cliente
-export const fm_valid_client = async (
+export const fm_create_client = async (
 	req: Request<any, Api.Resp, fm_client>,
 	res: Response,
 	next: NextFunction
@@ -47,11 +48,15 @@ export const fm_valid_client = async (
 
 		const { phone1, phone2, email, id_ident_type, ident_num, location }: any = req.body;
 
-		let client = await getRepository(fm_client).findOne({ email, id_ident_type, ident_num });
+		let client = await getRepository(fm_client).findOne({
+			select: ['id'],
+			where: { email, id_ident_type, ident_num },
+		});
 
 		let message: string = ``;
 
 		if (!client) {
+			req.body.rc_ident_card = null;
 			// validar existencia de la clave cumpuesta
 			const validIdent = await getRepository(fm_client).findOne({ id_ident_type, ident_num });
 			if (validIdent) throw { message: 'el documento de identidad ya esta afiliado a un correo' };
@@ -67,6 +72,8 @@ export const fm_valid_client = async (
 
 			const reslocation = await getRepository(fm_location).save(location);
 			req.body.id_location = reslocation.id;
+
+			console.log('req.body', req.body);
 
 			client = await getRepository(fm_client).save(req.body);
 
@@ -253,16 +260,16 @@ export const valid_bank_account = async (
 
 		const { bank_account_num, email }: any = req.body;
 
-		const bank: any = await getRepository(fm_bank).findOne({ code: bank_account_num.slice(0, 4) });
+		const bank: any = await getRepository(fm_bank).findOne({
+			select: ['name', 'id'],
+			where: { code: bank_account_num.slice(0, 4) },
+		});
 		if (!bank) throw { message: 'el banco no existe' };
 
 		let valid_bank_commerce: any;
 		const client: any = await getRepository(fm_client).findOne({ email });
 
-		const obj = {
-			bank_account_num,
-			id_bank: bank.id,
-		};
+		const obj = { bank_account_num, id_bank: bank.id };
 
 		if (!client) {
 			valid_bank_commerce = await getRepository(fm_bank_commerce).findOne(obj);
@@ -276,7 +283,7 @@ export const valid_bank_account = async (
 
 			if (valid_bank_commerce.length) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		}
-		Resp(req, res, { message: 'OK' });
+		Resp(req, res, { message: 'OK', info: { name: bank.name } });
 	} catch (err) {
 		next(err);
 	}
@@ -295,13 +302,9 @@ export const FM_create = async (
 		const {
 			number_post,
 			rc_constitutive_act,
-			rc_property_document,
-			rc_service_document,
 			rc_special_contributor,
 			rc_ref_bank,
 			rc_comp_dep,
-			rc_ref_perso,
-			rc_account_number,
 			rc_rif,
 			rc_ident_card,
 			id_payment_method,
@@ -316,8 +319,14 @@ export const FM_create = async (
 			discount,
 			nro_comp_dep,
 			pagadero,
-			initial,
 		}: any = req.body;
+
+		await getRepository(fm_client).update(id_client, { rc_ident_card });
+
+		await getRepository(fm_commerce).update(id_client, { rc_special_contributor, rc_rif });
+
+		const constitutive_act = rc_constitutive_act.map((id_photo: any) => ({ id_commerce, id_photo }));
+		await getRepository(fm_commerce_constitutive_act).save(constitutive_act);
 
 		const product = await getRepository(fm_product).findOne(id_product);
 		if (!product) throw { message: 'el producto no existe suministrado' };
@@ -325,19 +334,13 @@ export const FM_create = async (
 		const bank: any = await getRepository(fm_bank).findOne({ code: bank_account_num.slice(0, 4) });
 		if (!bank) throw { message: 'el banco no existe' };
 
-		const obj = { bank_account_num, id_bank: bank.id, ids: [id_client] };
-
 		const valid_bank_commerce = await getRepository(fm_bank_commerce).find({
 			where: { id_client: Not(id_client) },
 		});
 
 		if (valid_bank_commerce.length) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		else {
-			await getRepository(fm_bank_commerce).save({
-				bank_account_num,
-				id_commerce,
-				id_bank: bank.id,
-			});
+			await getRepository(fm_bank_commerce).save({ bank_account_num, id_commerce, id_bank: bank.id });
 		}
 
 		const valids = await getRepository(fm_valid_request).save({
@@ -349,30 +352,48 @@ export const FM_create = async (
 			valid_ident_card: '',
 		});
 
-		const quotas_calculated = await getRepository(fm_quotas_calculated).save({
-			id_type_payment,
-			initial: id_type_payment === 2 ? initial : product.price * number_post,
-			quotas_total: id_type_payment === 2 ? (product.price * number_post) / product.quota : 1,
-			quotas_to_pay:
-				id_type_payment === 2 ? (product.price * number_post - (discount ? 50 : 0) - initial) / product.quota : 0,
-		});
+		const initial = ((): number => {
+			if (id_type_payment === 2) {
+				const { initial }: any = req.body;
+				return initial;
+			} else {
+				return product.price * number_post;
+			}
+		})();
 
-		console.log('valid',quotas_calculated);
-		
+		const quotas_total = ((): number => {
+			if (id_type_payment === 2) {
+				const monto = product.price * number_post;
+				return (monto - 50) / product.quota;
+			} else {
+				return 1;
+			}
+		})();
+
+		const quotas_to_pay = ((): number => {
+			if (id_type_payment === 2) {
+				const monto = product.price * number_post;
+				const { initial }: any = req.body;
+
+				return (monto - (discount ? 50 : 0) - initial) / product.quota;
+			} else {
+				return 0;
+			}
+		})();
+
+		const quotas = await getRepository(fm_quotas_calculated).save({
+			id_type_payment,
+			initial,
+			quotas_total,
+			quotas_to_pay,
+		});
 
 		const FM_save = await getRepository(fm_request).save({
 			number_post,
 			bank_account_num,
-			rc_constitutive_act,
-			rc_property_document,
-			rc_service_document,
-			rc_special_contributor,
-			rc_ref_bank,
 			rc_comp_dep,
-			rc_ref_perso,
-			rc_account_number,
 			rc_rif,
-			rc_ident_card,
+			rc_ref_bank,
 			id_payment_method,
 			id_client,
 			id_commerce,
@@ -385,10 +406,10 @@ export const FM_create = async (
 			discount,
 			nro_comp_dep,
 			pagadero,
-			id_quotas_calculat: quotas_calculated.id,
+			id_quotas_calculat: quotas.id,
 		});
 
-		await getRepository(fm_quotas_calculated).update({ id: quotas_calculated.id }, { id_request: FM_save.id });
+		await getRepository(fm_quotas_calculated).update({ id: quotas.id }, { id_request: FM_save.id });
 
 		const validlocation = await getRepository(fm_location).findOne(dir_pos);
 		const location = validlocation ? validlocation : await getRepository(fm_location).save(dir_pos);

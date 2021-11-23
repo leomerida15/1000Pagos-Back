@@ -1,6 +1,8 @@
 import fm_status from '../../../db/models/fm_status';
 import { getConnection, getRepository, Any, Not } from 'typeorm';
 
+export let allSolic: any = 0;
+export let allTerm: any = 0;
 export let diferido: any[] = [];
 export let diferidoTranbajando: any[] = [];
 export let solictudes: any[] = [];
@@ -54,51 +56,87 @@ export const oneDIferido = async (id_request: any) => {
 };
 
 export const listSolicWorking = async (id_conectado: any, user: any) => {
-	console.log('solictudes.length', solictudes.length);
-	if (solictudes.length < 3) await listSolic();
+	if (solictudes.length < 2) await listDiferido();
 	if (solictudes.length !== 0) {
-		const obj = solictudesTrabajando.find((items) => items.id_conectado === id_conectado);
+		const obj = solictudesTrabajando.find((items) => {
+			console.log(`items.id_conectado === id_conectado`, items.id_conectado === id_conectado);
+
+			return items.id_conectado === id_conectado;
+		});
 		if (obj) return obj;
 
-		console.log('solictudes', solictudes.length);
+		console.log('solictudes.length', solictudes.length);
 
 		const working = solictudes.shift();
 
-		console.log('solictudes pos', solictudes.length);
-
-		// working.id_conectado = id_conectado;
-		// working.id_user = user.id;
-		// working.email_user = user.email;
-		// working.last_user = user.last_name;
-		// working.name_user = user.name;
+		console.log('solictudes pos', solictudes[0]);
 
 		// solictudesTrabajando.unshift(working);
-		solictudesTrabajando.unshift({ id_conectado, ...user, working });
+		solictudesTrabajando.unshift({ id_conectado, ...user, ...working });
 		// const obj2 = solictudesTrabajando.find((items) => items.id_conectado === id_conectado);
-		console.log(working);
+		console.log('Jisus este es el que pao', working);
 		return working;
 	}
 };
 
+export const listDiferidoWorking = async (id_conectado: any, user: any, id_dife: any) => {
+	if (diferido.length !== 0) {
+		const obj = diferidoTranbajando.find((items) => {
+			console.log(`items.id_conectado === id_conectado`, items.id_conectado === id_conectado);
+
+			return items.id_conectado === id_conectado;
+		});
+		if (obj) return obj;
+
+		const i = diferido.findIndex((item) => {
+			return item.id === id_dife;
+		});
+		if (i == -1) {
+			return console.log('MENOL NO EXISTE');
+		}
+		// const working2 = diferido.find((item) => {
+		// 	return item.id === id_dife;
+		// });
+
+		console.log('Valor I', i);
+		const resp = diferido[i];
+
+		// console.log('DIferido', resp);
+
+		diferido.splice(i, 1);
+
+		// console.log('Lista de Diferidos', diferido);
+
+		// diferidoTranbajando.unshift({ id_conectado, ...user, ...working2 });
+		diferidoTranbajando.unshift({ id_conectado, ...user, ...resp });
+
+		return resp;
+	}
+};
+
 export const disconect = (id_sockect: any) => {
-	console.log('antes del filter ', solictudesTrabajando.length);
-	console.log('solictudes', solictudes.length);
+	// console.log('antes del filter ', solictudesTrabajando.length);
+	// console.log('solictudes', solictudes.length);
+	// console.log('solictudesTrabajando', solictudesTrabajando);
 
-	solictudesTrabajando = solictudesTrabajando
-		.filter((item) => {
-			console.log('item.id_conectado != id_sockect');
-			console.log(`${item.id_conectado} != ${id_sockect}`);
-			console.log(item.id_conectado != id_sockect);
+	solictudesTrabajando = solictudesTrabajando.filter((item) => {
+		if (item.id_conectado != id_sockect) return true;
 
-			if (item.id_conectado != id_sockect) return true;
+		const { id_conectado, email, last_name, name, ...working } = item;
 
-			solictudes.unshift(item);
-			return false;
-		})
-		.map((item) => item.working);
+		solictudes.unshift(working);
+		// console.log('SOlicitud Trabjando', solictudesTrabajando);
+		return false;
+	});
 
-	console.log('pos del filter ', solictudesTrabajando.length);
-	console.log('pos solictudes', solictudes.length);
+	diferidoTranbajando = diferidoTranbajando.filter((item) => {
+		if (item.id_conectado != id_sockect) return true;
+
+		const { id_conectado, email, last_name, name, ...working2 } = item;
+
+		diferido.unshift(working2);
+		return false;
+	});
 };
 
 export const listSolic = async () => {
@@ -112,7 +150,7 @@ export const listSolic = async () => {
 	];
 
 	const query = await getRepository(fm_status).find({
-		where: { id_status_request: 1, id_department: 1, id_request: Not(ids) },
+		where: { id_status_request: 1, id_department: 1 },
 		take: 10,
 		order: {
 			id: 'ASC',
@@ -156,7 +194,7 @@ export const listSolic = async () => {
 
 	const info: any = query.map((item) => item.id_request);
 
-	solictudes.push(info);
+	solictudes = info;
 	// diferidos = query.map((item) => item.id_request);
 
 	return solictudes;
@@ -202,9 +240,34 @@ export const getDiferido = async (id_request: number) => {
 	return resp;
 };
 
-export const getDash = async () => ({
+export const getDash = () => ({
 	solictudes: solictudes.length,
 	solictudesTrabajando: solictudesTrabajando.length,
 	diferidos: diferido.length,
 	diferidosTranbajando: diferidoTranbajando.length,
 });
+
+export const All_Info = async () => {
+	let solicitudes: any = await getRepository(fm_status).count({
+		where: { id_status_request: 1, id_department: 1 },
+	});
+
+	let terminadas: any = await getRepository(fm_status).count({
+		where: { id_status_request: 3, id_department: 2 },
+	});
+
+	let diferidos: any = await getRepository(fm_status).count({
+		where: { id_status_request: 4, id_department: 1 },
+	});
+
+	// getDash();
+
+	allSolic = solicitudes;
+	allTerm = terminadas;
+
+	const total = { allSolic, allTerm, diferidos };
+
+	// console.log(total);
+
+	return total;
+};
