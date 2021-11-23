@@ -21,7 +21,7 @@ export interface pCiudad {
 }
 
 export interface pFM {
-	id_request: string | number;
+	id_request: any;
 }
 
 export interface RC {
