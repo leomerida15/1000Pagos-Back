@@ -20,6 +20,7 @@ import fm_location from './fm_location';
 import fm_aci_commerce from './fm_aci_commerce';
 import fm_dir_pos from './fm_dir_pos';
 import fm_ident_type from './fm_ident_type';
+import { fm_commerce_constitutive_act } from './fm_commerce_constitutive_act';
 
 @Entity()
 export default class fm_commerce {
@@ -55,6 +56,23 @@ export default class fm_commerce {
 	@JoinColumn({ name: 'id_client' })
 	id_client!: number;
 
+	@OneToMany(
+		() => fm_commerce_constitutive_act,
+		(fm_commerce_constitutive_act) => fm_commerce_constitutive_act.id_commerce
+	)
+	@JoinColumn({ name: 'rc_constitutive_act' })
+	rc_constitutive_act?: fm_commerce_constitutive_act[]; //acta constitutiva
+
+	@Column({ nullable: true, default: null })
+	@ManyToOne(() => fm_photo, (fm_photo) => fm_photo.requests)
+	@JoinColumn({ name: 'rc_special_contributor' }) // acta de contribullene especial
+	rc_special_contributor!: fm_photo | number;
+
+	@Column({ nullable: true, default: null })
+	@ManyToOne(() => fm_photo, (fm_photo) => fm_photo.requests)
+	@JoinColumn({ name: 'rc_rif' })
+	rc_rif!: fm_photo | number;
+
 	@OneToMany(() => fm_bank_commerce, (fm_bank_commerce) => fm_bank_commerce.id_commerce)
 	@JoinColumn({ name: 'banks' })
 	banks?: fm_bank_commerce[];
@@ -62,10 +80,6 @@ export default class fm_commerce {
 	@OneToMany(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_commerce)
 	@JoinColumn({ name: 'dir_pos' })
 	dir_pos?: number;
-
-	@ManyToMany(() => fm_photo)
-	@JoinTable()
-	photos?: fm_photo[];
 
 	@OneToMany(() => fm_request, (fm_request) => fm_request.id_commerce)
 	@JoinColumn({ name: 'requests' })

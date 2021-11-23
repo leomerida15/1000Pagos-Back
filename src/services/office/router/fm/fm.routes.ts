@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import {
-	fm_valid_client,
+	fm_create_client,
 	valid_existin_client,
 	fm_create_commerce,
 	FM_create,
@@ -20,7 +20,7 @@ const FM: Router = Router();
 
 // RC
 //
-FM.route('/FM/client').post(validClientData, fm_valid_client);
+FM.route('/FM/client').post(validClientData, fm_create_client);
 //
 FM.route('/FM/:id/commerce').post(validCommerceData, fm_create_commerce);
 //

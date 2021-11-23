@@ -4,14 +4,12 @@ import {
 	Entity,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
-	ManyToOne,
 	JoinColumn,
 	OneToMany,
-	ManyToMany,
-	JoinTable,
+	OneToOne,
 } from 'typeorm';
 import fm_request from './fm_request';
-import fm_product from './fm_product';
+import { fm_commerce_constitutive_act } from './fm_commerce_constitutive_act';
 
 @Entity()
 export default class fm_photo {
@@ -30,6 +28,13 @@ export default class fm_photo {
 	@OneToMany(() => fm_request, (fm_request) => fm_request)
 	@JoinColumn()
 	requests?: fm_request;
+
+	@OneToOne(
+		() => fm_commerce_constitutive_act,
+		(fm_commerce_constitutive_act) => fm_commerce_constitutive_act.id_photo
+	)
+	@JoinColumn()
+	rc_constitutive_act?: fm_commerce_constitutive_act;
 
 	@CreateDateColumn({ select: false })
 	createdAt?: Date;

@@ -55,63 +55,47 @@ export default class fm_request {
 
 	@ManyToOne(() => fm_payment_method, (fm_payment_method) => fm_payment_method.requests)
 	@JoinColumn({ name: 'id_payment_method' })
-	id_payment_method!: number;
+	id_payment_method!: number | fm_payment_method;
 
 	@ManyToOne(() => fm_type_payment, (fm_type_payment) => fm_type_payment.requests)
 	@JoinColumn({ name: 'id_type_payment' })
-	id_type_payment!: number;
+	id_type_payment!: number | fm_type_payment;
 
 	@ManyToOne(() => fm_client, (fm_client) => fm_client.requests)
 	@JoinColumn({ name: 'id_client' })
-	id_client!: number;
+	id_client!: number | fm_client;
 
 	@ManyToOne(() => fm_commerce, (fm_commerce) => fm_commerce.requests)
 	@JoinColumn({ name: 'id_commerce' })
-	id_commerce!: number;
+	id_commerce!: number | fm_commerce;
 
 	@ManyToOne(() => fm_product, (fm_product) => fm_product.requests)
 	@JoinColumn({ name: 'id_product' })
-	id_product!: number;
+	id_product!: number | fm_product;
 
 	@ManyToOne(() => fm_type_request, (fm_type_request) => fm_type_request.requests)
 	@JoinColumn({ name: 'id_type_request' })
-	id_type_request!: number;
+	id_type_request!: number | fm_type_request;
 
 	@ManyToOne(() => fm_request_origin, (fm_request_origin) => fm_request_origin.requests)
 	@JoinColumn({ name: 'id_request_origin' })
-	id_request_origin!: number;
+	id_request_origin!: number | fm_request_origin;
 
 	@OneToOne(() => fm_valid_request)
 	@JoinColumn({ name: 'id_valid_request' })
-	id_valid_request!: number;
+	id_valid_request!: number | fm_valid_request;
 
 	@OneToMany(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_commerce)
 	@JoinColumn({ name: 'dir_pos' })
 	dir_pos?: fm_dir_pos | fm_location;
 
 	@ManyToOne(() => fm_photo, (fm_photo) => fm_photo.requests)
-	@JoinColumn({ name: 'rc_constitutive_act' })
-	rc_constitutive_act!: number; //acta constitutiva
-
-	@ManyToOne(() => fm_photo, (fm_photo) => fm_photo.requests)
-	@JoinColumn({ name: 'rc_special_contributor' }) // acta de contribullene especial
-	rc_special_contributor!: number;
+	@JoinColumn({ name: 'rc_comp_dep' }) // foto del  numero de cuenta
+	rc_comp_dep!: number | fm_photo;
 
 	@ManyToOne(() => fm_photo, (fm_photo) => fm_photo.requests)
 	@JoinColumn({ name: 'rc_ref_bank' }) // ref bancaria
-	rc_ref_bank!: number;
-
-	@ManyToOne(() => fm_photo, (fm_photo) => fm_photo.requests)
-	@JoinColumn({ name: 'rc_comp_dep' }) // foto del  numero de cuenta
-	rc_comp_dep!: number;
-
-	@ManyToOne(() => fm_photo, (fm_photo) => fm_photo.requests)
-	@JoinColumn({ name: 'rc_rif' })
-	rc_rif!: number;
-
-	@ManyToOne(() => fm_photo, (fm_photo) => fm_photo.requests)
-	@JoinColumn({ name: 'rc_ident_card' })
-	rc_ident_card!: number;
+	rc_ref_bank!: number | fm_photo;
 
 	@OneToMany(() => fm_status, (fm_status) => fm_status.id_request)
 	@JoinColumn({ name: 'status' })

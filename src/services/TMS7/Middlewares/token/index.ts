@@ -9,12 +9,14 @@ export default (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// define array route
 
+		console.log('req.headers.token', req.headers.token);
+
 		// use
 		if (req.headers.token) {
 			const { token }: any = req.headers;
 			const resp: any = jwt.verify(token, Key);
 
-			console.log(resp);
+			console.log('resp', resp);
 
 			req.headers.token = resp;
 
