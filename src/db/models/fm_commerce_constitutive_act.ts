@@ -3,7 +3,7 @@ import fm_commerce from './fm_commerce';
 import fm_photo from './fm_photo';
 
 @Entity()
-export class fm_commerce_constitutive_act {
+export default class fm_commerce_constitutive_act {
 	@PrimaryGeneratedColumn()
 	id?: number;
 

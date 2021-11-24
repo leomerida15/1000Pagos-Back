@@ -20,7 +20,7 @@ import fm_location from './fm_location';
 import fm_aci_commerce from './fm_aci_commerce';
 import fm_dir_pos from './fm_dir_pos';
 import fm_ident_type from './fm_ident_type';
-import { fm_commerce_constitutive_act } from './fm_commerce_constitutive_act';
+import fm_commerce_constitutive_act from './fm_commerce_constitutive_act';
 
 @Entity()
 export default class fm_commerce {
