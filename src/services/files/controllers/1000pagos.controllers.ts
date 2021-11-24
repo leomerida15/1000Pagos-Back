@@ -58,9 +58,9 @@ export const upFilesRecaudos = async (
 				'rc_comp_dep',
 			],
 		});
-		if (!fm) throw { message: 'no existe fm con esos datos', code: 400 };
+		// if (!fm) throw { message: 'no existe fm con esos datos', code: 400 };
 
-		if (fm.id_client && fm) {
+		if (fm?.id_client && fm) {
 			const { id_commerce, id_client } = fm;
 			const { rc_ident_card }: any = id_client;
 			const { rc_special_contributor, rc_constitutive_act, rc_ref_bank, rc_rif }: any = id_commerce;
