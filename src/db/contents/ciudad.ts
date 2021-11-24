@@ -4,7 +4,7 @@ import fm_ciudad from '../models/fm_ciudad';
 const ciudad = async (): Promise<void> => {
 	const valid = await getRepository(fm_ciudad).count();
 	if (!valid) {
-		await getRepository(fm_ciudad).save([
+		const data = [
 			{ id: 1, id_estado: 14, ciudad: 'Acequias', area_code: '0274', postal_code: '5110' },
 			{ id: 2, id_estado: 14, ciudad: 'Apartaderos', area_code: '0271', postal_code: '5130' },
 			{ id: 3, id_estado: 14, ciudad: 'Acarigua', area_code: '0274', postal_code: '5101' },
@@ -6260,7 +6260,21 @@ const ciudad = async (): Promise<void> => {
 			{ id: 2785, id_estado: 2, ciudad: 'San Simón de Cocuy', area_code: '0248', postal_code: '7101' },
 			{ id: 2786, id_estado: 2, ciudad: 'Santa Rosa de Amanadona', area_code: '0248', postal_code: '7101' },
 			{ id: 2787, id_estado: 2, ciudad: 'Otras Poblaciones', area_code: '0248', postal_code: '7101' },
-		]);
+		];
+		const i = data.length / 8;
+		console.log('data.slice(0, i)', data.slice(0, i).length, data.slice(0, i)[data.slice(0, i).length - 1]);
+		console.log('data.slice(i, i * 2)', data.slice(i, i * 2).length, data.slice(i, i * 2)[0]);
+		console.log('data.slice(i * 2, i * 3)', data.slice(i * 2, i * 3).length);
+		console.log('data.slice(i * 3, i * 4)', data.slice(i * 3, i * 4).length);
+
+		await getRepository(fm_ciudad).save(data.slice(0, i));
+		await getRepository(fm_ciudad).save(data.slice(i, i * 2));
+		await getRepository(fm_ciudad).save(data.slice(i * 2, i * 3));
+		await getRepository(fm_ciudad).save(data.slice(i * 3, i * 4));
+		await getRepository(fm_ciudad).save(data.slice(i * 4, i * 5));
+		await getRepository(fm_ciudad).save(data.slice(i * 5, i * 6));
+		await getRepository(fm_ciudad).save(data.slice(i * 6, i * 7));
+		await getRepository(fm_ciudad).save(data.slice(i * 7, i * 8));
 	}
 };
 

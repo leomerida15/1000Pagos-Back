@@ -210,7 +210,6 @@ export const listSolic = async () => {
 			'id_request.dir_pos.id_location.id_municipio',
 			'id_request.dir_pos.id_location.id_ciudad',
 			'id_request.dir_pos.id_location.id_parroquia',
-
 			//
 			'id_request.id_commerce',
 			'id_request.id_commerce.id_ident_type',
