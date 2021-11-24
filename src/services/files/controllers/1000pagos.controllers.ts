@@ -34,6 +34,8 @@ export const upFilesRecaudos = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
+		console.log('files', req.files);
+
 		const files: any = req.files;
 		let info: any = {};
 
@@ -117,10 +119,11 @@ export const upFilesRecaudos = async (
 
 				info[descript] = save.id;
 			});
+		await Promise.all(stop);
 
 		const stop2 = files.constitutive_act.map(async (file: Express.Multer.File, i: number): Promise<void> => {
-			await Doc.Move(file.filename, `${base}/${id_client}/${id_commerce}/constitutive_act`);
-			const path = `static/${base}/${id_client}/${id_commerce}/constitutive_act/${file.filename}`;
+			await Doc.Move(file.filename, `${id_client}/${id_commerce}/constitutive_act`);
+			const path = `static/${id_client}/${id_commerce}/constitutive_act/${file.filename}`;
 
 			const data = getRepository(fm_photo).create({ name: file.filename, path, descript: 'rc_constitutive_act' });
 			const save = await getRepository(fm_photo).save(data);
@@ -128,7 +131,7 @@ export const upFilesRecaudos = async (
 			info.rc_constitutive_act.push(save.id);
 		});
 
-		await Promise.all([...stop, ...stop2]);
+		await Promise.all(stop2);
 
 		res.status(200).json({ message: 'archivos listos', info });
 	} catch (err) {
