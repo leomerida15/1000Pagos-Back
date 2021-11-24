@@ -1,6 +1,6 @@
 # 
 /node_modules
-/src/db/base
+# /src/db/base
 static
 yarn.lock
 package-lock.json

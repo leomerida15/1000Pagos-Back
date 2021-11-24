@@ -42,11 +42,11 @@ export default class fm_commerce {
 
 	@ManyToOne(() => fm_activity, (fm_activity) => fm_activity.commerces)
 	@JoinColumn({ name: 'id_activity' })
-	id_activity!: number;
+	id_activity!: number | fm_activity;
 
 	@ManyToOne(() => fm_location, (fm_location) => fm_location.commerces)
 	@JoinColumn({ name: 'id_location' })
-	id_location!: number;
+	id_location!: number | fm_location;
 
 	@OneToMany(() => fm_aci_commerce, (fm_aci_commerce) => fm_aci_commerce.id_commerce)
 	@JoinColumn({ name: 'aci' })
