@@ -73,13 +73,17 @@ export const upFilesRecaudos = async (
 					rc_rif: rc_rif && rc_rif.id,
 					rc_special_contributor: rc_special_contributor && rc_special_contributor.id,
 					rc_ref_bank: rc_ref_bank && rc_ref_bank.id,
-					rc_constitutive_act: rc_constitutive_act && rc_constitutive_act.map((item: any) => item.id),
+					rc_constitutive_act: rc_constitutive_act ? rc_constitutive_act.map((item: any) => item.id) : [],
 				};
 			} else {
 				info = {
 					rc_ident_card: rc_ident_card && rc_ident_card.id,
 				};
 			}
+		} else {
+			info = {
+				rc_constitutive_act: [],
+			};
 		}
 
 		// validamos la lista de imagenes
@@ -128,12 +132,16 @@ export const upFilesRecaudos = async (
 			const data = getRepository(fm_photo).create({ name: file.filename, path, descript: 'rc_constitutive_act' });
 			const save = await getRepository(fm_photo).save(data);
 
-			console.log('i', i);
+			console.log('save.id', save.id);
+
+			console.log('info.rc_constitutive_act', info.rc_constitutive_act.length);
 
 			info.rc_constitutive_act.push(save.id);
 		});
 
 		await Promise.all(stop2);
+
+		console.log('info', info);
 
 		res.status(200).json({ message: 'archivos listos', info });
 	} catch (err) {

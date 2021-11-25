@@ -299,6 +299,9 @@ export const FM_create = async (
 		// validacion de data
 		validationResult(req).throw();
 
+		console.log('req.body',req.body);
+		
+
 		const {
 			number_post,
 			rc_constitutive_act,
