@@ -27,20 +27,21 @@ export const editRolByWorker = async (
 ): Promise<void> => {
 	try {
 		const { id } = req.params;
-		const { roles } = req.body;
+		const { roles, id_department } = req.body;
 
 		if (!roles) throw { message: 'no envio roles para comparar ni editar', code: 400 };
 
 		await getConnection().query('DELETE FROM [MilPagos].[dbo].[fm_worker_roles_fm_roles] WHERE fmWorkerId =' + id);
 
 		const queryIds = roles
-			.map(
-				(rol) =>
-					`INSERT INTO [dbo].[fm_worker_roles_fm_roles] ([fmWorkerId] ,[fmRolesId]) VALUES (${id} ,${rol.id})`
-			)
+			.map((rol) => {
+				return /*sql*/ `INSERT INTO [dbo].[fm_worker_roles_fm_roles] ([fmWorkerId] ,[fmRolesId]) VALUES (${id} ,${rol.id})`;
+			})
 			.join(' ');
 
 		await getConnection().query(queryIds);
+
+		if (id_department) await getRepository(fm_worker).update(id, { id_department });
 
 		const message: string = Msg('trabajador').edit;
 

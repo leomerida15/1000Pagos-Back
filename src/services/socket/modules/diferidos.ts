@@ -221,6 +221,7 @@ export const listSolic = async () => {
 			'id_request.id_commerce.id_location.id_parroquia',
 			'id_request.id_commerce.banks',
 			'id_request.id_commerce.rc_constitutive_act',
+			'id_request.id_commerce.rc_constitutive_act.id_photo',
 			'id_request.id_commerce.rc_rif',
 			'id_request.id_commerce.rc_special_contributor',
 			//
