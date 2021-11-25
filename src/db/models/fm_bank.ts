@@ -21,6 +21,9 @@ export default class fm_bank {
 	@Column()
 	name!: string;
 
+	@Column()
+	alias!: string;
+
 	@OneToMany(() => fm_bank_commerce, (fm_bank_commerce) => fm_bank_commerce.id_commerce)
 	@JoinColumn({ name: 'commerces' })
 	commerces?: fm_bank_commerce[];
