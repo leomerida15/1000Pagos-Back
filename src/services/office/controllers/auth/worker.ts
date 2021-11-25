@@ -47,7 +47,10 @@ export const getWorkerById = async (
 	try {
 		const { id }: any = req.params;
 
-		const worker = await getRepository(fm_worker).findOne({ where: { id }, relations: ['roles'] });
+		const worker = await getRepository(fm_worker).findOne({
+			where: { id },
+			relations: ['roles', 'id_department'],
+		});
 		const { password, ...data }: any = worker;
 
 		const info = data;
