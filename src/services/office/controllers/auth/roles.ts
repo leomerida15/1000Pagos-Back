@@ -27,7 +27,7 @@ export const editRolByWorker = async (
 ): Promise<void> => {
 	try {
 		const { id } = req.params;
-		const { roles, id_department } = req.body;
+		const { roles, ...editar } = req.body;
 
 		if (!roles) throw { message: 'no envio roles para comparar ni editar', code: 400 };
 
@@ -41,7 +41,7 @@ export const editRolByWorker = async (
 
 		await getConnection().query(queryIds);
 
-		if (id_department) await getRepository(fm_worker).update(id, { id_department });
+		await getRepository(fm_worker).update(id, editar);
 
 		const message: string = Msg('trabajador').edit;
 

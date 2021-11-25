@@ -3,7 +3,7 @@ import { Api } from 'interfaces';
 import Resp from '../../Middlewares/res';
 import fm_client from '../../../../db/models/fm_client';
 import Msg from '../../../../hooks/messages/index.ts';
-import { getConnection, getRepository, Not } from 'typeorm';
+import { getRepository, Not, Any } from 'typeorm';
 import bcrypt from 'bcrypt';
 import fm_phone from '../../../../db/models/fm_phone';
 import { validationResult } from 'express-validator';
@@ -275,13 +275,9 @@ export const valid_bank_account = async (
 			valid_bank_commerce = await getRepository(fm_bank_commerce).findOne(obj);
 			if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		} else {
-			valid_bank_commerce = await getConnection()
-				.createQueryBuilder()
-				.from(fm_bank_commerce, 'fm_bank_commerce')
-				.where('fm_bank_commerce.id_client NOT IN (:ids)', { ...obj, ids: [client.id] })
-				.getMany();
+			valid_bank_commerce = await getRepository(fm_bank_commerce).count({ id_client: Any([client.id]), ...obj });
 
-			if (valid_bank_commerce.length) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
+			if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		}
 		Resp(req, res, { message: 'OK', info: { name: bank.name } });
 	} catch (err) {
@@ -298,9 +294,6 @@ export const FM_create = async (
 	try {
 		// validacion de data
 		validationResult(req).throw();
-
-		console.log('req.body',req.body);
-		
 
 		const {
 			number_post,

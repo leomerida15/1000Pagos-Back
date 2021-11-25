@@ -50,7 +50,7 @@ export default class fm_commerce {
 
 	@OneToMany(() => fm_aci_commerce, (fm_aci_commerce) => fm_aci_commerce.id_commerce)
 	@JoinColumn({ name: 'aci' })
-	aci?: fm_bank_commerce[];
+	id_aci?: fm_bank_commerce[];
 
 	@ManyToOne(() => fm_Client, (fm_Client) => fm_Client.commerces)
 	@JoinColumn({ name: 'id_client' })
@@ -83,7 +83,7 @@ export default class fm_commerce {
 
 	@OneToMany(() => fm_request, (fm_request) => fm_request.id_commerce)
 	@JoinColumn({ name: 'requests' })
-	requests!: fm_request[];
+	requests?: fm_request[];
 
 	@CreateDateColumn({ select: false })
 	createdAt?: Date;
