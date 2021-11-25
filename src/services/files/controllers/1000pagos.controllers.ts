@@ -84,6 +84,10 @@ export const upFilesRecaudos = async (
 					rc_constitutive_act: [],
 				};
 			}
+		} else {
+			info = {
+				rc_constitutive_act: [],
+			};
 		}
 		// validamos la lista de imagenes
 		const v_descript = files.images.filter((file: any) => description.includes(file.originalname)).length;
