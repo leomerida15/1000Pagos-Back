@@ -46,7 +46,7 @@ export const upFilesRecaudos = async (
 		const description = ['rc_ref_bank', 'rc_rif', 'rc_ident_card', 'rc_special_contributor', 'rc_comp_dep'];
 
 		// query que retorna el ultimo fm con ese comercio y cliente
-		const fm = await getRepository(fm_request).findOne({
+		const fm: any = await getRepository(fm_request).findOne({
 			where: { id_client, id_commerce },
 			order: { id: 'ASC' },
 			relations: [
@@ -62,7 +62,7 @@ export const upFilesRecaudos = async (
 		});
 		// if (!fm) throw { message: 'no existe fm con esos datos', code: 400 };
 
-		if (fm?.id_client && fm) {
+		if (fm.id_client && fm) {
 			const { id_commerce, id_client } = fm;
 			const { rc_ident_card }: any = id_client;
 			const { rc_special_contributor, rc_constitutive_act, rc_ref_bank, rc_rif }: any = id_commerce;
