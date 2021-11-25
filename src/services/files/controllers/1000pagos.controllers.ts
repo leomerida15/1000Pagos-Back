@@ -125,23 +125,23 @@ export const upFilesRecaudos = async (
 			});
 		await Promise.all(stop);
 
-		const stop2 = files.constitutive_act.map(async (file: Express.Multer.File, i: number): Promise<void> => {
-			await Doc.Move(file.filename, `${id_client}/${id_commerce}/constitutive_act`);
-			const path = `static/${id_client}/${id_commerce}/constitutive_act/${file.filename}`;
+		if (files.constitutive_act) {
+			const stop2 = files.constitutive_act.map(async (file: Express.Multer.File, i: number): Promise<void> => {
+				await Doc.Move(file.filename, `${id_client}/${id_commerce}/constitutive_act`);
+				const path = `static/${id_client}/${id_commerce}/constitutive_act/${file.filename}`;
 
-			const data = getRepository(fm_photo).create({ name: file.filename, path, descript: 'rc_constitutive_act' });
-			const save = await getRepository(fm_photo).save(data);
+				const data = getRepository(fm_photo).create({
+					name: file.filename,
+					path,
+					descript: 'rc_constitutive_act',
+				});
+				const save = await getRepository(fm_photo).save(data);
 
-			console.log('save.id', save.id);
+				info.rc_constitutive_act.push(save.id);
+			});
 
-			console.log('info.rc_constitutive_act', info.rc_constitutive_act.length);
-
-			info.rc_constitutive_act.push(save.id);
-		});
-
-		await Promise.all(stop2);
-
-		console.log('info', info);
+			await Promise.all(stop2);
+		}
 
 		res.status(200).json({ message: 'archivos listos', info });
 	} catch (err) {

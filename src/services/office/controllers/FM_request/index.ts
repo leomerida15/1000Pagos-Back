@@ -3,7 +3,7 @@ import { Api } from 'interfaces';
 import Resp from '../../Middlewares/res';
 import fm_client from '../../../../db/models/fm_client';
 import Msg from '../../../../hooks/messages/index.ts';
-import { getRepository, Not, Any } from 'typeorm';
+import { getRepository, Not } from 'typeorm';
 import bcrypt from 'bcrypt';
 import fm_phone from '../../../../db/models/fm_phone';
 import { validationResult } from 'express-validator';
@@ -336,7 +336,7 @@ export const FM_create = async (
 
 		if (valid_bank_commerce.length) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		else {
-			await getRepository(fm_bank_commerce).save({ bank_account_num, id_commerce, id_bank: bank.id });
+			await getRepository(fm_bank_commerce).save({ bank_account_num, id_commerce, id_bank: bank.id, id_client });
 		}
 
 		const valids = await getRepository(fm_valid_request).save({
