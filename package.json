@@ -18,7 +18,7 @@
 		"migration:preData": "ts-node src/db/contents/index.ts",
 		"migration:run": "npm run typeorm migration:run",
 		"migration:create": "typeorm migration:generate -- -n",
-		"migration:reverse": "npm run typeorm migration:revert",
+		"migration:revert": "npm run typeorm migration:revert",
 		"migration:show": "npm run typeorm migration:show"
 	},
 	"author": "Dimas, Jesus, Aldrin, Carlos",

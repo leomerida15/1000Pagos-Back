@@ -54,7 +54,7 @@ export const register = async (
 		// await mail.verify(req.body);
 
 		// Response
-		Resp(req, res, {
+		res.status(200).json({
 			message: 'Trabajador registrado Revise su correo por favor',
 			info: { ...data_user, roles },
 			token,
@@ -79,7 +79,7 @@ export const registerValid1 = async (
 		const Worker = await getRepository(fm_worker).findOne({ email });
 		if (Worker) throw { message: 'el correo ya existe' };
 
-		Resp(req, res, { message: 'ok' });
+		res.status(200).json({ message: 'ok' });
 	} catch (err) {
 		next(err);
 	}
@@ -100,7 +100,7 @@ export const registerValid2 = async (
 		const Worker = await getRepository(fm_worker).findOne({ id_ident_type, ident_num });
 		if (Worker) throw { message: 'el documento de identidad ya existe' };
 
-		Resp(req, res, { message: 'ok' });
+		res.status(200).json({ message: 'ok' });
 	} catch (err) {
 		next(err);
 	}
@@ -185,7 +185,7 @@ export const passMail = async (
 		await mail.newPass(worker);
 
 		// Response
-		Resp(req, res, { message: 'Le hemos enviado un correo electrónico para recuperar su contraseña' });
+		res.status(200).json({ message: 'Le hemos enviado un correo electrónico para recuperar su contraseña' });
 	} catch (err) {
 		next(err);
 	}
@@ -215,7 +215,7 @@ export const editPass = async (
 			.execute();
 
 		// Response
-		Resp(req, res, { message: 'Contraseña actualizada con exito' });
+		res.status(200).json({ message: 'Contraseña actualizada con exito' });
 	} catch (err) {
 		next(err);
 	}

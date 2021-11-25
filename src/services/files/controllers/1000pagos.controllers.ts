@@ -34,6 +34,8 @@ export const upFilesRecaudos = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
+		console.log('files', req.files);
+
 		const files: any = req.files;
 		let info: any = {};
 
@@ -58,9 +60,9 @@ export const upFilesRecaudos = async (
 				'rc_comp_dep',
 			],
 		});
-		if (!fm) throw { message: 'no existe fm con esos datos', code: 400 };
+		// if (!fm) throw { message: 'no existe fm con esos datos', code: 400 };
 
-		if (fm.id_client && fm) {
+		if (fm?.id_client && fm) {
 			const { id_commerce, id_client } = fm;
 			const { rc_ident_card }: any = id_client;
 			const { rc_special_contributor, rc_constitutive_act, rc_ref_bank, rc_rif }: any = id_commerce;
@@ -117,10 +119,11 @@ export const upFilesRecaudos = async (
 
 				info[descript] = save.id;
 			});
+		await Promise.all(stop);
 
 		const stop2 = files.constitutive_act.map(async (file: Express.Multer.File, i: number): Promise<void> => {
-			await Doc.Move(file.filename, `${base}/${id_client}/${id_commerce}/constitutive_act`);
-			const path = `static/${base}/${id_client}/${id_commerce}/constitutive_act/${file.filename}`;
+			await Doc.Move(file.filename, `${id_client}/${id_commerce}/constitutive_act`);
+			const path = `static/${id_client}/${id_commerce}/constitutive_act/${file.filename}`;
 
 			const data = getRepository(fm_photo).create({ name: file.filename, path, descript: 'rc_constitutive_act' });
 			const save = await getRepository(fm_photo).save(data);
@@ -128,7 +131,7 @@ export const upFilesRecaudos = async (
 			info.rc_constitutive_act.push(save.id);
 		});
 
-		await Promise.all([...stop, ...stop2]);
+		await Promise.all(stop2);
 
 		res.status(200).json({ message: 'archivos listos', info });
 	} catch (err) {

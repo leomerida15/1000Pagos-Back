@@ -20,7 +20,7 @@ import fm_request_origin from '../../../../db/models/fm_request_origin';
 import fm_valid_request from '../../../../db/models/fm_valid_request';
 import fm_quotas_calculated from '../../../../db/models/fm_quotas_calculated';
 import fm_product from '../../../../db/models/fm_product';
-import { fm_commerce_constitutive_act } from '../../../../db/models/fm_commerce_constitutive_act';
+import fm_commerce_constitutive_act from '../../../../db/models/fm_commerce_constitutive_act';
 
 //
 export const requestOrigin = async (

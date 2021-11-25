@@ -9,7 +9,7 @@ import {
 	OneToOne,
 } from 'typeorm';
 import fm_request from './fm_request';
-import { fm_commerce_constitutive_act } from './fm_commerce_constitutive_act';
+import fm_commerce_constitutive_act from './fm_commerce_constitutive_act';
 
 @Entity()
 export default class fm_photo {

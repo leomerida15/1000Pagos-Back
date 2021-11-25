@@ -20,7 +20,7 @@ import fm_location from './fm_location';
 import fm_aci_commerce from './fm_aci_commerce';
 import fm_dir_pos from './fm_dir_pos';
 import fm_ident_type from './fm_ident_type';
-import { fm_commerce_constitutive_act } from './fm_commerce_constitutive_act';
+import fm_commerce_constitutive_act from './fm_commerce_constitutive_act';
 
 @Entity()
 export default class fm_commerce {
@@ -42,11 +42,11 @@ export default class fm_commerce {
 
 	@ManyToOne(() => fm_activity, (fm_activity) => fm_activity.commerces)
 	@JoinColumn({ name: 'id_activity' })
-	id_activity!: number;
+	id_activity!: number | fm_activity;
 
 	@ManyToOne(() => fm_location, (fm_location) => fm_location.commerces)
 	@JoinColumn({ name: 'id_location' })
-	id_location!: number;
+	id_location!: number | fm_location;
 
 	@OneToMany(() => fm_aci_commerce, (fm_aci_commerce) => fm_aci_commerce.id_commerce)
 	@JoinColumn({ name: 'aci' })

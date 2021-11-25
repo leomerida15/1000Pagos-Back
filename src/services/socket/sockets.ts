@@ -14,6 +14,7 @@ import {
 	allSolic,
 	allTerm,
 	listDiferidoWorking,
+	disconectsolic,
 } from './modules/diferidos';
 
 let notes: any[] = [];
@@ -89,6 +90,12 @@ export default (io: any) => {
 			console.log('');
 
 			disconect(socket.id);
+		});
+
+		socket.on('cliente:cleansolic', () => {
+			disconectsolic(socket.id);
+			io.emit('server:loadDiferido', diferido);
+			io.emit('cliente:dashdatasiempre');
 		});
 
 		socket.on('disconnect', () => {
