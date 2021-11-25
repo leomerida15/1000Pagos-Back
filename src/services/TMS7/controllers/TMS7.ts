@@ -111,6 +111,7 @@ export const createCommerce = async (
 			where: { id: req.body.id_fm, id_commerce: req.body.id_commerce, id_client: req.body.id_client },
 			order: { id: 'ASC' },
 			relations: [
+				// client
 				'id_client',
 				'id_client.id_location',
 				'id_client.id_location.id_estado',
@@ -118,21 +119,14 @@ export const createCommerce = async (
 				'id_client.id_location.id_ciudad',
 				'id_client.id_location.id_parroquia',
 				'id_client.id_ident_type',
-				'id_valid_request',
+				// dir_pos
 				'dir_pos',
 				'dir_pos.id_location',
 				'dir_pos.id_location.id_estado',
 				'dir_pos.id_location.id_municipio',
 				'dir_pos.id_location.id_ciudad',
 				'dir_pos.id_location.id_parroquia',
-				'rc_constitutive_act',
-				'rc_special_contributor',
-				'rc_ref_bank',
-				'rc_comp_dep',
-				'rc_rif',
-				'rc_ident_card',
-				'id_payment_method',
-				'id_type_payment',
+				// commerce
 				'id_commerce',
 				'id_commerce.id_ident_type',
 				'id_commerce.id_activity',
@@ -142,10 +136,6 @@ export const createCommerce = async (
 				'id_commerce.id_location.id_ciudad',
 				'id_commerce.id_location.id_parroquia',
 				'id_commerce.banks',
-				'id_commerce.id_activity',
-				'id_product',
-				'id_type_request',
-				'id_request_origin',
 			],
 		});
 		if (!fmData) throw { message: 'el commercio suministrado no existe', code: 400 };
