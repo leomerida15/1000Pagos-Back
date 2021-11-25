@@ -128,6 +128,8 @@ export const upFilesRecaudos = async (
 			const data = getRepository(fm_photo).create({ name: file.filename, path, descript: 'rc_constitutive_act' });
 			const save = await getRepository(fm_photo).save(data);
 
+			console.log('i', i);
+
 			info.rc_constitutive_act.push(save.id);
 		});
 
