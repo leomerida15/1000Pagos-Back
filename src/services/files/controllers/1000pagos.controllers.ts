@@ -47,7 +47,7 @@ export const upFilesRecaudos = async (
 
 		// query que retorna el ultimo fm con ese comercio y cliente
 		const fm: any = await getRepository(fm_request).findOne({
-			where: { id_client, id_commerce },
+			where: { id_client },
 			order: { id: 'ASC' },
 			relations: [
 				'rc_ref_bank',
@@ -60,28 +60,22 @@ export const upFilesRecaudos = async (
 				'rc_comp_dep',
 			],
 		});
-		if (fm) {
-			if (fm.id_client && fm) {
-				const { id_commerce, id_client } = fm;
-				const { rc_ident_card }: any = id_client;
-				const { rc_special_contributor, rc_constitutive_act, rc_ref_bank, rc_rif }: any = id_commerce;
+		if (fm.id_client && fm) {
+			const { id_commerce, id_client } = fm;
+			const { rc_ident_card }: any = id_client;
+			const { rc_special_contributor, rc_constitutive_act, rc_ref_bank, rc_rif }: any = id_commerce;
 
-				if (fm.id_commerce) {
-					info = {
-						rc_ident_card: rc_ident_card && rc_ident_card.id,
-						rc_rif: rc_rif && rc_rif.id,
-						rc_special_contributor: rc_special_contributor && rc_special_contributor.id,
-						rc_ref_bank: rc_ref_bank && rc_ref_bank.id,
-						rc_constitutive_act: rc_constitutive_act ? rc_constitutive_act.map((item: any) => item.id) : [],
-					};
-				} else {
-					info = {
-						rc_ident_card: rc_ident_card && rc_ident_card.id,
-					};
-				}
+			if (fm.id_commerce === id_commerce) {
+				info = {
+					rc_ident_card: rc_ident_card && rc_ident_card.id,
+					rc_rif: rc_rif && rc_rif.id,
+					rc_special_contributor: rc_special_contributor && rc_special_contributor.id,
+					rc_ref_bank: rc_ref_bank && rc_ref_bank.id,
+					rc_constitutive_act: rc_constitutive_act ? rc_constitutive_act.map((item: any) => item.id) : [],
+				};
 			} else {
 				info = {
-					rc_constitutive_act: [],
+					rc_ident_card: rc_ident_card && rc_ident_card.id,
 				};
 			}
 		} else {
@@ -89,6 +83,7 @@ export const upFilesRecaudos = async (
 				rc_constitutive_act: [],
 			};
 		}
+
 		// validamos la lista de imagenes
 		const v_descript = files.images.filter((file: any) => description.includes(file.originalname)).length;
 
