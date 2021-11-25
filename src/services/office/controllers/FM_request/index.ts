@@ -275,7 +275,7 @@ export const valid_bank_account = async (
 			valid_bank_commerce = await getRepository(fm_bank_commerce).findOne(obj);
 			if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		} else {
-			valid_bank_commerce = await getRepository(fm_bank_commerce).count({ id_client: Not(client.id) });
+			valid_bank_commerce = await getRepository(fm_bank_commerce).count({ id_client: Not(client.id), bank_account_num, id_bank: bank.id });			
 
 			if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		}
