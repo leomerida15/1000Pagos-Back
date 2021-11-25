@@ -8,29 +8,33 @@ const convert = async (req: Request, res: Response, next: NextFunction) => {
 
 	if (files.image) {
 		const stop: Promise<void>[] = files.image.map(async (file: any, i: number) => {
-			console.log('file', file);
+			const from: string = file.filename.split('.')[file.filename.split('.').length - 1];
+			if (['pdf', 'png'].includes(from)) {
+				//
+				//
+				await Doc.Convert(file.filename, 'jpg');
 
-			//
-			//
-			await Doc.Convert(file.filename, 'jpg');
+				let filename = file.filename.split('.');
+				filename[filename.length - 1] = 'jpg';
 
-			let filename = file.filename.split('.');
-			filename[filename.length - 1] = 'jpg';
+				files[i].filename = filename.join('.');
 
-			files[i].filename = filename.join('.');
+				let filepath = file.path.split('.');
+				filepath[filepath.length - 1] = 'jpg';
 
-			let filepath = file.path.split('.');
-			filepath[filepath.length - 1] = 'jpg';
+				files[i].path = filepath.join('.');
 
-			files[i].path = filepath.join('.');
+				file.mimetype = file.mimetype.replace(
+					file.filename.split('.')[file.filename.split('.').length - 1],
+					'jpg'
+				);
+				files[i].mimetype = file.mimetype;
 
-			file.mimetype = file.mimetype.replace(file.filename.split('.')[file.filename.split('.').length - 1], 'jpg');
-			files[i].mimetype = file.mimetype;
+				let originalname = file.originalname.split('.');
+				originalname[originalname.length - 1] = 'jpg';
 
-			let originalname = file.originalname.split('.');
-			originalname[originalname.length - 1] = 'jpg';
-
-			files[i].originalname = originalname.join('.');
+				files[i].originalname = originalname.join('.');
+			}
 		});
 
 		await Promise.all(stop);
@@ -38,9 +42,8 @@ const convert = async (req: Request, res: Response, next: NextFunction) => {
 
 	if (files.images) {
 		const stop: Promise<void>[] = files.images.map(async (file: any, i: number) => {
-			try {
-				console.log('file', file.filename, i);
-
+			const from: string = file.filename.split('.')[file.filename.split('.').length - 1];
+			if (['pdf', 'png'].includes(from)) {
 				//
 				await Doc.Convert(file.filename, 'jpg');
 
@@ -64,8 +67,6 @@ const convert = async (req: Request, res: Response, next: NextFunction) => {
 				// originalname[originalname.length - 1] = 'jpg';
 
 				// files[i].originalname = originalname.join('.');
-			} catch (err) {
-				console.log('|------------|>  err', i);
 			}
 		});
 
