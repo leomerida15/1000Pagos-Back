@@ -59,8 +59,8 @@ export default class fm_worker {
 	@Column({ unique: true })
 	email!: string;
 
-	@Column({ default: 0 })
-	block?: number;
+	@Column({ default: false })
+	block?: boolean;
 
 	@Column()
 	phone!: string;
