@@ -73,6 +73,9 @@ export default class fm_commerce {
 	@JoinColumn({ name: 'rc_rif' })
 	rc_rif!: fm_photo | number;
 
+	@Column()
+	days!: string;
+
 	@OneToMany(() => fm_bank_commerce, (fm_bank_commerce) => fm_bank_commerce.id_commerce)
 	@JoinColumn({ name: 'banks' })
 	banks?: fm_bank_commerce[];

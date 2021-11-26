@@ -73,9 +73,13 @@ export const fm_create_client = async (
 			const reslocation = await getRepository(fm_location).save(location);
 			req.body.id_location = reslocation.id;
 
-			console.log('req.body', req.body);
+			// console.log('req.body', req.body);
 
-			client = await getRepository(fm_client).save(req.body);
+			client = await getRepository(fm_client).save({
+				...req.body,
+				ref_person_1: JSON.stringify(req.body.ref_person_1),
+				ref_person_2: JSON.stringify(req.body.ref_person_2),
+			});
 
 			// definimos data de telefonos
 			const id_client: any = client.id;
@@ -214,7 +218,7 @@ export const fm_create_commerce = async (
 		validationResult(req).throw();
 
 		const id_client: any = req.params.id;
-		const { id_ident_type, ident_num, special_contributor, location, name, id_activity } = req.body;
+		const { id_ident_type, ident_num, special_contributor, location, name, id_activity, days } = req.body;
 		let commerce: any = await getRepository(fm_commerce).findOne({ id_ident_type, ident_num, id_client });
 
 		let Resps: Api.Resp = { message: '', info: {} };
@@ -234,6 +238,7 @@ export const fm_create_commerce = async (
 				id_activity,
 				id_location,
 				id_client,
+				days,
 			});
 
 			Resps = {
@@ -275,7 +280,11 @@ export const valid_bank_account = async (
 			valid_bank_commerce = await getRepository(fm_bank_commerce).findOne(obj);
 			if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		} else {
-			valid_bank_commerce = await getRepository(fm_bank_commerce).count({ id_client: Not(client.id), bank_account_num, id_bank: bank.id });			
+			valid_bank_commerce = await getRepository(fm_bank_commerce).count({
+				id_client: Not(client.id),
+				bank_account_num,
+				id_bank: bank.id,
+			});
 
 			if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		}

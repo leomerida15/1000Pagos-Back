@@ -184,10 +184,11 @@ export const createCommerce = async (
 
 		console.log('usar', usar);
 
-		console.log('');
+		console.log('072000410800000');
+		console.log('000000720004108');
 
 		const valid = await axios.get(
-			`http://10.198.72.86/TMS7API/v1/Merchant?net_id=2&taxId=${id_ident_type}${ident_num}`,
+			`http://10.198.72.86/TMS7API/v1/Merchant?net_id=2&taxId=${id_ident_type.name}${ident_num}`,
 			{
 				headers: {
 					Authorization: 'Bearer ' + usar.access_token,
