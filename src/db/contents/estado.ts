@@ -1,4 +1,3 @@
-import fm_ident_type from '../models/fm_ident_type';
 import { getRepository } from 'typeorm';
 import fm_estado from '../models/fm_estado';
 

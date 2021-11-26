@@ -1,7 +1,11 @@
+// @ts-expect-error
+import tables from 'db-js';
 import fm_status from '../../../db/models/fm_status';
 import { getConnection, getRepository, Any, Not } from 'typeorm';
 
-export let allSolic: any = 0;
+tables.collection('allSolic');
+
+export let allSolic: number = 0;
 export let allTerm: any = 0;
 export let diferido: any[] = [];
 export let diferidoTranbajando: any[] = [];
@@ -294,7 +298,7 @@ export const getDash = () => ({
 });
 
 export const All_Info = async () => {
-	let solicitudes: any = await getRepository(fm_status).count({
+	let solicitudes = await getRepository(fm_status).count({
 		where: { id_status_request: 1, id_department: 1 },
 	});
 

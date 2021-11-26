@@ -2,13 +2,13 @@ import { NextFunction, Request, Response } from 'express';
 import { Doc } from '../../../../hooks/docs';
 
 const convert = async (req: Request, res: Response, next: NextFunction) => {
-	// console.log('req.files', req.files);
+	console.log('req.files', req.files);
 
 	let files: any = req.files;
 
 	if (files.image) {
 		const stop: Promise<void>[] = files.image.map(async (file: any, i: number) => {
-			const from: string = file.filename.split('.')[file.filename.split('.').length - 1];
+			const from: string = file.mimetype.split('/')[file.mimetype.split('.').length - 1];
 			if (['pdf', 'png'].includes(from)) {
 				//
 				//
@@ -25,7 +25,7 @@ const convert = async (req: Request, res: Response, next: NextFunction) => {
 				files[i].path = filepath.join('.');
 
 				file.mimetype = file.mimetype.replace(
-					file.filename.split('.')[file.filename.split('.').length - 1],
+					from,
 					'jpg'
 				);
 				files[i].mimetype = file.mimetype;
@@ -42,7 +42,7 @@ const convert = async (req: Request, res: Response, next: NextFunction) => {
 
 	if (files.images) {
 		const stop: Promise<void>[] = files.images.map(async (file: any, i: number) => {
-			const from: string = file.filename.split('.')[file.filename.split('.').length - 1];
+			const from: string = file.mimetype.split('/')[file.mimetype.split('.').length - 1];
 			if (['pdf', 'png'].includes(from)) {
 				//
 				await Doc.Convert(file.filename, 'jpg');
@@ -58,15 +58,10 @@ const convert = async (req: Request, res: Response, next: NextFunction) => {
 				files[i].path = filepath.join('.');
 
 				file.mimetype = file.mimetype.replace(
-					file.filename.split('.')[file.filename.split('.').length - 1],
+					from,
 					'jpg'
 				);
-				// files[i].mimetype = file.mimetype;
-
-				// let originalname = file.originalname.split('.');
-				// originalname[originalname.length - 1] = 'jpg';
-
-				// files[i].originalname = originalname.join('.');
+				
 			}
 		});
 

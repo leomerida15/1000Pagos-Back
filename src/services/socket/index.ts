@@ -1,8 +1,9 @@
 import express from 'express';
 import { Server } from 'socket.io';
 import http from 'http';
-import Sockets from './sockets';
-import { All_Info, diferido, listDiferido, listSolic, listSolicWorking, solictudes } from './modules/diferidos';
+import Sockets from './router';
+
+import { All_Info, listDiferido, listSolic } from './controllers/admition';
 import { createConnection } from 'typeorm';
 
 const app = express();

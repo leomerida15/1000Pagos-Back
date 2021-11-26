@@ -46,8 +46,8 @@ export const upFilesRecaudos = async (
 		const description = ['rc_ref_bank', 'rc_rif', 'rc_ident_card', 'rc_special_contributor', 'rc_comp_dep'];
 
 		// query que retorna el ultimo fm con ese comercio y cliente
-		const fm = await getRepository(fm_request).findOne({
-			where: { id_client, id_commerce },
+		const fm: any = await getRepository(fm_request).findOne({
+			where: { id_client },
 			order: { id: 'ASC' },
 			relations: [
 				'rc_ref_bank',
@@ -60,26 +60,28 @@ export const upFilesRecaudos = async (
 				'rc_comp_dep',
 			],
 		});
-		// if (!fm) throw { message: 'no existe fm con esos datos', code: 400 };
-
-		if (fm?.id_client && fm) {
+		if (fm && fm.id_client) {
 			const { id_commerce, id_client } = fm;
 			const { rc_ident_card }: any = id_client;
 			const { rc_special_contributor, rc_constitutive_act, rc_ref_bank, rc_rif }: any = id_commerce;
 
-			if (fm.id_commerce) {
+			if (fm.id_commerce === id_commerce) {
 				info = {
 					rc_ident_card: rc_ident_card && rc_ident_card.id,
 					rc_rif: rc_rif && rc_rif.id,
 					rc_special_contributor: rc_special_contributor && rc_special_contributor.id,
 					rc_ref_bank: rc_ref_bank && rc_ref_bank.id,
-					rc_constitutive_act: rc_constitutive_act && rc_constitutive_act.map((item: any) => item.id),
+					rc_constitutive_act: rc_constitutive_act ? rc_constitutive_act.map((item: any) => item.id) : [],
 				};
 			} else {
 				info = {
 					rc_ident_card: rc_ident_card && rc_ident_card.id,
 				};
 			}
+		} else {
+			info = {
+				rc_constitutive_act: [],
+			};
 		}
 
 		// validamos la lista de imagenes
@@ -121,17 +123,23 @@ export const upFilesRecaudos = async (
 			});
 		await Promise.all(stop);
 
-		const stop2 = files.constitutive_act.map(async (file: Express.Multer.File, i: number): Promise<void> => {
-			await Doc.Move(file.filename, `${id_client}/${id_commerce}/constitutive_act`);
-			const path = `static/${id_client}/${id_commerce}/constitutive_act/${file.filename}`;
+		if (files.constitutive_act) {
+			const stop2 = files.constitutive_act.map(async (file: Express.Multer.File, i: number): Promise<void> => {
+				await Doc.Move(file.filename, `${id_client}/${id_commerce}/constitutive_act`);
+				const path = `static/${id_client}/${id_commerce}/constitutive_act/${file.filename}`;
 
-			const data = getRepository(fm_photo).create({ name: file.filename, path, descript: 'rc_constitutive_act' });
-			const save = await getRepository(fm_photo).save(data);
+				const data = getRepository(fm_photo).create({
+					name: file.filename,
+					path,
+					descript: 'rc_constitutive_act',
+				});
+				const save = await getRepository(fm_photo).save(data);
 
-			info.rc_constitutive_act.push(save.id);
-		});
+				info.rc_constitutive_act.push(save.id);
+			});
 
-		await Promise.all(stop2);
+			await Promise.all(stop2);
+		}
 
 		res.status(200).json({ message: 'archivos listos', info });
 	} catch (err) {

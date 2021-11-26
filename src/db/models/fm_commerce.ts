@@ -30,7 +30,7 @@ export default class fm_commerce {
 	@Column()
 	name!: string;
 
-	@ManyToOne(() => fm_ident_type, (fm_ident_type) => fm_ident_type.clients)
+	@ManyToOne(() => fm_ident_type, (fm_ident_type) => fm_ident_type.commerces)
 	@JoinColumn({ name: 'id_ident_type' })
 	id_ident_type!: number;
 
@@ -50,7 +50,7 @@ export default class fm_commerce {
 
 	@OneToMany(() => fm_aci_commerce, (fm_aci_commerce) => fm_aci_commerce.id_commerce)
 	@JoinColumn({ name: 'aci' })
-	aci?: fm_bank_commerce[];
+	id_aci?: fm_bank_commerce[];
 
 	@ManyToOne(() => fm_Client, (fm_Client) => fm_Client.commerces)
 	@JoinColumn({ name: 'id_client' })
@@ -73,6 +73,9 @@ export default class fm_commerce {
 	@JoinColumn({ name: 'rc_rif' })
 	rc_rif!: fm_photo | number;
 
+	@Column()
+	days!: string;
+
 	@OneToMany(() => fm_bank_commerce, (fm_bank_commerce) => fm_bank_commerce.id_commerce)
 	@JoinColumn({ name: 'banks' })
 	banks?: fm_bank_commerce[];
@@ -83,7 +86,7 @@ export default class fm_commerce {
 
 	@OneToMany(() => fm_request, (fm_request) => fm_request.id_commerce)
 	@JoinColumn({ name: 'requests' })
-	requests!: fm_request[];
+	requests?: fm_request[];
 
 	@CreateDateColumn({ select: false })
 	createdAt?: Date;

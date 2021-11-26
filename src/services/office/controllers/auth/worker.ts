@@ -10,7 +10,10 @@ export const worker = async (req: Request<any, Api.Resp>, res: Response, next: N
 		const { id, type }: any = req.headers.token;
 
 		if (type === 1) throw { message: 'no esta tiene permiso de consumir enta data' };
-		const worker = await getRepository(fm_worker).findOne({ where: { id }, relations: ['roles'] });
+		const worker = await getRepository(fm_worker).findOne({
+			where: { id },
+			relations: ['roles', 'id_department'],
+		});
 
 		const { password, ...info }: any = worker;
 
@@ -44,7 +47,10 @@ export const getWorkerById = async (
 	try {
 		const { id }: any = req.params;
 
-		const worker = await getRepository(fm_worker).findOne({ where: { id }, relations: ['roles'] });
+		const worker = await getRepository(fm_worker).findOne({
+			where: { id },
+			relations: ['roles', 'id_department'],
+		});
 		const { password, ...data }: any = worker;
 
 		const info = data;
@@ -61,37 +67,28 @@ export const editWorkerById = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const { id }: any = req.params;
-		const { roles } = req.body;
+		const { id } = req.params;
+		const { roles, ...edit } = req.body;
 
 		if (roles) {
-			const { id } = req.params;
-			const { roles } = req.body;
-
-			if (!roles) throw { message: 'no envio roles para comparar ni editar', code: 400 };
-
 			await getConnection().query(
 				'DELETE FROM [MilPagos].[dbo].[fm_worker_roles_fm_roles] WHERE fmWorkerId =' + id
 			);
 
 			const queryIds = roles
-				.map(
-					(rol) =>
-						`INSERT INTO [dbo].[fm_worker_roles_fm_roles] ([fmWorkerId] ,[fmRolesId]) VALUES (${id} ,${rol.id})`
-				)
+				.map((rol) => {
+					return /*sql*/ `INSERT INTO [dbo].[fm_worker_roles_fm_roles] ([fmWorkerId] ,[fmRolesId]) VALUES (${id} ,${rol.id})`;
+				})
 				.join(' ');
 
 			await getConnection().query(queryIds);
 		}
 
-		const worker = await getRepository(fm_worker).update(id, { roles });
-		const { password, ...data }: any = worker;
+		await getRepository(fm_worker).update(id, edit);
 
-		const info = data;
+		const message: string = Msg('trabajador').edit;
 
-		const message: string = Msg('usuario').edit;
-
-		Resp(req, res, { message, info });
+		Resp(req, res, { message });
 	} catch (err) {
 		next(err);
 	}

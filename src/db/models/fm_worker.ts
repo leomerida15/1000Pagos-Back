@@ -37,7 +37,7 @@ export default class fm_worker {
 	@Column()
 	password!: string;
 
-	@ManyToOne(() => fm_ident_type)
+	@ManyToOne(() => fm_ident_type, (fm_ident_type) => fm_ident_type.workers)
 	@JoinColumn({ name: 'id_ident_type' })
 	id_ident_type!: number;
 

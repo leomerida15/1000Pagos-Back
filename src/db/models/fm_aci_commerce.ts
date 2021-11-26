@@ -7,6 +7,7 @@ import {
 	JoinColumn,
 	UpdateDateColumn,
 	CreateDateColumn,
+	OneToOne,
 } from 'typeorm';
 import fm_commerce from './fm_commerce';
 import fm_bank from './fm_bank';
@@ -17,16 +18,13 @@ export default class fm_aci_commerce {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@ManyToOne(() => fm_commerce, (fm_commerce) => fm_commerce.aci)
+	@OneToOne(() => fm_commerce)
 	@JoinColumn({ name: 'id_commerce' })
 	id_commerce!: number;
 
 	@ManyToOne(() => fm_worker, (fm_worker) => fm_worker.commerces)
-	@JoinColumn({ name: 'id_bank' })
+	@JoinColumn({ name: 'id_worker' })
 	id_worker!: number;
-
-	@Column()
-	bank_account_num!: string;
 
 	@CreateDateColumn({ select: false })
 	createdAt?: Date;

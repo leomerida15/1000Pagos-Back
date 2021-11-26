@@ -3,7 +3,7 @@ import { Api } from 'interfaces';
 import Resp from '../../Middlewares/res';
 import fm_client from '../../../../db/models/fm_client';
 import Msg from '../../../../hooks/messages/index.ts';
-import { getConnection, getRepository, Not } from 'typeorm';
+import { getRepository, Not } from 'typeorm';
 import bcrypt from 'bcrypt';
 import fm_phone from '../../../../db/models/fm_phone';
 import { validationResult } from 'express-validator';
@@ -73,9 +73,13 @@ export const fm_create_client = async (
 			const reslocation = await getRepository(fm_location).save(location);
 			req.body.id_location = reslocation.id;
 
-			console.log('req.body', req.body);
+			// console.log('req.body', req.body);
 
-			client = await getRepository(fm_client).save(req.body);
+			client = await getRepository(fm_client).save({
+				...req.body,
+				ref_person_1: JSON.stringify(req.body.ref_person_1),
+				ref_person_2: JSON.stringify(req.body.ref_person_2),
+			});
 
 			// definimos data de telefonos
 			const id_client: any = client.id;
@@ -214,7 +218,7 @@ export const fm_create_commerce = async (
 		validationResult(req).throw();
 
 		const id_client: any = req.params.id;
-		const { id_ident_type, ident_num, special_contributor, location, name, id_activity } = req.body;
+		const { id_ident_type, ident_num, special_contributor, location, name, id_activity, days } = req.body;
 		let commerce: any = await getRepository(fm_commerce).findOne({ id_ident_type, ident_num, id_client });
 
 		let Resps: Api.Resp = { message: '', info: {} };
@@ -234,6 +238,7 @@ export const fm_create_commerce = async (
 				id_activity,
 				id_location,
 				id_client,
+				days,
 			});
 
 			Resps = {
@@ -275,15 +280,15 @@ export const valid_bank_account = async (
 			valid_bank_commerce = await getRepository(fm_bank_commerce).findOne(obj);
 			if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		} else {
-			valid_bank_commerce = await getConnection()
-				.createQueryBuilder()
-				.from(fm_bank_commerce, 'fm_bank_commerce')
-				.where('fm_bank_commerce.id_client NOT IN (:ids)', { ...obj, ids: [client.id] })
-				.getMany();
+			valid_bank_commerce = await getRepository(fm_bank_commerce).count({
+				id_client: Not(client.id),
+				bank_account_num,
+				id_bank: bank.id,
+			});
 
-			if (valid_bank_commerce.length) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
+			if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		}
-		Resp(req, res, { message: 'OK', info: { name: bank.name } });
+		Resp(req, res, { message: 'OK', info: { ...bank } });
 	} catch (err) {
 		next(err);
 	}
@@ -340,7 +345,7 @@ export const FM_create = async (
 
 		if (valid_bank_commerce.length) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		else {
-			await getRepository(fm_bank_commerce).save({ bank_account_num, id_commerce, id_bank: bank.id });
+			await getRepository(fm_bank_commerce).save({ bank_account_num, id_commerce, id_bank: bank.id, id_client });
 		}
 
 		const valids = await getRepository(fm_valid_request).save({
