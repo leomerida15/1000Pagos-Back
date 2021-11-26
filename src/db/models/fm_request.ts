@@ -10,7 +10,7 @@ import {
 	OneToOne,
 } from 'typeorm';
 import fm_commerce from './fm_commerce';
-import fm_type_request from './fm_type_request';
+import fm_type_request2 from './fm_type_request';
 import fm_photo from './fm_photo';
 import fm_dir_pos from './fm_dir_pos';
 import fm_location from './fm_location';
@@ -73,9 +73,9 @@ export default class fm_request {
 	@JoinColumn({ name: 'id_product' })
 	id_product!: number | fm_product;
 
-	@ManyToOne(() => fm_type_request, (fm_type_request) => fm_type_request.requests)
+	@ManyToOne(() => fm_type_request2, (fm_type_request2) => fm_type_request2.requests)
 	@JoinColumn({ name: 'id_type_request' })
-	id_type_request!: number | fm_type_request;
+	id_type_request!: number | fm_type_request2;
 
 	@ManyToOne(() => fm_request_origin, (fm_request_origin) => fm_request_origin.requests)
 	@JoinColumn({ name: 'id_request_origin' })

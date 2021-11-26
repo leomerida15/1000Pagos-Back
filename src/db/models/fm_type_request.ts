@@ -10,7 +10,7 @@ import {
 import fm_request from './fm_request';
 
 @Entity()
-export default class fm_type_request {
+export default class fm_type_request2 {
 	@PrimaryGeneratedColumn()
 	id?: number;
 

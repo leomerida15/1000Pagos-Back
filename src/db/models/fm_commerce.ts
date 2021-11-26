@@ -30,7 +30,7 @@ export default class fm_commerce {
 	@Column()
 	name!: string;
 
-	@ManyToOne(() => fm_ident_type, (fm_ident_type) => fm_ident_type.clients)
+	@ManyToOne(() => fm_ident_type, (fm_ident_type) => fm_ident_type.commerces)
 	@JoinColumn({ name: 'id_ident_type' })
 	id_ident_type!: number;
 
