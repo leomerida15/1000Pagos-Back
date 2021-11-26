@@ -15,11 +15,11 @@ import {
 	allTerm,
 	listDiferidoWorking,
 	disconectsolic,
-} from './modules/diferidos';
+} from '../controllers/admition';
 
 let notes: any[] = [];
 
-export default (io: any) => {
+const admitions = (io: any) => {
 	io.on('connection', (socket: any) => {
 		// console.log(socket.handshake.url);
 		console.log('nuevo socket connectado:', socket.id);
@@ -143,3 +143,5 @@ export default (io: any) => {
 		});
 	});
 };
+
+export default admitions;
