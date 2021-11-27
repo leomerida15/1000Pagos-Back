@@ -32,7 +32,7 @@ const admitions = (io: any) => {
 		});
 
 		socket.on('Trabanjando_Solic', async (user: any, callback: any) => {
-			console.log('DIferidos-Solic');
+			console.log('Trabanjando_Solic');
 			// console.log(solictudesTrabajando.length);
 
 			callback(await listSolicWorking(socket.id, user));
@@ -51,6 +51,8 @@ const admitions = (io: any) => {
 		////Devuelve Toda las cantidades de Admision
 
 		socket.on('cliente:Todos', async (data: any, callback: any) => {
+			console.log('cliente:Todos');
+			
 			const todos = await All_Info();
 			callback(todos);
 
@@ -58,13 +60,15 @@ const admitions = (io: any) => {
 		});
 
 		socket.on('client:newnote', (newNote: any) => {
+			console.log('client:newnote');
+			
 			const note = { ...newNote, id: uuid() };
 			notes.push(note);
 			io.emit('server:newnote', note);
 		});
 
 		socket.on('client:deletenote', (noteId: any) => {
-			// console.log(noteId);
+
 			notes = notes.filter((note) => note.id !== noteId);
 			io.emit('server:loadnotes', notes);
 		});
@@ -106,7 +110,7 @@ const admitions = (io: any) => {
 		});
 
 		socket.on('Editar_diferido', async (id_request: number, callback: any) => {
-			// console.log('id_request', id_request);
+			console.log('Editar_diferido');
 			// console.log(''); listDiferido
 
 			const diferido = await getDiferido(id_request);
@@ -114,6 +118,8 @@ const admitions = (io: any) => {
 		});
 
 		socket.on('cliente:dashdata', async (user: any, callback: any) => {
+			console.log('cliente:dashdata');
+
 			// console.log('Usuario de peticion: ', user);
 			const dash = await getDash();
 
@@ -122,6 +128,8 @@ const admitions = (io: any) => {
 		});
 
 		socket.emit('server:dashdata', async (user: any, callback: any) => {
+			console.log('server:dashdata');
+
 			// console.log('Usuario de peticion: ', user);
 			const dash = await getDash();
 
