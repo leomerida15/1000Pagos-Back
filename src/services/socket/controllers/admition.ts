@@ -125,6 +125,11 @@ export const disconect = (id_sockect: any) => {
 	// console.log('solictudes', solictudes.length);
 	// console.log('solictudesTrabajando', solictudesTrabajando);
 
+	const data = tables
+		.collection('solictudesTrabajando')
+		.where({ id_conectado: { Not: [id_sockect] } })
+		.valueOf();
+
 	solictudesTrabajando = solictudesTrabajando.filter((item) => {
 		if (item.id_conectado != id_sockect) return true;
 
@@ -135,22 +140,22 @@ export const disconect = (id_sockect: any) => {
 		return false;
 	});
 
-	diferidoTranbajando = diferidoTranbajando.filter((item) => {
-		if (item.id_conectado != id_sockect) return true;
+	// diferidoTranbajando = diferidoTranbajando.filter((item) => {
+	// 	if (item.id_conectado != id_sockect) return true;
 
-		const { id_conectado, email, last_name, name, ...working2 } = item;
+	// 	const { id_conectado, email, last_name, name, ...working2 } = item;
 
-		diferido.unshift(working2);
-		return false;
-	});
+	// 	diferido.unshift(working2);
+	// 	return false;
+	// });
 
-	listDiferido();
+	// listDiferido();
 
-	All_Info();
+	// All_Info();
 
-	getDash();
+	// getDash();
 
-	console.log('ARMANDO ESTAS AQUI');
+	// console.log('ARMANDO ESTAS AQUI');
 };
 
 export const disconectsolic = async (id_sockect: any) => {
