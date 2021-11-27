@@ -34,35 +34,35 @@ export const oneDIferido = async (id_request: any) => {
 	// const query = await getConnection().query(
 	// 	/*sql*/ `SELECT * FROM [MilPagos].[dbo].[fm_status] where id_department = 1 and id_status_request = 1`
 	// );
-	if (diferido.length <= 5) {
-		const query = await getRepository(fm_status).findOne({
-			where: { id_request },
-			relations: [
-				'id_request',
-				'id_request.id_client',
-				'id_request.id_client.id_ident_type',
-				'id_request.id_client.rc_ident_card',
-				'id_request.id_commerce',
-				'id_request.id_commerce.rc_constitutive_act',
-				'id_request.id_commerce.rc_constitutive_act.id_photo',
-				'id_request.id_commerce.rc_special_contributor',
-				'id_request.id_commerce.rc_rif',
-				'id_request.rc_ref_bank',
-				'id_request.id_valid_request',
-				'id_request.rc_comp_dep',
-			],
-		});
+	// if (diferido.length <= 5) {
+	const query = await getRepository(fm_status).findOne({
+		where: { id_request },
+		relations: [
+			'id_request',
+			'id_request.id_client',
+			'id_request.id_client.id_ident_type',
+			'id_request.id_client.rc_ident_card',
+			'id_request.id_commerce',
+			'id_request.id_commerce.rc_constitutive_act',
+			'id_request.id_commerce.rc_constitutive_act.id_photo',
+			'id_request.id_commerce.rc_special_contributor',
+			'id_request.id_commerce.rc_rif',
+			'id_request.rc_ref_bank',
+			'id_request.id_valid_request',
+			'id_request.rc_comp_dep',
+		],
+	});
 
-		if (!query) throw { message: 'no existen solicitudes en espera', code: 400 };
+	if (!query) throw { message: 'no existen solicitudes en espera', code: 400 };
 
-		diferidoTranbajando.push(query.id_request);
+	diferidoTranbajando.push(query.id_request);
 
-		return diferidoTranbajando;
-	}
+	return diferidoTranbajando;
+	// }
 };
 
 export const listSolicWorking = async (id_conectado: any, user: any) => {
-	if (solictudes.length < 2) await listDiferido();
+	if (solictudes.length <= 1) await listDiferido();
 	if (solictudes.length !== 0) {
 		const obj = solictudesTrabajando.find((items) => {
 			console.log(`items.id_conectado === id_conectado`, items.id_conectado === id_conectado);
@@ -83,6 +83,7 @@ export const listSolicWorking = async (id_conectado: any, user: any) => {
 		console.log('Jisus este es el que pao', working);
 		return working;
 	}
+	return solictudes;
 };
 
 export const listDiferidoWorking = async (id_conectado: any, user: any, id_dife: any) => {
@@ -144,13 +145,13 @@ export const disconect = (id_sockect: any) => {
 		return false;
 	});
 
-	listDiferido();
+	// listDiferido();
 
-	All_Info();
+	// All_Info();
 
-	getDash();
+	// getDash();
 
-	console.log('ARMANDO ESTAS AQUI');
+	// console.log('ARMANDO ESTAS AQUI');
 };
 
 export const disconectsolic = async (id_sockect: any) => {
@@ -173,11 +174,11 @@ export const disconectsolic = async (id_sockect: any) => {
 		return false;
 	});
 
-	await listDiferido();
+	// await listDiferido();
 
-	await All_Info();
+	// await All_Info();
 
-	await getDash();
+	// await getDash();
 };
 
 export const listSolic = async () => {
@@ -256,16 +257,21 @@ export const getDiferido = async (id_request: number) => {
 		relations: [
 			'id_request',
 			'id_request.id_valid_request',
-			'id_request.rc_constitutive_act',
-			'id_request.rc_special_contributor',
+			'id_request.id_commerce',
+			'id_request.id_commerce.rc_constitutive_act',
+			'id_request.id_commerce.rc_constitutive_act.id_photo',
+			'id_request.id_commerce.rc_rif',
+			'id_request.id_commerce.rc_special_contributor',
 			'id_request.rc_ref_bank',
 			'id_request.rc_comp_dep',
-			'id_request.rc_rif',
-			'id_request.rc_ident_card',
+			'id_request.id_client',
+			'id_request.id_client.rc_ident_card',
 		],
 	});
 
 	if (!query) throw { message: 'el id soministrado no extie', code: 400 };
+
+	console.log('query', query);
 
 	let id_valid_request: any = {};
 	Object.keys(query.id_request.id_valid_request)
@@ -274,18 +280,32 @@ export const getDiferido = async (id_request: number) => {
 		})
 		.forEach((key) => (id_valid_request[key] = query.id_request.id_valid_request[key]));
 
+	const { id_commerce, id_client, rc_ref_bank, rc_comp_dep }: any = query.id_request;
+	console.log('id_commerce', id_commerce);
+
+	const { rc_special_contributor, rc_constitutive_act, rc_rif }: any = id_commerce;
+	const { rc_ident_card }: any = id_client;
+
 	let imgs: any = {};
 
+	const data: any = {
+		rc_special_contributor,
+		rc_constitutive_act,
+		rc_rif,
+		rc_ident_card,
+		rc_ref_bank,
+		rc_comp_dep,
+	};
 	Object.keys(id_valid_request)
 		.map((valid) => valid.replace('valid_', 'rc_'))
-		.forEach((key) => (imgs[key] = query.id_request[key]));
+		.forEach((key) => (imgs[key] = data[key]));
 
 	const resp = {
 		...imgs,
 		id_valid_request,
 	};
 
-	// console.log('resp', resp);
+	console.log('resp', resp);
 
 	return resp;
 };
@@ -299,15 +319,15 @@ export const getDash = () => ({
 
 export const All_Info = async () => {
 	let solicitudes = await getRepository(fm_status).count({
-		where: { id_status_request: 1, id_department: 1 },
+		where: { id_status_request: 1, id_department: 4 },
 	});
 
 	let terminadas: any = await getRepository(fm_status).count({
-		where: { id_status_request: 3, id_department: 1 },
+		where: { id_status_request: 3, id_department: 4 },
 	});
 
 	let diferidos: any = await getRepository(fm_status).count({
-		where: { id_status_request: 4, id_department: 1 },
+		where: { id_status_request: 4, id_department: 4 },
 	});
 
 	// getDash();
