@@ -14,7 +14,7 @@ export const getFmAdministration = async (
 ): Promise<void> => {
 	try {
 		const query = await getRepository(fm_status).find({
-			where: { id_department: 1, id_status_request: 3 },
+			where: { id_department: 4, id_status_request: 3 },
 			relations: ['id_request'],
 		});
 
@@ -23,7 +23,7 @@ export const getFmAdministration = async (
 		const ids: any[] = query.map((item: any) => item.id_request.id);
 
 		const query2 = await getRepository(fm_status).find({
-			where: { id_request: In(ids), id_department: 2, id_status_request: 1 },
+			where: { id_request: In(ids), id_department: 7, id_status_request: 1 },
 			relations: [
 				'id_request',
 				'id_request.id_commerce',
