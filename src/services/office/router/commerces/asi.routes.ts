@@ -7,6 +7,6 @@ const Aci: Router = Router();
 
 // ? worker
 //
-Aci.route('/aci').get(getAllAliados);
+Aci.route('/asi').get(getAllAliados);
 
 export default Aci;
