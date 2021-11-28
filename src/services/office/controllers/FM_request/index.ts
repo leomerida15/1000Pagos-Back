@@ -432,10 +432,17 @@ export const FM_create = async (
 		);
 
 		const departments = await getRepository(fm_department).find();
+		
+		const statusFm:any = [
+			4, //Admision
+			5, //Cobranza
+			6, //Activacion
+			7, //Administracion
+		]
 
-		const status = departments.map((department) => {
+		const status = statusFm.map((dep:number) => {
 			const id_request = FM_save.id;
-			const id_department = department.id;
+			const id_department = dep;
 			const id_status_request = 1;
 			//
 			return { id_request, id_department, id_status_request };
