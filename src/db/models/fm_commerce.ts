@@ -51,7 +51,7 @@ export default class fm_commerce {
 
 	@ManyToOne(() => Aliados, (fm_aci_commerce) => fm_aci_commerce.commerces)
 	@JoinColumn({ name: 'id_aci' })
-	id_aci?: Aliados[];
+	id_aci!: number | Aliados;
 
 	@ManyToOne(() => fm_Client, (fm_Client) => fm_Client.commerces)
 	@JoinColumn({ name: 'id_client' })
