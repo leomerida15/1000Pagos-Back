@@ -543,7 +543,7 @@ export const editStatusByIdAdmision = async (
 
 		if (commerce_data) {
 			const { id_aci } = commerce_data;
-			await getRepository(fm_commerce).update(id_FM, { id_aci });
+			await getRepository(fm_commerce).update(FM, { id_aci });
 		}
 
 		const message: string = Msg('Status del FM').edit;

@@ -26,10 +26,13 @@ const department = async (): Promise<void> => {
 			name: 'Administracion',
 		},
 		{
-			name: 'Presidencia',
+			name: 'God',
 		},
 		{
 			name: 'Canales',
+		},
+		{
+			name: 'Presidencia',
 		},
 	];
 
