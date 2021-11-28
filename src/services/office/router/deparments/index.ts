@@ -4,5 +4,5 @@ import Deparments from './generalt.routes';
 
 export default (app: Application) => {
 	app.use('/department/', Admitions);
-	app.use('/department/', Deparments);
+	app.use( Deparments);
 };
