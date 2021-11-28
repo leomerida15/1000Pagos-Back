@@ -15,7 +15,8 @@ export const getAllAliados = async (
 
 		const message: string = Msg('Aliado').getAll;
 
-		Resp(req, res, { message, info });
+		// Resp(req, res, { message, info });
+		res.status(200).json({ message, info });
 	} catch (err) {
 		next(err);
 	}
