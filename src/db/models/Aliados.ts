@@ -1,72 +1,82 @@
-// import {
-// 	Entity,
-// 	Column,
-// 	PrimaryGeneratedColumn,
-// 	JoinColumn,
-// 	UpdateDateColumn,
-// 	CreateDateColumn,
-// 	OneToOne,
-// } from 'typeorm';
+import fm_request from './fm_request';
+import fm_commerce from './fm_commerce';
+import {
+	Entity,
+	Column,
+	PrimaryGeneratedColumn,
+	JoinColumn,
+	UpdateDateColumn,
+	CreateDateColumn,
+	OneToOne,
+	OneToMany,
+} from 'typeorm';
 
-// @Entity()
-// export default class Aliados {
-// 	@Column()
-// 	aliIdUsuario!: string;
+@Entity({ synchronize: false })
+export default class Aliados {
+	@PrimaryGeneratedColumn()
+	id?: number;
 
-// 	@Column()
-// 	aliTipoIdentificacion!: string;
+	@Column()
+	aliIdUsuario!: number;
 
-// 	@Column()
-// 	aliIdentificacion!: string;
+	@Column()
+	aliTipoIdentificacion!: string;
 
-// 	@Column()
-// 	aliApellidos!: string;
+	@Column()
+	aliIdentificacion!: string;
 
-// 	@Column()
-// 	aliNombres!: string;
+	@Column()
+	aliApellidos!: string;
 
-// 	@Column()
-// 	aliSexo!: string;
+	@Column()
+	aliNombres!: string;
 
-// 	@Column()
-// 	aliFechaNacimiento!: string;
+	@Column()
+	aliSexo!: string;
 
-// 	@Column()
-// 	aliCodigoTelHabitacion!: string;
+	@Column()
+	aliFechaNacimiento!: string;
 
-// 	@Column()
-// 	aliTelefonoHabitacion!: string;
+	@Column()
+	aliCodigoTelHabitacion!: string;
 
-// 	@Column()
-// 	aliCodigoCelular!: string;
+	@Column()
+	aliTelefonoHabitacion!: string;
 
-// 	@Column()
-// 	aliCelular!: string;
+	@Column()
+	aliCodigoCelular!: string;
 
-// 	@Column()
-// 	aliEmail!: string;
+	@Column()
+	aliCelular!: string;
 
-// 	@Column()
-// 	aliProfesion!: string;
+	@Column()
+	aliEmail!: string;
 
-// 	@Column()
-// 	aliDireccion!: string;
+	@Column()
+	aliProfesion!: string;
 
-// 	@Column()
-// 	aliCodZonaAtencion!: string;
+	@Column()
+	aliDireccion!: string;
 
-// 	@Column()
-// 	aliCodModalidadPago!: string;
+	@Column()
+	aliCodZonaAtencion!: number;
 
-// 	@Column()
-// 	aliCuentaAbono!: string;
+	@Column()
+	aliCodModalidadPago!: number;
 
-// 	@Column()
-// 	aliObservaciones!: string;
+	@Column()
+	aliCuentaAbono!: string;
 
-// 	@Column()
-// 	aliCodEstatus!: string;
+	@Column()
+	aliObservaciones!: string;
 
-// 	@Column()
-// 	aliRecaudos!: string;
-// }
+	@Column()
+	aliCodEstatus!: number;
+
+	@Column()
+	aliRecaudos!: string;
+
+	@OneToMany(() => fm_commerce, (fm_commerce) => fm_commerce.id_aci)
+	@JoinColumn({ name: 'commerces' })
+	commerces?: fm_commerce[];
+}
