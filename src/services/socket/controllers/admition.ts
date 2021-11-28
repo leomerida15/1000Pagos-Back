@@ -258,10 +258,10 @@ export const getDiferido = async (id_request: number) => {
 			'id_request.id_commerce.rc_constitutive_act.id_photo',
 			'id_request.id_commerce.rc_rif',
 			'id_request.id_commerce.rc_special_contributor',
-			'id_request.rc_ref_bank',
-			'id_request.rc_comp_dep',
 			'id_request.id_client',
 			'id_request.id_client.rc_ident_card',
+			'id_request.rc_ref_bank',
+			'id_request.rc_comp_dep',
 		],
 	});
 
