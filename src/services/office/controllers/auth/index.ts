@@ -157,7 +157,7 @@ export const login = async (
 		}
 
 		//generamos token
-		const token = jwt.sign({ id, email, type: 2 }, key, { expiresIn: 60 * 30 });
+		const token = jwt.sign({ id, type: 2, email }, key, { expiresIn: 60 * 30 });
 
 		// Response
 		Resp(req, res, {

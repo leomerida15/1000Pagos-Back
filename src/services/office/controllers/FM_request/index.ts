@@ -524,10 +524,12 @@ export const editStatusByIdAdmision = async (
 		const { id_FM }: any = req.params;
 		const { id_status_request, valids } = req.body;
 
+
 		const FM: any = await getRepository(fm_request).findOne(id_FM, { relations: ['id_valid_request'] });
 		if (!FM) throw { message: 'FM no existe' };
 
 		await getRepository(fm_status).update({ id_request: id_FM, id_department: 4 }, { id_status_request });
+
 
 		if (id_status_request === 4) {
 			const { id } = FM.id_valid_request;
