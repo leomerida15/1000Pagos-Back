@@ -60,7 +60,7 @@ export const editStatusByIdAdministration = async (
 		const FM: any = await getRepository(fm_request).findOne(id_FM, { relations: ['id_valid_request'] });
 		if (!FM) throw { message: 'FM no existe' };
 
-		await getRepository(fm_status).update({ id_request: id_FM, id_department: 2 }, { id_status_request });
+		await getRepository(fm_status).update({ id_request: id_FM, id_department: 7 }, { id_status_request });
 
 		if (id_payment_method && id_type_payment)
 			await getRepository(fm_request).update({ id: id_FM }, { id_payment_method, id_type_payment });

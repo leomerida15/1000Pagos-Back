@@ -216,7 +216,7 @@ export const editRcByFm = async (
 
 		await Promise.all(stop);
 
-		await getRepository(fm_status).update({ id_request: fm.id, id_department: 1 }, { id_status_request: 3 });
+		await getRepository(fm_status).update({ id_request: fm.id, id_department: 4 }, { id_status_request: 3 });
 
 		res.status(200).json({ message: 'imagenes editadas' });
 	} catch (err) {

@@ -124,7 +124,7 @@ export const login = async (
 
 	try {
 		// encript password
-		const worker = await getRepository(fm_worker).findOne({ where: { email }, relations: ['roles'] });
+		const worker = await getRepository(fm_worker).findOne({ where: { email }, relations: ['roles', 'id_department'] });
 
 		if (!worker) throw { message: 'correo o contraseña incorrecta', code: 400 };
 
