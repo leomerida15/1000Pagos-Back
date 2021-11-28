@@ -1,9 +1,5 @@
-// @ts-expect-error
-import tables from 'db-js';
 import fm_status from '../../../db/models/fm_status';
 import { getConnection, getRepository, Any, Not } from 'typeorm';
-
-tables.collection('allSolic');
 
 export let allSolic: number = 0;
 export let allTerm: any = 0;
