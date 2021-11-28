@@ -345,7 +345,10 @@ export const FM_create = async (
 		const bank: any = await getRepository(fm_bank).findOne({ code: bank_account_num.slice(0, 4) });
 		if (!bank) throw { message: 'el banco no existe' };
 
-		const valid_bank_commerce = await getRepository(fm_bank_commerce).count({ id_client: Not(id_client), bank_account_num });
+		const valid_bank_commerce = await getRepository(fm_bank_commerce).count({
+			id_client: Not(id_client),
+			bank_account_num,
+		});
 
 		if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		else {
@@ -424,23 +427,21 @@ export const FM_create = async (
 		const location = validlocation ? validlocation : await getRepository(fm_location).save(dir_pos);
 		const id_request = FM_save.id;
 
-		await getRepository(fm_dir_pos).save({ id_location: location.id, id_commerce, id_request });
+		await getRepository(fm_dir_pos).save({ id_location: location.id, id_commerce, id_request, id_product });
 
 		await getRepository(fm_request).update(
 			{ id: FM_save.id },
 			{ code: 'S' + id_client + id_commerce + 'F' + FM_save.id }
 		);
 
-		const departments = await getRepository(fm_department).find();
-		
-		const statusFm:any = [
+		const statusFm: any = [
 			4, //Admision
 			5, //Cobranza
 			6, //Activacion
 			7, //Administracion
-		]
+		];
 
-		const status = statusFm.map((dep:number) => {
+		const status = statusFm.map((dep: number) => {
 			const id_request = FM_save.id;
 			const id_department = dep;
 			const id_status_request = 1;
@@ -448,7 +449,8 @@ export const FM_create = async (
 			return { id_request, id_department, id_status_request };
 		});
 
-		await getRepository(fm_status).save(status);
+		const statusData = getRepository(fm_status).create(status);
+		await getRepository(fm_status).save(statusData);
 
 		res.status(200).json({ message: 'FM creada', info: { id: FM_save.id } });
 	} catch (err) {
@@ -525,7 +527,7 @@ export const editStatusByIdAdmision = async (
 		const FM: any = await getRepository(fm_request).findOne(id_FM, { relations: ['id_valid_request'] });
 		if (!FM) throw { message: 'FM no existe' };
 
-		await getRepository(fm_status).update({ id_request: id_FM, id_department: 1 }, { id_status_request });
+		await getRepository(fm_status).update({ id_request: id_FM, id_department: 4 }, { id_status_request });
 
 		if (id_status_request === 4) {
 			const { id } = FM.id_valid_request;

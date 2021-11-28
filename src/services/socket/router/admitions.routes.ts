@@ -26,11 +26,6 @@ const admitions = (io: any) => {
 
 		socket.emit('server:loadDiferido', diferido);
 
-		socket.on('prueba', async () => {
-			console.log('Dimas es HOLA');
-			// await listSolic();
-		});
-
 		socket.on('Trabanjando_Solic', async (user: any, callback: any) => {
 			console.log('Trabanjando_Solic');
 			// console.log(solictudesTrabajando.length);
@@ -52,7 +47,7 @@ const admitions = (io: any) => {
 
 		socket.on('cliente:Todos', async (data: any, callback: any) => {
 			console.log('cliente:Todos');
-			
+
 			const todos = await All_Info();
 			callback(todos);
 
@@ -61,14 +56,13 @@ const admitions = (io: any) => {
 
 		socket.on('client:newnote', (newNote: any) => {
 			console.log('client:newnote');
-			
+
 			const note = { ...newNote, id: uuid() };
 			notes.push(note);
 			io.emit('server:newnote', note);
 		});
 
 		socket.on('client:deletenote', (noteId: any) => {
-
 			notes = notes.filter((note) => note.id !== noteId);
 			io.emit('server:loadnotes', notes);
 		});
@@ -151,7 +145,34 @@ const admitions = (io: any) => {
 		});
 
 		//************************************************** */
-		///CON DIMAS TRABAJANDO
+		///NUEVAS FUNCIONES DE SOCKET
+		//Prueba de conexion de modulos
+		socket.on('prueba', async () => {
+			console.log('ESTA USTED VERIFICADO ');
+			// await listSolic();
+		});
+
+		//Coloca 10 nuevos FM en la variable SOlicitudes
+		socket.on('client:getAll', async () => {
+			console.log('client:getAll');
+			//toda las variables de data
+			let listadiferidos = await listDiferido;
+			let dataSDT = await getDash;
+			let countAll = await All_Info;
+
+			//Todos los emit de esa data
+			//Devuelve diferidos
+			socket.emit('server:loadDiferido', listadiferidos);
+			//solicitudes,diferidos,solictudestrabajdno y diferidostrabjando
+			io.emit('server:dashdata', dataSDT);
+			//SI las solicitudes estan por terminar pide 10 mas
+			if (solictudes.length <= 1) {
+				//solo debe ejecutarse cunado variable solicitudes sea 1 o menos
+				await listSolic;
+			}
+			//count de solicitudes, terminadas, diferidos
+			io.emit('server:counAll', countAll);
+		});
 
 		//************************************************** */
 	});
