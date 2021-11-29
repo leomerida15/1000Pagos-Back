@@ -10,7 +10,7 @@
 	"requestTimeout": 30000000,
 	"connectionTimeout": 30000,
 	"synchronize": false,
-	"logging": false,
+	"logging": ["query"],
 	"entities": ["src/db/models/**/*.ts"],
 	"migrations": ["src/db/base/**/*.ts"],
 	"subscribers": ["src/db/subscriber/**/*.ts"],
