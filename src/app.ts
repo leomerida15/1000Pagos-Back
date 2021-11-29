@@ -75,6 +75,6 @@ createConnection()
 		// 	query.dir_pos = dir_pos;
 		// 	console.log('dir_pos', query.dir_pos);
 		// }
-		console.log('fmData', query);
+		// console.log('fmData', query);
 	})
 	.catch((err) => console.log('DB ERR', err));
