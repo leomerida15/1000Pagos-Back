@@ -42,6 +42,12 @@ createConnection()
 				'id_client.id_location.id_ciudad',
 				'id_client.id_location.id_parroquia',
 				'id_client.id_ident_type',
+				// dir_pos
+				'dir_pos.id_location',
+				'dir_pos.id_location.id_estado',
+				'dir_pos.id_location.id_municipio',
+				'dir_pos.id_location.id_ciudad',
+				'dir_pos.id_location.id_parroquia',
 				// commerce
 				'id_commerce',
 				'id_commerce.id_ident_type',
@@ -54,20 +60,20 @@ createConnection()
 				'id_commerce.banks',
 			],
 		});
-		if (query) {
-			const dir_pos = await getRepository(fm_dir_pos).find({
-				where: { id_request: query.id },
-				relations: [
-					'id_location',
-					'id_location.id_estado',
-					'id_location.id_municipio',
-					'id_location.id_ciudad',
-					'id_location.id_parroquia',
-				],
-			});
-			query.dir_pos = dir_pos;
-			console.log('dir_pos', query.dir_pos);
-		}
+		// if (query) {
+		// 	const dir_pos = await getRepository(fm_dir_pos).find({
+		// 		where: { id_request: query.id },
+		// 		relations: [
+		// 			'id_location',
+		// 			'id_location.id_estado',
+		// 			'id_location.id_municipio',
+		// 			'id_location.id_ciudad',
+		// 			'id_location.id_parroquia',
+		// 		],
+		// 	});
+		// 	query.dir_pos = dir_pos;
+		// 	console.log('dir_pos', query.dir_pos);
+		// }
 		console.log('fmData', query);
 	})
 	.catch((err) => console.log('DB ERR', err));
