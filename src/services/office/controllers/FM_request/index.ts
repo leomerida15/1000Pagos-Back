@@ -544,11 +544,17 @@ export const editStatusByIdAdmision = async (
 			await getRepository(fm_valid_request).update(id, { ...valids });
 		}
 
+<<<<<<< HEAD
+		if (commerce_data) {
+			const { id_aci } = commerce_data;
+			await getRepository(fm_commerce).update(FM, { id_aci });
+=======
 		if (id_aci) {
 			const edit = await getRepository(fm_commerce).update({ id:FM.id_commerce }, { id_aci });
 
 			console.log('edit',edit);
 			
+>>>>>>> c18c7f3bbd1c4df9c01a9b6dd5c55226292463e2
 		}
 		
 
