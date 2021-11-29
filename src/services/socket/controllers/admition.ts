@@ -10,7 +10,8 @@ export let solictudesTrabajando: any[] = [];
 
 export const listDiferido = async () => {
 	const query = await getConnection()
-		.query(/*sql*/ `SELECT r.id ,r.code, cc.name as nameComer, c.name as nameClient, c.last_name as lastnameClient, c.email , i.name as identTypeComer, cc.ident_num as identNumComer , r.updatedAt
+		.query(/*sql*/ `SELECT r.id ,r.code, cc.name as nameComer, c.name as nameClient, c.last_name as lastnameClient,
+			c.email , i.name as identTypeComer, cc.ident_num as identNumComer , r.updatedAt
 			FROM [MilPagos].[dbo].[fm_status]
 
 			inner join fm_request as r on r.id = id_request
@@ -18,7 +19,7 @@ export const listDiferido = async () => {
 			inner join fm_commerce as cc on cc.id = r.id_commerce
 			inner join fm_ident_type as i on i.id = cc.id_ident_type
 
-			where id_department = 1 and id_status_request = 4`);
+			where id_department = 4 and id_status_request = 4`);
 
 	diferido = query;
 	// diferidos = query.map((item) => item.id_request);
@@ -59,11 +60,15 @@ export const oneDIferido = async (id_request: any) => {
 
 export const listSolicWorking = async (id_conectado: any, user: any) => {
 	if (solictudes.length <= 1) await listDiferido();
-	if (solictudes.length !== 0) {
+
+	if (solictudes.length) {
+		console.log('Numero de solici: ', solictudes.length);
 		const obj = solictudesTrabajando.find((items) => {
 			console.log(`items.id_conectado === id_conectado`, items.id_conectado === id_conectado);
-
-			return items.id_conectado === id_conectado;
+			// console.log('TODA LAS SOLIC ITEMS: ', items);
+			// console.log('ITEMS: ', items.id_conectado, 'y id :', id_conectado);
+			// console.log('ITEMS: ', items.id, 'y id :', user.id);
+			return items.id_conectado === id_conectado || items.ident_num === user.ident_num;
 		});
 		if (obj) return obj;
 
@@ -79,7 +84,7 @@ export const listSolicWorking = async (id_conectado: any, user: any) => {
 		// console.log('Jisus este es el que pao', working);
 		return working;
 	}
-	return solictudes;
+	// return solictudes;
 };
 
 export const listDiferidoWorking = async (id_conectado: any, user: any, id_dife: any) => {
@@ -188,7 +193,7 @@ export const listSolic = async () => {
 	];
 
 	const query = await getRepository(fm_status).find({
-		where: { id_status_request: 1, id_department: 1 },
+		where: { id_status_request: 1, id_department: 4 },
 		take: 10,
 		order: {
 			id: 'ASC',

@@ -26,32 +26,17 @@ const admitions = (io: any) => {
 
 		socket.emit('server:loadDiferido', diferido);
 
-		socket.on('Trabanjando_Solic', async (user: any, callback: any) => {
-			console.log('Trabanjando_Solic');
-			// console.log(solictudesTrabajando.length);
-
-			callback(await listSolicWorking(socket.id, user));
-		});
-
 		socket.on('cliente:loadDiferidos', async () => {
 			// console.log('Dimas es gayyyyy');
 			if (diferido.length <= 1) await listDiferido();
 			io.emit('server:loadDiferidos', diferido);
-			getDash();
-			All_Info();
 
 			// console.log(diferido);
 		});
 
-		////Devuelve Toda las cantidades de Admision
-
-		socket.on('cliente:Todos', async (data: any, callback: any) => {
-			console.log('cliente:Todos');
-
-			const todos = await All_Info();
-			callback(todos);
-
-			// console.log('Toy aqui probando', todos);
+		socket.on('cliente:trabanjandoDiferido', async (user: any, id: any) => {
+			await listDiferidoWorking(socket.id, user, id);
+			io.emit('server:loadDiferido', diferido);
 		});
 
 		socket.on('client:newnote', (newNote: any) => {
@@ -92,8 +77,8 @@ const admitions = (io: any) => {
 
 		socket.on('cliente:cleansolic', () => {
 			disconectsolic(socket.id);
-			io.emit('server:loadDiferido', diferido);
-			io.emit('cliente:dashdatasiempre');
+			// io.emit('server:loadDiferido', diferido);
+			// io.emit('cliente:dashdatasiempre');
 		});
 
 		socket.on('disconnect', () => {
@@ -101,14 +86,6 @@ const admitions = (io: any) => {
 			console.log('FUera');
 
 			disconect(socket.id);
-		});
-
-		socket.on('Editar_diferido', async (id_request: number, callback: any) => {
-			console.log('Editar_diferido');
-			// console.log(''); listDiferido
-
-			const diferido = await getDiferido(id_request);
-			callback(diferido);
 		});
 
 		socket.on('cliente:dashdata', async (user: any, callback: any) => {
@@ -130,18 +107,13 @@ const admitions = (io: any) => {
 			// console.log('Informacion de tabla', dash);
 			callback(dash);
 		});
+
 		socket.on('cliente:dashdatasiempre', async () => {
 			// console.log('Dimas es gayyyyy');
 			const todos = await getDash();
 			io.emit('server:dashdata', todos);
 
 			// console.log(diferido);
-		});
-
-		socket.on('cliente:trabanjandoDiferido', async (user: any, id: any) => {
-			await listDiferidoWorking(socket.id, user, id);
-
-			io.emit('server:loadDiferido', diferido);
 		});
 
 		//************************************************** */
@@ -156,22 +128,49 @@ const admitions = (io: any) => {
 		socket.on('client:getAll', async () => {
 			console.log('client:getAll');
 			//toda las variables de data
-			let listadiferidos = await listDiferido;
-			let dataSDT = await getDash;
-			let countAll = await All_Info;
+			const listadiferidos = await listDiferido();
+			const countAll = await All_Info();
+			const dataSDT = await getDash();
 
 			//Todos los emit de esa data
 			//Devuelve diferidos
-			socket.emit('server:loadDiferido', listadiferidos);
+			socket.emit('server:loadDiferidos', listadiferidos);
+			console.log('ListDiferido ', listadiferidos);
 			//solicitudes,diferidos,solictudestrabajdno y diferidostrabjando
-			io.emit('server:dashdata', dataSDT);
+			// console.log('Resultado de getdas: ', dataSDT);
+			socket.emit('server:dashdata', dataSDT);
 			//SI las solicitudes estan por terminar pide 10 mas
-			if (solictudes.length <= 1) {
+			let numSolic = solictudes.length + solictudesTrabajando.length;
+			console.log('Suma de solic: ', numSolic);
+			if (numSolic <= 10) {
 				//solo debe ejecutarse cunado variable solicitudes sea 1 o menos
-				await listSolic;
+				await listSolic();
 			}
 			//count de solicitudes, terminadas, diferidos
-			io.emit('server:counAll', countAll);
+			socket.emit('server:counAll', countAll);
+		});
+
+		//Solicitudes trabajando
+		socket.on('Trabanjando_Solic', async (user: any, callback: any) => {
+			console.log('Trabanjando_Solic');
+			let data = await listSolicWorking(socket.id, user);
+			console.log('EL CallBack: ', data);
+			callback(data);
+		});
+
+		//Editar DIferidos
+		socket.on('Editar_diferido', async (id_request: number, callback: any) => {
+			// console.log('Editar_diferido');
+			const diferido = await getDiferido(id_request);
+			callback(diferido);
+		});
+
+		//TODOS
+		socket.on('cliente:Todos', async (data: any, callback: any) => {
+			// console.log('cliente:Todos');
+			let todos = await All_Info();
+			callback(todos);
+			// console.log('Toy aqui probando', todos);
 		});
 
 		//************************************************** */
