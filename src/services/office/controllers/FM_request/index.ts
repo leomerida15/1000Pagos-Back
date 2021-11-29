@@ -519,14 +519,17 @@ export const editStatusByIdAdmision = async (
 	req: Request<
 		Api.params,
 		Api.Resp,
-		{ id_status_request: number; valids?: fm_valid_request; commerce_data: fm_commerce }
+		{ id_status_request: number; valids?: fm_valid_request; id_aci: any }
 	>,
 	res: Response<Api.Resp>,
 	next: NextFunction
 ): Promise<void> => {
 	try {
 		const { id_FM }: any = req.params;
-		const { id_status_request, valids, commerce_data } = req.body;
+		const { id_status_request, valids, id_aci } = req.body;
+
+		console.log(' req.body', req.body);
+		
 
 		const FM: any = await getRepository(fm_request).findOne(id_FM, { relations: ['id_valid_request'] });
 		if (!FM) throw { message: 'FM no existe' };
@@ -541,10 +544,19 @@ export const editStatusByIdAdmision = async (
 			await getRepository(fm_valid_request).update(id, { ...valids });
 		}
 
+<<<<<<< HEAD
 		if (commerce_data) {
 			const { id_aci } = commerce_data;
 			await getRepository(fm_commerce).update(FM, { id_aci });
+=======
+		if (id_aci) {
+			const edit = await getRepository(fm_commerce).update({ id:FM.id_commerce }, { id_aci });
+
+			console.log('edit',edit);
+			
+>>>>>>> c18c7f3bbd1c4df9c01a9b6dd5c55226292463e2
 		}
+		
 
 		const message: string = Msg('Status del FM').edit;
 

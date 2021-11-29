@@ -8,6 +8,7 @@ const list: string[] = [
 	'Location',
 	'FM',
 	'activity',
+	'department',
 	'status',
 	'products',
 	'payment',

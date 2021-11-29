@@ -7,6 +7,8 @@ import Msg from '../../../../hooks/messages/index.ts';
 
 export const worker = async (req: Request<any, Api.Resp>, res: Response, next: NextFunction): Promise<void> => {
 	try {
+		console.log('req.headers.token',req.headers.token);
+		
 		const { id, type, email }: any = req.headers.token;
 
 		if (type === 1) throw { message: 'no tiene permiso de consumir enta data' };
@@ -14,7 +16,7 @@ export const worker = async (req: Request<any, Api.Resp>, res: Response, next: N
 			where: { id, email },
 			relations: ['roles', 'id_department'],
 		});
-
+		
 		const { password, ...info }: any = worker;
 
 		Resp(req, res, { message: 'data del usuario', info });

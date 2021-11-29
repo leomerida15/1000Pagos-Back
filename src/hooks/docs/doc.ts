@@ -202,7 +202,8 @@ export const toConvert = (to: string) => {};
 export const fromConvert = (from: string): any => {};
 //
 export const Convert = async (file: any, to: string): Promise<void> => {
-	// console.log('file', file);
+	try {
+		// console.log('file', file);
 
 	const from: string = file.split('.')[file.split('.').length - 1];
 	const filePath: string = path.join(base, file);
@@ -242,5 +243,9 @@ export const Convert = async (file: any, to: string): Promise<void> => {
 		await fs.rename(path.join(base, file), path.join(base, file.replace('.jpeg', '.jpg')));
 	}
 
-	if (remove) await Delete(path.join(base, file));
+	if (remove) await Delete(path.join(base, file));	
+	} catch (err) {
+		console.log('err convert',err);
+		
+	}
 };

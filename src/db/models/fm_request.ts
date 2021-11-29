@@ -85,7 +85,7 @@ export default class fm_request {
 	@JoinColumn({ name: 'id_valid_request' })
 	id_valid_request!: number | fm_valid_request;
 
-	@OneToMany(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_commerce)
+	@OneToOne(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_commerce)
 	@JoinColumn({ name: 'dir_pos' })
 	dir_pos?: fm_dir_pos;
 

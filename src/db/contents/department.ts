@@ -29,6 +29,9 @@ const department = async (): Promise<void> => {
 			name: 'God',
 		},
 		{
+			name: 'God'
+		},
+		{
 			name: 'Canales',
 		},
 		{
