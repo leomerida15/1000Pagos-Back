@@ -49,7 +49,7 @@ export default class fm_commerce {
 	@JoinColumn({ name: 'id_location' })
 	id_location!: number | fm_location;
 
-	@ManyToOne(() => Aliados, (fm_aci_commerce) => fm_aci_commerce.commerces)
+	@ManyToOne(() => Aliados, (Aliados) => Aliados.commerces)
 	@JoinColumn({ name: 'id_aci' })
 	id_aci!: number | Aliados;
 

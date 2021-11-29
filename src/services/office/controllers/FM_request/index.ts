@@ -3,7 +3,7 @@ import { Api } from 'interfaces';
 import Resp from '../../Middlewares/res';
 import fm_client from '../../../../db/models/fm_client';
 import Msg from '../../../../hooks/messages/index.ts';
-import { getRepository, Not } from 'typeorm';
+import { getConnection, getRepository, Not } from 'typeorm';
 import bcrypt from 'bcrypt';
 import fm_phone from '../../../../db/models/fm_phone';
 import { validationResult } from 'express-validator';
@@ -537,7 +537,7 @@ export const editStatusByIdAdmision = async (
 			if (!valids) throw { message: 'cambio de estatus es 4, valids es requerido', code: 400 };
 
 			await getRepository(fm_valid_request).update(id, { ...valids });
-		}
+		} 
 
 		if (id_aci) {
 			const edit = await getRepository(fm_commerce).update({ id: FM.id_commerce }, { id_aci });
