@@ -106,7 +106,7 @@ export const registerValid2 = async (
 	}
 };
 
-const block = async (email: string) => {
+const block = async (email: string): Promise<void> => {
 	await getRepository(fm_worker)
 		.createQueryBuilder()
 		.update(fm_worker)
@@ -124,7 +124,10 @@ export const login = async (
 
 	try {
 		// encript password
-		const worker = await getRepository(fm_worker).findOne({ where: { email }, relations: ['roles', 'id_department'] });
+		const worker = await getRepository(fm_worker).findOne({
+			where: { email },
+			relations: ['roles', 'id_department'],
+		});
 
 		if (!worker) throw { message: 'correo o contraseña incorrecta', code: 400 };
 
@@ -154,7 +157,7 @@ export const login = async (
 		}
 
 		//generamos token
-		const token = jwt.sign({ id, type: 2 }, key, { expiresIn: 60 * 30 });
+		const token = jwt.sign({ id, type: 2, email }, key, { expiresIn: 60 * 30 });
 
 		// Response
 		Resp(req, res, {

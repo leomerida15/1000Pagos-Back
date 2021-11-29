@@ -21,6 +21,7 @@ import fm_aci_commerce from './fm_aci_commerce';
 import fm_dir_pos from './fm_dir_pos';
 import fm_ident_type from './fm_ident_type';
 import fm_commerce_constitutive_act from './fm_commerce_constitutive_act';
+import Aliados from './Aliados';
 
 @Entity()
 export default class fm_commerce {
@@ -48,9 +49,9 @@ export default class fm_commerce {
 	@JoinColumn({ name: 'id_location' })
 	id_location!: number | fm_location;
 
-	@OneToMany(() => fm_aci_commerce, (fm_aci_commerce) => fm_aci_commerce.id_commerce)
-	@JoinColumn({ name: 'aci' })
-	id_aci?: fm_bank_commerce[];
+	@ManyToOne(() => Aliados, (fm_aci_commerce) => fm_aci_commerce.commerces)
+	@JoinColumn({ name: 'id_aci' })
+	id_aci!: number | Aliados;
 
 	@ManyToOne(() => fm_Client, (fm_Client) => fm_Client.commerces)
 	@JoinColumn({ name: 'id_client' })

@@ -6,6 +6,6 @@ const Deparments: Router = Router();
 
 // Amition
 //
-Deparments.route('/all').get(getAllDeparments);
+Deparments.route('/department/all').get(getAllDeparments);
 
 export default Deparments;

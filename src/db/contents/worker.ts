@@ -12,7 +12,7 @@ const worker = async (): Promise<void> => {
 			email: 'leomerida15@gmail.com',
 			phone: '+584444848',
 			id_company: 1,
-			id_department: 1,
+			id_department: 8,
 		},
 	];
 
