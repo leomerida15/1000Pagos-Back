@@ -5,6 +5,7 @@ import { getRepository } from 'typeorm';
 import fm_commerce from '../../../db/models/fm_commerce';
 import fm_request from '../../../db/models/fm_request';
 import ident_type from '../../../db/contents/ident_type';
+import fm_status from '../../../db/models/fm_status';
 let token: string = '';
 
 let users: any[] = [];
@@ -97,16 +98,41 @@ export const getAllCommerce = async (
 	}
 };
 
+const validarRif_tms7 = async (rif: string, access_token: string): Promise<boolean> => {
+	try {
+		await axios.get(`http://10.198.72.86/TMS7API/v1/Merchant?net_id=2&taxId=${rif}`, {
+			headers: {
+				Authorization: 'Bearer ' + access_token,
+			},
+		});
+		return true;
+	} catch (err) {
+		return false;
+	}
+};
+
+const createCommerceTMS7 = async (commerce: any, access_token: string): Promise<boolean> => {
+	try {
+		await axios.post('http://10.198.72.86/TMS7API/v1/Merchant', commerce, {
+			headers: {
+				Authorization: 'Bearer ' + access_token,
+			},
+		});
+		return true;
+	} catch (err) {
+		let error: any = err;
+		console.log(error.response.data);
+
+		return false;
+	}
+};
+
 export const createCommerce = async (
 	req: Request<Api.params, Api.Resp, { id_fm: number; id_commerce: number; id_client: number }>,
 	res: Response,
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		console.log('req.headers.token', req.headers.token);
-
-		const { id }: any = req.headers.token;
-
 		const fmData = await getRepository(fm_request).findOne({
 			where: { id: req.body.id_fm, id_commerce: req.body.id_commerce, id_client: req.body.id_client },
 			order: { id: 'ASC' },
@@ -130,79 +156,78 @@ export const createCommerce = async (
 				'id_commerce',
 				'id_commerce.id_ident_type',
 				'id_commerce.id_activity',
+				'id_commerce.id_activity.id_afiliado',
 				'id_commerce.id_location',
 				'id_commerce.id_location.id_estado',
 				'id_commerce.id_location.id_municipio',
 				'id_commerce.id_location.id_ciudad',
 				'id_commerce.id_location.id_parroquia',
-				'id_commerce.banks',
 			],
 		});
 		if (!fmData) throw { message: 'el commercio suministrado no existe', code: 400 };
-
-		const { id_commerce, id_client, dir_pos }: any = fmData;
+		const { id_commerce, id_client, dir_pos, id }: any = fmData;
 		const { name, id_ident_type, ident_num, id_activity }: any = id_commerce;
-
 		const { id_estado, id_ciudad } = id_commerce.id_location;
 
 		const address = Object.keys(id_commerce.id_location)
-			.map((key) => id_commerce.id_location[key].name)
+			.filter((key) => key !== 'id')
+			.map((key) => id_commerce.id_location[key][key.replace('id_', '')])
+			.filter((item) => item)
 			.join(', ');
 
 		const address_line1 = Object.keys(id_client.id_location)
-			.map((key) => id_client.id_location[key].name)
-			.join(', ');
+			.filter((key) => key !== 'id')
+			.map((key) => id_client.id_location[key][key.replace('id_', '')])
+			.filter((item) => item)[0];
 
-		const address_line2 = Object.keys(dir_pos.id_location)
-			.map((key) => dir_pos.id_location[key].name)
-			.join(', ');
+		const address_line2 = Object.keys(dir_pos[0].id_location)
+			.map((key) => {
+				console.log('key', key);
+				return dir_pos[0].id_location[key][key.replace('id_', '')];
+			})
+			.filter((item) => item)[0];
+
+		console.log('id_activity', id_activity);
+		console.log('id_activity.id_afiliado', id_activity.id_afiliado);
+		console.log('id_activity.id_afiliado.id', id_activity.id_afiliado.id);
+
+		const merchantId = `1${id_activity.id_afiliado.id}${10000 + id + 10}`;
+		console.log('merchantId', merchantId);
 
 		const commerce = {
 			net_id: 2,
-			subacquirer_code: id_activity.id_afiliados,
-			merchantId: '0720004108',
+			subacquirer_code: `1${id_activity.id_afiliado.id}`,
+			merchantId: merchantId,
 			company_name: name,
 			receipt_name: name,
 			trade_name: name,
-			taxId: `${id_ident_type}${ident_num}`,
+			taxId: `${id_ident_type.name}${ident_num}`,
 			address,
 			address_number: 100,
 			address_line1,
 			address_line2,
-			city: id_ciudad.name,
-			state: id_estado.name,
+			city: id_ciudad.ciudad,
+			state: id_estado.estado,
 			postalcode: id_ciudad.postal_code,
-			status: '1',
-			group: { name: id_activity.id, installments: '1' },
-			partner: { code: null },
+			group: { name: `${id_activity.id_afiliado.name}`, installments: '1' },
+			partner: null,
 		};
 
-		console.log('users', users);
+		console.log('commerce', commerce);
+		const { token }: any = req.headers;
+		console.log('token', token);
+		console.log('---------|>');
 
-		const usar = users.find((user) => user.id === id);
-		// if (!usar) throw { message: 'usuario no logeado', code: 401 };
+		const usar = users.find((user) => user.id === token.id);
+		if (!usar) throw { message: 'usuario no logeado', code: 401 };
 
-		console.log('usar', usar);
+		if (await validarRif_tms7(`${id_ident_type.name}${ident_num}`, usar.access_token)) {
+			throw { message: 'el rif del commercio ya existe en tms7', code: 400 };
+		}
 
-		console.log('072000410800000');
-		console.log('000000720004108');
+		await createCommerceTMS7(commerce, usar.access_token);
 
-		const valid = await axios.get(
-			`http://10.198.72.86/TMS7API/v1/Merchant?net_id=2&taxId=${id_ident_type.name}${ident_num}`,
-			{
-				headers: {
-					Authorization: 'Bearer ' + usar.access_token,
-				},
-			}
-		);
-
-		const resp = await axios.post('http://10.198.72.86/TMS7API/v1/Merchant', commerce, {
-			headers: {
-				Authorization: 'Bearer ' + usar.access_token,
-			},
-		});
-
-		res.status(200).json({ message: 'Auth OK', info: resp.data });
+		res.status(200).json({ message: 'comercio creado' });
 	} catch (err) {
 		next(err);
 	}

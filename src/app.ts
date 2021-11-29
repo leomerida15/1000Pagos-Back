@@ -30,37 +30,38 @@ createConnection()
 			console.log('|_______|');
 		});
 
-		let query: any = await getRepository(fm_request).findOne({
-			where: { id: 1 },
-			order: { id: 'ASC' },
-			relations: [
-				// client
-				'id_client',
-				'id_client.id_location',
-				'id_client.id_location.id_estado',
-				'id_client.id_location.id_municipio',
-				'id_client.id_location.id_ciudad',
-				'id_client.id_location.id_parroquia',
-				'id_client.id_ident_type',
-				// dir_pos
-				'dir_pos',
-				'dir_pos.id_location',
-				'dir_pos.id_location.id_estado',
-				'dir_pos.id_location.id_municipio',
-				'dir_pos.id_location.id_ciudad',
-				'dir_pos.id_location.id_parroquia',
-				// commerce
-				'id_commerce',
-				'id_commerce.id_ident_type',
-				'id_commerce.id_activity',
-				'id_commerce.id_location',
-				'id_commerce.id_location.id_estado',
-				'id_commerce.id_location.id_municipio',
-				'id_commerce.id_location.id_ciudad',
-				'id_commerce.id_location.id_parroquia',
-				'id_commerce.banks',
-			],
-		});
+		// let query: any = await getRepository(fm_request).findOne({
+		// 	where: { id: 2 },
+		// 	order: { id: 'ASC' },
+		// 	relations: [
+		// 		// client
+		// 		'id_client',
+		// 		'id_client.id_location',
+		// 		'id_client.id_location.id_estado',
+		// 		'id_client.id_location.id_municipio',
+		// 		'id_client.id_location.id_ciudad',
+		// 		'id_client.id_location.id_parroquia',
+		// 		'id_client.id_ident_type',
+		// 		// dir_pos
+		// 		'dir_pos',
+		// 		'dir_pos.id_location',
+		// 		'dir_pos.id_location.id_estado',
+		// 		'dir_pos.id_location.id_municipio',
+		// 		'dir_pos.id_location.id_ciudad',
+		// 		'dir_pos.id_location.id_parroquia',
+		// 		// commerce
+		// 		'id_commerce',
+		// 		'id_commerce.id_ident_type',
+		// 		'id_commerce.id_activity',
+		// 		'id_commerce.id_location',
+		// 		'id_commerce.id_location.id_estado',
+		// 		'id_commerce.id_location.id_municipio',
+		// 		'id_commerce.id_location.id_ciudad',
+		// 		'id_commerce.id_location.id_parroquia',
+		// 		'id_commerce.banks',
+		// 		'id_commerce.id_aci',
+		// 	],
+		// });
 		// if (query) {
 		// 	const dir_pos = await getRepository(fm_dir_pos).find({
 		// 		where: { id_request: query.id },
