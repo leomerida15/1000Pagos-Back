@@ -43,6 +43,7 @@ createConnection()
 				'id_client.id_location.id_parroquia',
 				'id_client.id_ident_type',
 				// dir_pos
+				'dir_pos',
 				'dir_pos.id_location',
 				'dir_pos.id_location.id_estado',
 				'dir_pos.id_location.id_municipio',
