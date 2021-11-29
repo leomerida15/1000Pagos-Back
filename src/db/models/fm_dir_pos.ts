@@ -27,7 +27,7 @@ export default class fm_dir_pos {
 	@JoinColumn({ name: 'id_commerce' })
 	id_commerce!: number;
 
-	@OneToOne(() => fm_request)
+	@OneToOne(() => fm_request, (fm_request) => fm_request.dir_pos)
 	@JoinColumn({ name: 'id_request' })
 	id_request!: number;
 
