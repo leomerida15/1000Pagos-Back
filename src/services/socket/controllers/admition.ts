@@ -46,6 +46,7 @@ export const oneDIferido = async (id_request: any) => {
 			'id_request.id_commerce.rc_constitutive_act.id_photo',
 			'id_request.id_commerce.rc_special_contributor',
 			'id_request.id_commerce.rc_rif',
+			'id_request.id_commerce.id_aci',
 			'id_request.rc_ref_bank',
 			'id_request.id_valid_request',
 			'id_request.rc_comp_dep',
@@ -70,16 +71,16 @@ export const listSolicWorking = async (id_conectado: any, user: any) => {
 		});
 		if (obj) return obj;
 
-		// console.log('solictudes.length', solictudes.length);
+		console.log('solictudes.length', solictudes.length);
 
 		const working = solictudes.shift();
 
-		// console.log('solictudes pos', solictudes[0]);
+		console.log('solictudes pos', solictudes[0]);
 
 		// solictudesTrabajando.unshift(working);
 		solictudesTrabajando.unshift({ id_conectado, ...user, ...working });
 		// const obj2 = solictudesTrabajando.find((items) => items.id_conectado === id_conectado);
-		// console.log('Jisus este es el que pao', working);
+		console.log('Jisus este es el que pao', working);
 		return working;
 	}
 	return solictudes;
@@ -92,7 +93,7 @@ export const listDiferidoWorking = async (id_conectado: any, user: any, id_dife:
 		const obj = diferidoTranbajando.find((items) => {
 			// console.log(`items.id_conectado === id_conectado`, items.id_conectado === id_conectado);
 
-			return items.id_conectado === id_conectado;
+			return items.id_conectado === id_conectado || items.id === user.id;
 		});
 		if (obj) return obj;
 
@@ -118,7 +119,7 @@ export const listDiferidoWorking = async (id_conectado: any, user: any, id_dife:
 		// diferidoTranbajando.unshift({ id_conectado, ...user, ...working2 });
 		diferidoTranbajando.unshift({ id_conectado, ...user, ...resp });
 
-		console.log('diferido pos', diferido);
+		// console.log('diferido pos', diferido);
 
 		return resp;
 	}
@@ -145,7 +146,7 @@ export const disconect = (id_sockect: any) => {
 		return false;
 	});
 
-	console.log('soy trabajando ', diferido);
+	// console.log('soy trabajando ', diferido);
 };
 
 export const disconectsolic = async (id_sockect: any) => {
@@ -158,70 +159,75 @@ export const listSolic = async () => {
 	// const query = await getConnection().query(
 	// 	/*sql*/ `SELECT * FROM [MilPagos].[dbo].[fm_status] where id_department = 1 and id_status_request = 1`
 	// );
+	const countdata = solictudes.length + solictudesTrabajando.length;
+	if (countdata <= 1) {
+		let ids = [
+			...solictudes.map((solictude) => solictude.id),
+			...solictudesTrabajando.map((solictude) => solictude.id),
+		];
 
-	let ids = [
-		...solictudes.map((solictude) => solictude.id),
-		...solictudesTrabajando.map((solictude) => solictude.id),
-	];
+		const query = await getRepository(fm_status).find({
+			where: { id_status_request: 1, id_department: 4 },
+			take: 10,
+			order: {
+				id: 'ASC',
+			},
+			relations: [
+				'id_request',
+				'id_request.id_client',
+				'id_request.id_client.id_location',
+				'id_request.id_client.id_location.id_estado',
+				'id_request.id_client.id_location.id_municipio',
+				'id_request.id_client.id_location.id_ciudad',
+				'id_request.id_client.id_location.id_parroquia',
+				'id_request.id_client.rc_ident_card',
+				'id_request.id_client.id_ident_type',
+				//
+				'id_request.id_valid_request',
+				'id_request.dir_pos',
+				'id_request.dir_pos.id_location',
+				'id_request.dir_pos.id_location.id_estado',
+				'id_request.dir_pos.id_location.id_municipio',
+				'id_request.dir_pos.id_location.id_ciudad',
+				'id_request.dir_pos.id_location.id_parroquia',
+				//
+				'id_request.id_commerce',
+				'id_request.id_commerce.id_ident_type',
+				'id_request.id_commerce.id_activity',
+				'id_request.id_commerce.id_location',
+				'id_request.id_commerce.id_location.id_estado',
+				'id_request.id_commerce.id_location.id_municipio',
+				'id_request.id_commerce.id_location.id_ciudad',
+				'id_request.id_commerce.id_location.id_parroquia',
+				'id_request.id_commerce.banks',
+				'id_request.id_commerce.rc_constitutive_act',
+				'id_request.id_commerce.rc_constitutive_act.id_photo',
+				'id_request.id_commerce.rc_rif',
+				'id_request.id_commerce.rc_special_contributor',
+				'id_request.id_commerce.id_aci',
+				//
+				'id_request.id_product',
+				'id_request.id_type_request',
+				'id_request.id_request_origin',
+				//
+				'id_request.rc_ref_bank',
+				'id_request.rc_comp_dep',
+				'id_request.id_payment_method',
+				'id_request.id_type_payment',
+			],
+		});
 
-	const query = await getRepository(fm_status).find({
-		where: { id_status_request: 1, id_department: 4 },
-		take: 10,
-		order: {
-			id: 'ASC',
-		},
-		relations: [
-			'id_request',
-			'id_request.id_client',
-			'id_request.id_client.id_location',
-			'id_request.id_client.id_location.id_estado',
-			'id_request.id_client.id_location.id_municipio',
-			'id_request.id_client.id_location.id_ciudad',
-			'id_request.id_client.id_location.id_parroquia',
-			'id_request.id_client.rc_ident_card',
-			'id_request.id_client.id_ident_type',
-			//
-			'id_request.id_valid_request',
-			'id_request.dir_pos',
-			'id_request.dir_pos.id_location',
-			'id_request.dir_pos.id_location.id_estado',
-			'id_request.dir_pos.id_location.id_municipio',
-			'id_request.dir_pos.id_location.id_ciudad',
-			'id_request.dir_pos.id_location.id_parroquia',
-			//
-			'id_request.id_commerce',
-			'id_request.id_commerce.id_ident_type',
-			'id_request.id_commerce.id_activity',
-			'id_request.id_commerce.id_location',
-			'id_request.id_commerce.id_location.id_estado',
-			'id_request.id_commerce.id_location.id_municipio',
-			'id_request.id_commerce.id_location.id_ciudad',
-			'id_request.id_commerce.id_location.id_parroquia',
-			'id_request.id_commerce.banks',
-			'id_request.id_commerce.rc_constitutive_act',
-			'id_request.id_commerce.rc_constitutive_act.id_photo',
-			'id_request.id_commerce.rc_rif',
-			'id_request.id_commerce.rc_special_contributor',
-			//
-			'id_request.id_product',
-			'id_request.id_type_request',
-			'id_request.id_request_origin',
-			//
-			'id_request.rc_ref_bank',
-			'id_request.rc_comp_dep',
-			'id_request.id_payment_method',
-			'id_request.id_type_payment',
-		],
-	});
+		if (!query) throw { message: 'no existen solicitudes en espera', code: 400 };
 
-	if (!query) throw { message: 'no existen solicitudes en espera', code: 400 };
+		const info: any = query.map((item) => item.id_request);
 
-	const info: any = query.map((item) => item.id_request);
+		solictudes = info;
+		// diferidos = query.map((item) => item.id_request);
 
-	solictudes = info;
-	// diferidos = query.map((item) => item.id_request);
-
-	return solictudes;
+		return solictudes;
+	} else {
+		return solictudes;
+	}
 };
 
 export const getDiferido = async (id_request: number) => {
@@ -235,6 +241,7 @@ export const getDiferido = async (id_request: number) => {
 			'id_request.id_commerce.rc_constitutive_act.id_photo',
 			'id_request.id_commerce.rc_rif',
 			'id_request.id_commerce.rc_special_contributor',
+			'id_request.id_commerce.id_aci',
 			'id_request.rc_ref_bank',
 			'id_request.rc_comp_dep',
 			'id_request.id_client',
