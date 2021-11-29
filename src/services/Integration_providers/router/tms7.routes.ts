@@ -4,11 +4,8 @@ import { CreateCommerceData } from '../Middlewares/data/commerce';
 
 const Commerce: Router = Router();
 
-// Auth
+// Commerce
 //
-Commerce.route('/commerce').get(getAllCommerce);
-//
-Commerce.route('/commerce').post(CreateCommerceData, createCommerce);
-
+Commerce.route('/tms7/commerce').get(getAllCommerce).post(CreateCommerceData, createCommerce);
 //
 export default Commerce;
