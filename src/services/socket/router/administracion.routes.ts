@@ -7,7 +7,7 @@ const administra = (io: any) => {
 		//Devuelve
 		socket.on('cliente:administrWorking', async (user: any, id: any) => {
 			await listAdminisWorking(socket.id, user, id);
-			console.log('Lista de Administracion', administra);
+			// console.log('Lista de Administracion', administra);
 			io.emit('server:loadAdministra', administracion);
 		});
 	});

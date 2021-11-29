@@ -26,7 +26,7 @@ export const listAdministracion = async () => {
 export const listAdminisWorking = async (id_conectado: any, user: any, id_dife: any) => {
 	if (administracion.length !== 0) {
 		const obj = administracionTrabajndo.find((items) => {
-			// console.log(`items.id_conectado === id_conectado`, items.id_conectado === id_conectado);
+			//// // console.log(`items.id_conectado === id_conectado`, items.id_conectado === id_conectado);
 			return items.id_conectado === id_conectado;
 		});
 		if (obj) return obj;
@@ -35,13 +35,13 @@ export const listAdminisWorking = async (id_conectado: any, user: any, id_dife: 
 			return item.id === id_dife;
 		});
 		if (i == -1) {
-			return console.log('MENOL NO EXISTE');
+			return; // // console.log('MENOL NO EXISTE');
 		}
 
-		// console.log('Valor I', i);
+		//// // console.log('Valor I', i);
 		const resp = administracion[i];
 
-		// console.log('DIferido', resp);
+		//// // console.log('DIferido', resp);
 
 		administracion.splice(i, 1);
 
