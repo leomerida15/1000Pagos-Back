@@ -2,6 +2,7 @@
 import services from './services';
 import { createConnection, getRepository } from 'typeorm';
 import fm_request from './db/models/fm_request';
+import fm_dir_pos from './db/models/fm_dir_pos';
 // init server
 
 createConnection()
@@ -29,7 +30,7 @@ createConnection()
 			console.log('|_______|');
 		});
 
-		const fmData = await getRepository(fm_request).findOne({
+		let query: any = await getRepository(fm_request).findOne({
 			where: { id: 1 },
 			order: { id: 'ASC' },
 			relations: [
@@ -60,7 +61,22 @@ createConnection()
 				'id_commerce.banks',
 			],
 		});
+		// if (query) {
+		// 	query.dir_pos = await getRepository(fm_dir_pos).findOne(
+		// 		{ id_request: query.id },
+		// 		{
+		// 			relations: [
+		// 				// dir_pos
+		// 				'id_location',
+		// 				'id_location.id_estado',
+		// 				'id_location.id_municipio',
+		// 				'id_location.id_ciudad',
+		// 				'id_location.id_parroquia',
+		// 			],
+		// 		}
+		// 	);
+		// }
 
-		console.log('fmData', fmData);
+		console.log('fmData', query);
 	})
 	.catch((err) => console.log('DB ERR', err));

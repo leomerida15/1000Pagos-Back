@@ -85,9 +85,9 @@ export default class fm_request {
 	@JoinColumn({ name: 'id_valid_request' })
 	id_valid_request!: number | fm_valid_request;
 
-	@OneToOne(() => fm_dir_pos)
+	@OneToMany(() => fm_dir_pos, (fm_dir_pos) => fm_dir_pos.id_commerce)
 	@JoinColumn({ name: 'dir_pos' })
-	dir_pos?: fm_dir_pos;
+	dir_pos?: fm_dir_pos[];
 
 	@ManyToOne(() => fm_photo, (fm_photo) => fm_photo.requests)
 	@JoinColumn({ name: 'rc_comp_dep' }) // foto del  numero de cuenta
