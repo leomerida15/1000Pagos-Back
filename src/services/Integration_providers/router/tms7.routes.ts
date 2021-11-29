@@ -6,6 +6,6 @@ const Commerce: Router = Router();
 
 // Commerce
 //
-Commerce.route('/commerce').get(getAllCommerce).post(CreateCommerceData, createCommerce);
+Commerce.route('/tms7/commerce').get(getAllCommerce).post(CreateCommerceData, createCommerce);
 //
 export default Commerce;

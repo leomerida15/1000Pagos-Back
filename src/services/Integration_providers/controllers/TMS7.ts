@@ -107,6 +107,10 @@ const validarRif_tms7 = async (rif: string, access_token: string): Promise<boole
 		});
 		return true;
 	} catch (err) {
+		let error: any = err;
+
+		console.log(error);
+
 		return false;
 	}
 };
@@ -121,7 +125,7 @@ const createCommerceTMS7 = async (commerce: any, access_token: string): Promise<
 		return true;
 	} catch (err) {
 		let error: any = err;
-		console.log(error.response.data);
+		console.log(error);
 
 		return false;
 	}
@@ -133,6 +137,11 @@ export const createCommerce = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
+		const { token }: any = req.headers;
+
+		const usar = users.find((user) => user.id === token.id);
+		if (!usar) throw { message: 'usuario no logeado', code: 401 };
+
 		const fmData = await getRepository(fm_request).findOne({
 			where: { id: req.body.id_fm, id_commerce: req.body.id_commerce, id_client: req.body.id_client },
 			order: { id: 'ASC' },
@@ -165,6 +174,7 @@ export const createCommerce = async (
 			],
 		});
 		if (!fmData) throw { message: 'el commercio suministrado no existe', code: 400 };
+
 		const { id_commerce, id_client, dir_pos, id }: any = fmData;
 		const { name, id_ident_type, ident_num, id_activity }: any = id_commerce;
 		const { id_estado, id_ciudad } = id_commerce.id_location;
@@ -187,17 +197,12 @@ export const createCommerce = async (
 			})
 			.filter((item) => item)[0];
 
-		console.log('id_activity', id_activity);
-		console.log('id_activity.id_afiliado', id_activity.id_afiliado);
-		console.log('id_activity.id_afiliado.id', id_activity.id_afiliado.id);
-
-		const merchantId = `1${id_activity.id_afiliado.id}${10000 + id + 10}`;
-		console.log('merchantId', merchantId);
+		const merchantId = `7${id_activity.id_afiliado.id}${11000 + (id + 777)}`;
 
 		const commerce = {
 			net_id: 2,
-			subacquirer_code: `1${id_activity.id_afiliado.id}`,
-			merchantId: merchantId,
+			subacquirer_code: `0${id_activity.id_afiliado.id}`,
+			merchantId,
 			company_name: name,
 			receipt_name: name,
 			trade_name: name,
@@ -206,28 +211,35 @@ export const createCommerce = async (
 			address_number: 100,
 			address_line1,
 			address_line2,
-			city: id_ciudad.ciudad,
+			city: id_client.name,
 			state: id_estado.estado,
 			postalcode: id_ciudad.postal_code,
 			group: { name: `${id_activity.id_afiliado.name}`, installments: '1' },
 			partner: null,
 		};
 
-		console.log('commerce', commerce);
-		const { token }: any = req.headers;
-		console.log('token', token);
-		console.log('---------|>');
+		// const commerce = {
+		// 	net_id: 2,
+		// 	subacquirer_code: `7${id_activity.id_afiliado.id}`,
+		// 	merchantId: merchantId,
+		// 	company_name: name,
+		// 	receipt_name: name,
+		// 	trade_name: name,
+		// 	taxId: `${id_ident_type.name}${ident_num}`,
+		// 	address,
+		// 	address_number: 100,
+		// 	address_line1,
+		// 	address_line2,
+		// 	city: 'caracas',
+		// 	state: id_estado.estado,
+		// 	postalcode: id_ciudad.postal_code,
+		// 	group: { name: `${id_activity.id_afiliado.name}`, installments: '1' },
+		// 	partner: null,
+		// };
 
-		const usar = users.find((user) => user.id === token.id);
-		if (!usar) throw { message: 'usuario no logeado', code: 401 };
+		const info = await createCommerceTMS7(commerce, usar.access_token);
 
-		if (await validarRif_tms7(`${id_ident_type.name}${ident_num}`, usar.access_token)) {
-			throw { message: 'el rif del commercio ya existe en tms7', code: 400 };
-		}
-
-		await createCommerceTMS7(commerce, usar.access_token);
-
-		res.status(200).json({ message: 'comercio creado' });
+		res.status(200).json({ message: 'comercio creado', info: commerce });
 	} catch (err) {
 		next(err);
 	}
