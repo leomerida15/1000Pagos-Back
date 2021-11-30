@@ -19,13 +19,13 @@ export default class fm_product {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	description!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	price!: number;
 
 	@ManyToMany(() => fm_photo)

@@ -14,7 +14,7 @@ export default class fm_status_request {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
 	@OneToMany(() => fm_status, (fm_status) => fm_status.id_status_request)

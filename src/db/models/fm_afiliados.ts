@@ -20,9 +20,9 @@ export default class fm_afiliados {
 	@JoinColumn({ name: 'activitys' })
 	activitys?: fm_activity[];
 
-	@Column()
+	@Column({ nullable: true })
 	bank_account_number!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 }

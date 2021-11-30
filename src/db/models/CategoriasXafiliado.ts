@@ -1,8 +1,8 @@
 // import { Column } from 'typeorm';
 
 // export default class CategoriasXafiliado {
-// 	@Column()
+// 	@Column({ nullable: true })
 // 	catCodAfi: string;
-// 	@Column()
+// 	@Column({ nullable: true })
 // 	catCodCat: string;
 // }

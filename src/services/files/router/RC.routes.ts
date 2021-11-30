@@ -10,6 +10,6 @@ const RC: Router = Router();
 //
 RC.route('/RC').post(uploads, convert, upFilesRecaudos);
 //
-//RC.route('/RC/admition/:id_request/diferidos').put(uploads, convert, editRcByFm);
+RC.route('/RC/admition/:id_request/diferidos').put(uploads, convert, editRcByFm);
 //
 export default RC;
