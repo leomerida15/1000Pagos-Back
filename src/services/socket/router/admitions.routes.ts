@@ -1,3 +1,4 @@
+import { emit } from 'process';
 import { v4 as uuid } from 'uuid';
 
 import {
@@ -24,33 +25,37 @@ const admitions = (io: any) => {
 		//// // console.log(socket.handshake.url);
 		// console.log('nuevo socket connectado:', socket.id);
 
-		socket.emit('server:loadDiferido', diferido);
+		io.emit('server:loadDiferidos', diferido);
 
-		socket.on('prueba', async () => {
-			// console.log('Dimas es HOLA');
+		socket.on('client:prueba', async () => {
+			console.log('Prueba de emision');
 			// await listSolic();
+			let data = 'mano funciona';
+			io.emit('server:prueba', data);
 		});
 
-		socket.on('Trabanjando_Solic', async (user: any, callback: any) => {
+		socket.on('Trabanjando_Solic', async (user: any) => {
 			// console.log('DIferidos-Solic');
 			//// // console.log(solictudesTrabajando.length);
 
-			callback(await listSolicWorking(socket.id, user));
+			socket.emit('server:Trabanjando_Solic', await listSolicWorking(socket.id, user));
+			const todos = getDash();
+			const todo = await All_Info();
+
+			io.emit('server:loadDiferidos', diferido);
+			io.emit('server:dashdata', todos);
+			io.emit('server:todos', todo);
 		});
 
 		socket.on('cliente:loadDiferidos', async () => {
 			//// // console.log('Dimas es gayyyyy');
 			if (diferido.length < 1) await listDiferido();
 			io.emit('server:loadDiferidos', diferido);
-			getDash();
-			All_Info();
-
-			//// // console.log(diferido);
 		});
 
 		////Devuelve Toda las cantidades de Admision
 
-		socket.on('cliente:Todos', async (data: any, callback: any) => {
+		socket.on('cliente:todo', async (callback: any) => {
 			const todos = await All_Info();
 			callback(todos);
 
@@ -85,17 +90,27 @@ const admitions = (io: any) => {
 			io.emit('server:loadnotes', notes);
 		});
 
-		socket.on('cliente:disconnect', () => {
+		socket.on('cliente:disconnect', async () => {
 			// console.log(socket.id, 'disconnected');
 			// console.log('');
 
 			disconect(socket.id);
+			const todos = getDash();
+			const todo = await All_Info();
+
+			io.emit('server:loadDiferidos', diferido);
+			io.emit('server:dashdata', todos);
+			io.emit('server:todos', todo);
 		});
 
-		socket.on('cliente:cleansolic', () => {
+		socket.on('cliente:cleansolic', async () => {
 			disconectsolic(socket.id);
-			io.emit('server:loadDiferido', diferido);
-			io.emit('cliente:dashdatasiempre');
+			const todos = getDash();
+			const todo = await All_Info();
+
+			io.emit('server:loadDiferidos', diferido);
+			io.emit('server:dashdata', todos);
+			io.emit('server:todos', todo);
 		});
 
 		socket.on('disconnect', () => {
@@ -106,34 +121,19 @@ const admitions = (io: any) => {
 		});
 
 		socket.on('Editar_diferido', async (id_request: number, callback: any) => {
-			//// // console.log('id_request', id_request);
-			//// // console.log(''); listDiferido
-
 			const diferido = await getDiferido(id_request);
 			callback(diferido);
 		});
 
-		socket.on('cliente:dashdata', async (user: any, callback: any) => {
-			//// // console.log('Usuario de peticion: ', user);
-			const dash = await getDash();
-
-			//// // console.log('Informacion de tabla', dash);
+		socket.on('cliente:dashdata', async (callback: any) => {
+			await listSolic();
+			const dash = getDash();
 			callback(dash);
 		});
 
-		socket.emit('server:dashdata', async (user: any, callback: any) => {
-			//// // console.log('Usuario de peticion: ', user);
-			const dash = await getDash();
-
-			//// // console.log('Informacion de tabla', dash);
-			callback(dash);
-		});
 		socket.on('cliente:dashdatasiempre', async () => {
-			// console.log('Dimas es gayyyyy');
-			const todos = await getDash();
+			const todos = getDash();
 			io.emit('server:dashdata', todos);
-
-			//// // console.log(diferido);
 		});
 
 		socket.on('cliente:trabanjandoDiferido', async (user: any, id: any) => {
@@ -142,13 +142,13 @@ const admitions = (io: any) => {
 
 			await listDiferidoWorking(socket.id, user, id);
 
-			io.emit('server:loadDiferido', diferido);
+			const todos = getDash();
+			const todo = await All_Info();
+
+			io.emit('server:loadDiferidos', diferido);
+			io.emit('server:dashdata', todos);
+			io.emit('server:todos', todo);
 		});
-
-		//************************************************** */
-		///CON DIMAS TRABAJANDO
-
-		//************************************************** */
 	});
 };
 

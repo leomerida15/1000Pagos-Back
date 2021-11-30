@@ -17,7 +17,6 @@ import fm_bank_commerce from './fm_bank_commerce';
 import fm_request from './fm_request';
 import fm_photo from './fm_photo';
 import fm_location from './fm_location';
-import fm_aci_commerce from './fm_aci_commerce';
 import fm_dir_pos from './fm_dir_pos';
 import fm_ident_type from './fm_ident_type';
 import fm_commerce_constitutive_act from './fm_commerce_constitutive_act';
@@ -28,14 +27,14 @@ export default class fm_commerce {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
 	@ManyToOne(() => fm_ident_type, (fm_ident_type) => fm_ident_type.commerces)
 	@JoinColumn({ name: 'id_ident_type' })
 	id_ident_type!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	ident_num!: string;
 
 	@Column({ default: 1 })
@@ -74,7 +73,7 @@ export default class fm_commerce {
 	@JoinColumn({ name: 'rc_rif' })
 	rc_rif!: fm_photo | number;
 
-	@Column()
+	@Column({ nullable: true })
 	days!: string;
 
 	@OneToMany(() => fm_bank_commerce, (fm_bank_commerce) => fm_bank_commerce.id_commerce)

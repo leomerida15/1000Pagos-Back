@@ -21,13 +21,13 @@ export default class fm_ciudad {
 	@JoinColumn({ name: 'id_estado' })
 	id_estado!: number | fm_estado;
 
-	@Column()
+	@Column({ nullable: true })
 	ciudad!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	area_code!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	postal_code!: string;
 
 	@OneToMany(() => fm_location, (fm_location) => fm_location.id_municipio)

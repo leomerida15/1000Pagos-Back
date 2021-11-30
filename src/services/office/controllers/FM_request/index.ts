@@ -21,6 +21,7 @@ import fm_valid_request from '../../../../db/models/fm_valid_request';
 import fm_quotas_calculated from '../../../../db/models/fm_quotas_calculated';
 import fm_product from '../../../../db/models/fm_product';
 import fm_commerce_constitutive_act from '../../../../db/models/fm_commerce_constitutive_act';
+import { mail } from '../../../../helpers';
 
 //
 export const requestOrigin = async (
@@ -537,7 +538,9 @@ export const editStatusByIdAdmision = async (
 			if (!valids) throw { message: 'cambio de estatus es 4, valids es requerido', code: 400 };
 
 			await getRepository(fm_valid_request).update(id, { ...valids });
-		} 
+
+			mail.diferido(FM);
+		}
 
 		if (id_aci) await getRepository(fm_commerce).update({ id: FM.id_commerce.id }, { id_aci });
 

@@ -6,7 +6,7 @@ export default class fm_request_origin {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
 	@OneToMany(() => fm_request, (fm_request) => fm_request.id_request_origin)

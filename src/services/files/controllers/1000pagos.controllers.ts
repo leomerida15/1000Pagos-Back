@@ -34,7 +34,7 @@ export const upFilesRecaudos = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		console.log('files', req.files);
+		// console.log('files', req.files);
 
 		const files: any = req.files;
 		let info: any = {};
@@ -159,14 +159,18 @@ export const editRcByFm = async (
 
 		//console.log('files', req.files);
 
-		const fm: any = await getRepository(fm_request).findOne(id_request, {
+		const fm: any = await getRepository(fm_request).findOne({
+			where: { id: id_request },
 			order: { id: 'ASC' },
 			relations: [
-				'rc_constitutive_act',
 				'rc_ref_bank',
-				'rc_rif',
-				'rc_ident_card',
-				'rc_special_contributor',
+				'id_client',
+				'id_client.rc_ident_card',
+				'id_commerce',
+				'id_commerce.rc_constitutive_act',
+				'id_commerce.rc_constitutive_act.id_photo',
+				'id_commerce.rc_rif',
+				'id_commerce.rc_special_contributor',
 				'rc_comp_dep',
 			],
 		});
@@ -187,7 +191,42 @@ export const editRcByFm = async (
 
 		let valids: any = {};
 
-		const stop: Promise<void>[] = files
+		let info: any = {
+			rc_ident_card: id_client.rc_ident_card,
+			rc_rif: id_commerce.rc_rif,
+			rc_special_contributor: id_commerce.rc_special_contributor,
+			rc_ref_bank: fm.rc_ref_bank,
+			rc_constitutive_act: id_commerce.rc_constitutive_act,
+		};
+
+		const stop: Promise<void>[] = files.images
+			.filter((file: Express.Multer.File): boolean => {
+				const valid: string = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
+				return description.includes(valid);
+			})
+			.map(async (file: Express.Multer.File, i: number): Promise<void> => {
+				const descript: any = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
+
+				await Doc.Delete(info[descript].path);
+
+				const route_ids: string = ['rc_ident_card'].includes(descript)
+					? `${id_client}`
+					: `${id_client}/${id_commerce}`;
+
+				//await Doc.Move(file.filename, route_ids);
+
+				const path = `static/${route_ids}/${file.filename}`;
+
+				// console.log('path', path);
+
+				// console.log('fm[descript].id', fm[descript].id);
+
+				await getRepository(fm_photo).update(fm[descript].id, { path });
+
+				valids[descript.replace('rc_', 'valid_')] = '';
+			});
+
+		const stop2: Promise<void>[] = files.images
 			.filter((file: Express.Multer.File): boolean => {
 				const valid: string = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
 				return description.includes(valid);
@@ -214,7 +253,7 @@ export const editRcByFm = async (
 				valids[descript.replace('rc_', 'valid_')] = '';
 			});
 
-		await Promise.all(stop);
+		await Promise.all([...stop, ...stop2]);
 
 		await getRepository(fm_status).update({ id_request: fm.id, id_department: 4 }, { id_status_request: 3 });
 

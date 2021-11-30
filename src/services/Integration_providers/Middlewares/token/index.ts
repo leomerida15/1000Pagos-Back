@@ -9,8 +9,6 @@ export default (req: Request, res: Response, next: NextFunction) => {
 	try {
 		// define array route
 
-		console.log('req.headers.token', req.headers.token);
-
 		// use
 		if (req.headers.token) {
 			const { token }: any = req.headers;
@@ -19,6 +17,8 @@ export default (req: Request, res: Response, next: NextFunction) => {
 			console.log('resp', resp);
 
 			req.headers.token = resp;
+
+			console.log('req.headers.token', req.headers.token);
 
 			next();
 			//

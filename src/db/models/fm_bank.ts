@@ -15,13 +15,13 @@ export default class fm_bank {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	code!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	alias!: string;
 
 	@OneToMany(() => fm_bank_commerce, (fm_bank_commerce) => fm_bank_commerce.id_commerce)

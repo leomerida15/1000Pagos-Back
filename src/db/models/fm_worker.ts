@@ -24,17 +24,17 @@ export default class fm_worker {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	last_name!: string;
 
 	@ManyToMany(() => fm_roles)
 	@JoinTable()
 	roles?: fm_roles[];
 
-	@Column()
+	@Column({ nullable: true })
 	password!: string;
 
 	@ManyToOne(() => fm_ident_type, (fm_ident_type) => fm_ident_type.workers)
@@ -53,7 +53,7 @@ export default class fm_worker {
 	@JoinColumn({ name: 'commerces' })
 	commerces?: fm_aci_commerce[];
 
-	@Column()
+	@Column({ nullable: true })
 	ident_num!: string;
 
 	@Column({ unique: true })
@@ -62,7 +62,7 @@ export default class fm_worker {
 	@Column({ default: 0 })
 	block?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	phone!: string;
 
 	@OneToMany(() => fm_request, (fm_request) => fm_request.id_client)

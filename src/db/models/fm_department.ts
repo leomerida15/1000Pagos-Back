@@ -1,10 +1,11 @@
-import { Entity,
+import {
+	Entity,
 	PrimaryGeneratedColumn,
 	Column,
 	UpdateDateColumn,
 	OneToMany,
 	JoinColumn,
-	CreateDateColumn
+	CreateDateColumn,
 } from 'typeorm';
 import fm_status from './fm_status';
 
@@ -13,7 +14,7 @@ export default class fm_department {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
 	@OneToMany(() => fm_status, (fm_status) => fm_status.id_department)
