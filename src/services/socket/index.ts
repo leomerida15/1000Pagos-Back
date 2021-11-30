@@ -5,6 +5,7 @@ import Sockets from './router';
 
 import { All_Info, listDiferido, listSolic } from './controllers/admition';
 import { createConnection } from 'typeorm';
+import { getFmAdministration } from './controllers/administracion';
 
 const app = express();
 const server = http.createServer(app);
@@ -27,6 +28,9 @@ Sockets(io);
 
 	//Lista de Solicitudes
 	await listSolic();
+	console.log('listSolic OK');
+
+	await getFmAdministration();
 	console.log('listSolic OK');
 
 	await All_Info();
