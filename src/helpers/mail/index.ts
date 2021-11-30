@@ -23,7 +23,7 @@ const mailer: Mail = nodemailer.createTransport({
 });
 
 // this mail is for verify the email a user
-export const verify = async (info: fm_client) => {
+export const verify = async (info: fm_client | fm_worker) => {
 	try {
 		/** define vars */
 		const { name, last_name, email, id } = info;

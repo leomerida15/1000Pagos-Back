@@ -51,7 +51,7 @@ export const register = async (
 		const token = jwt.sign({ id, roles }, key, { expiresIn: 60 * 30 });
 
 		// enviar correo de validacion
-		// await mail.verify(req.body);
+		await mail.verify(req.body);
 
 		// Response
 		res.status(200).json({

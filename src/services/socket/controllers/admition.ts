@@ -9,9 +9,9 @@ export let solictudes: any[] = [];
 export let solictudesTrabajando: any[] = [];
 
 export const listDiferido = async () => {
+	const ids = diferidoTranbajando.map((item) => item.id);
 	const query = await getConnection()
-		.query(/*sql*/ `SELECT r.id ,r.code, cc.name as nameComer, c.name as nameClient, c.last_name as lastnameClient,
-			c.email , i.name as identTypeComer, cc.ident_num as identNumComer , r.updatedAt
+		.query(/*sql*/ `SELECT r.id ,r.code, cc.name as nameComer, c.name as nameClient, c.last_name as lastnameClient, c.email , i.name as identTypeComer, cc.ident_num as identNumComer , r.updatedAt
 			FROM [MilPagos].[dbo].[fm_status]
 
 			inner join fm_request as r on r.id = id_request
@@ -19,7 +19,9 @@ export const listDiferido = async () => {
 			inner join fm_commerce as cc on cc.id = r.id_commerce
 			inner join fm_ident_type as i on i.id = cc.id_ident_type
 
-			where id_department = 4 and id_status_request = 4`);
+			where id_department = 4 and id_status_request = 4 ${
+				ids.length ? `AND id_request NOT IN (${ids.join(', ')})` : ``
+			} `);
 
 	diferido = query;
 	// diferidos = query.map((item) => item.id_request);
@@ -60,15 +62,11 @@ export const oneDIferido = async (id_request: any) => {
 
 export const listSolicWorking = async (id_conectado: any, user: any) => {
 	if (solictudes.length <= 1) await listDiferido();
-
-	if (solictudes.length) {
-		console.log('Numero de solici: ', solictudes.length);
+	if (solictudes.length !== 0) {
 		const obj = solictudesTrabajando.find((items) => {
-			console.log(`items.id_conectado === id_conectado`, items.id_conectado === id_conectado);
-			// console.log('TODA LAS SOLIC ITEMS: ', items);
-			// console.log('ITEMS: ', items.id_conectado, 'y id :', id_conectado);
-			// console.log('ITEMS: ', items.id, 'y id :', user.id);
-			return items.id_conectado === id_conectado || items.ident_num === user.ident_num;
+			// console.log(`items.id_conectado === id_conectado`, items.id_conectado === id_conectado);
+
+			return items.id_conectado === id_conectado;
 		});
 		if (obj) return obj;
 
@@ -84,10 +82,12 @@ export const listSolicWorking = async (id_conectado: any, user: any) => {
 		// console.log('Jisus este es el que pao', working);
 		return working;
 	}
-	// return solictudes;
+	return solictudes;
 };
 
 export const listDiferidoWorking = async (id_conectado: any, user: any, id_dife: any) => {
+	console.log('diferido pre', diferido);
+
 	if (diferido.length !== 0) {
 		const obj = diferidoTranbajando.find((items) => {
 			// console.log(`items.id_conectado === id_conectado`, items.id_conectado === id_conectado);
@@ -100,7 +100,7 @@ export const listDiferidoWorking = async (id_conectado: any, user: any, id_dife:
 			return item.id === id_dife;
 		});
 		if (i == -1) {
-			return console.log('MENOL NO EXISTE');
+			return; // // console.log('MENOL NO EXISTE');
 		}
 		// const working2 = diferido.find((item) => {
 		// 	return item.id === id_dife;
@@ -109,77 +109,49 @@ export const listDiferidoWorking = async (id_conectado: any, user: any, id_dife:
 		// console.log('Valor I', i);
 		const resp = diferido[i];
 
-		// console.log('DIferido', resp);
+		//// // console.log('DIferido', resp);
 
 		diferido.splice(i, 1);
 
-		// console.log('Lista de Diferidos', diferido);
+		//// // console.log('Lista de Diferidos', diferido);
 
 		// diferidoTranbajando.unshift({ id_conectado, ...user, ...working2 });
 		diferidoTranbajando.unshift({ id_conectado, ...user, ...resp });
+
+		console.log('diferido pos', diferido);
 
 		return resp;
 	}
 };
 
 export const disconect = (id_sockect: any) => {
-	// console.log('antes del filter ', solictudesTrabajando.length);
-	// console.log('solictudes', solictudes.length);
-	// console.log('solictudesTrabajando', solictudesTrabajando);
-
 	solictudesTrabajando = solictudesTrabajando.filter((item) => {
 		if (item.id_conectado != id_sockect) return true;
 
 		const { id_conectado, email, last_name, name, ...working } = item;
 
 		solictudes.unshift(working);
-		// console.log('SOlicitud Trabjando', solictudesTrabajando);
+
 		return false;
 	});
 
 	diferidoTranbajando = diferidoTranbajando.filter((item) => {
-		if (item.id_conectado != id_sockect) return true;
-
-		const { id_conectado, email, last_name, name, ...working2 } = item;
-
-		diferido.unshift(working2);
-		return false;
-	});
-
-	// listDiferido();
-
-	// All_Info();
-
-	// getDash();
-
-	// console.log('ARMANDO ESTAS AQUI');
-};
-
-export const disconectsolic = async (id_sockect: any) => {
-	solictudesTrabajando = solictudesTrabajando.filter((item) => {
 		if (item.id_conectado != id_sockect) return true;
 
 		const { id_conectado, email, last_name, name, ...working } = item;
 
-		// solictudes.unshift(working);
-		// console.log('SOlicitud Trabjando', solictudesTrabajando);
+		diferido.unshift(working);
+
 		return false;
 	});
 
-	diferidoTranbajando = diferidoTranbajando.filter((item) => {
-		if (item.id_conectado != id_sockect) return true;
+	console.log('soy trabajando ', diferido);
+};
 
-		const { id_conectado, email, last_name, name, ...working2 } = item;
+export const disconectsolic = async (id_sockect: any) => {
+	solictudesTrabajando = solictudesTrabajando.filter((item) => item.id_conectado != id_sockect);
 
-		// diferido.unshift(working2);
-		return false;
-	});
-
-	// await listDiferido();
-
-	// await All_Info();
-
-	// await getDash();
+	diferidoTranbajando = diferidoTranbajando.filter((item) => item.id_conectado != id_sockect);
 };
 
 export const listSolic = async () => {
@@ -263,10 +235,10 @@ export const getDiferido = async (id_request: number) => {
 			'id_request.id_commerce.rc_constitutive_act.id_photo',
 			'id_request.id_commerce.rc_rif',
 			'id_request.id_commerce.rc_special_contributor',
-			'id_request.id_client',
-			'id_request.id_client.rc_ident_card',
 			'id_request.rc_ref_bank',
 			'id_request.rc_comp_dep',
+			'id_request.id_client',
+			'id_request.id_client.rc_ident_card',
 		],
 	});
 
@@ -282,7 +254,7 @@ export const getDiferido = async (id_request: number) => {
 		.forEach((key) => (id_valid_request[key] = query.id_request.id_valid_request[key]));
 
 	const { id_commerce, id_client, rc_ref_bank, rc_comp_dep }: any = query.id_request;
-	console.log('id_commerce', id_commerce);
+	// console.log('id_commerce', id_commerce);
 
 	const { rc_special_contributor, rc_constitutive_act, rc_rif }: any = id_commerce;
 	const { rc_ident_card }: any = id_client;
@@ -319,27 +291,26 @@ export const getDash = () => ({
 });
 
 export const All_Info = async () => {
-	//Count solicitudes
 	let solicitudes = await getRepository(fm_status).count({
 		where: { id_status_request: 1, id_department: 4 },
 	});
 
-	//Count Terminas todo lo que salio de admision
 	let terminadas: any = await getRepository(fm_status).count({
 		where: { id_status_request: 3, id_department: 4 },
 	});
 
-	//count diferidos
 	let diferidos: any = await getRepository(fm_status).count({
 		where: { id_status_request: 4, id_department: 4 },
 	});
+
+	// getDash();
 
 	allSolic = solicitudes;
 	allTerm = terminadas;
 
 	const total = { allSolic, allTerm, diferidos };
 
-	// console.log(total);
+	//// // console.log(total);
 
 	return total;
 };
