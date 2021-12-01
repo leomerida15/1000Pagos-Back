@@ -180,6 +180,7 @@ export const valid_exitin_commerce = async (
 
 		const id_client: any = req.params.id;
 		const { id_ident_type, ident_num } = req.body;
+
 		const commerce = await getRepository(fm_commerce).findOne({
 			where: { id_ident_type, ident_num, id_client },
 			relations: [
@@ -195,15 +196,15 @@ export const valid_exitin_commerce = async (
 		});
 
 		if (!commerce) {
-			const valid_commerce_client = await getRepository(fm_commerce).findOne({ id_ident_type, ident_num });
+			const valid_commerce_client = await getRepository(fm_commerce).count({ id_ident_type, ident_num });
 			if (valid_commerce_client) {
 				throw { message: 'este comercio ya se encuentra asociado a un cliente', code: 400 };
 			} else {
 				resp = { message: 'el commercio no exite' };
 			}
 		} else {
-			const matchImg: boolean = (await getRepository(fm_request).findOne({ id_client })) ? true : false;
-			resp = { message: 'datos del comercio', info: { ...commerce, matchImg } };
+			const matchImg: boolean = (await getRepository(fm_request).count({ id_client })) ? true : false;
+			resp = { message: 'datos del comercio', info: { ...commerce, matchImg, matsh: true } };
 		}
 
 		Resp(req, res, resp);

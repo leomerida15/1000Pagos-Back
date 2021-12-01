@@ -156,6 +156,8 @@ export const editRcByFm = async (
 ): Promise<void> => {
 	try {
 		const constitutive_act_ids = req.body.constitutive_act_ids.split(',');
+		console.log('constitutive_act_ids', constitutive_act_ids);
+
 		const { id_request } = req.params;
 		const files: any = req.files;
 
@@ -178,6 +180,8 @@ export const editRcByFm = async (
 		});
 		if (!fm) throw { message: 'el FM suministrado no existe', code: 400 };
 
+		console.log('--------|>');
+
 		const { id_client, id_commerce } = fm;
 
 		// console.log('id_client}/${id_commerce',id_client,id_commerce);
@@ -193,6 +197,8 @@ export const editRcByFm = async (
 
 		let valids: any = {};
 
+		console.log('--------|>');
+
 		let info: any = {
 			rc_ident_card: id_client.rc_ident_card,
 			rc_rif: id_commerce.rc_rif,
@@ -200,6 +206,9 @@ export const editRcByFm = async (
 			rc_ref_bank: fm.rc_ref_bank,
 			rc_constitutive_act: id_commerce.rc_constitutive_act,
 		};
+
+		console.log('--------|>');
+
 		if (files.constitutive_act) {
 			const stop: Promise<void>[] = files.images
 				.filter((file: Express.Multer.File): boolean => {
@@ -207,6 +216,8 @@ export const editRcByFm = async (
 					return description.includes(valid);
 				})
 				.map(async (file: Express.Multer.File, i: number): Promise<void> => {
+					console.log('file', file);
+
 					const descript: any = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
 
 					await Doc.Delete(info[descript].path);
@@ -231,6 +242,8 @@ export const editRcByFm = async (
 			await Promise.all(stop);
 		}
 
+		console.log('--------|>');
+
 		if (files.constitutive_act) {
 			const stop2 = files.constitutive_act.map(async (file: Express.Multer.File, i: number): Promise<void> => {
 				await Doc.Move(file.filename, `${id_client}/${id_commerce}/constitutive_act`);
@@ -248,6 +261,8 @@ export const editRcByFm = async (
 
 			await Promise.all(stop2);
 		}
+
+		console.log('--------|>');
 
 		if (req.body.constitutive_act_ids) {
 			const imgs = await getRepository(fm_photo).findByIds(constitutive_act_ids);
