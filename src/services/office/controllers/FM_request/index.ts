@@ -315,8 +315,7 @@ export const FM_create = async (
 		// validacion de data
 		validationResult(req).throw();
 
-		console.log('req.body',req.body);
-		
+		console.log('req.body', req.body);
 
 		const {
 			number_post,
@@ -342,7 +341,7 @@ export const FM_create = async (
 
 		await getRepository(fm_client).update(id_client, { rc_ident_card });
 
-		await getRepository(fm_commerce).update(id_client, { rc_special_contributor, rc_rif });
+		await getRepository(fm_commerce).update(id_commerce, { rc_special_contributor, rc_rif });
 
 		const constitutive_act = rc_constitutive_act.map((id_photo: any) => ({ id_commerce, id_photo }));
 		await getRepository(fm_commerce_constitutive_act).save(constitutive_act);
@@ -545,7 +544,7 @@ export const editStatusByIdAdmision = async (
 			if (!valids) throw { message: 'cambio de estatus es 4, valids es requerido', code: 400 };
 
 			await getRepository(fm_valid_request).update(id, { ...valids });
-		} 
+		}
 
 		if (id_aci) await getRepository(fm_commerce).update({ id: FM.id_commerce.id }, { id_aci });
 
