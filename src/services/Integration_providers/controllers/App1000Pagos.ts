@@ -5,6 +5,7 @@ import { DateTime } from 'luxon';
 import fm from 'services/office/router/fm';
 import Comercios from '../../../db/models/Comercios';
 import { Api } from '../../../interfaces';
+import ComerciosXafiliado from '../../../db/models/CategoriasXafiliado';
 
 export const createCommerce = async (
 	req: Request<Api.params, Api.Resp, { id_fm: number; id_commerce: number; id_client: number }>,
@@ -107,9 +108,15 @@ export const createCommerce = async (
 
 		console.log('commerce', commerce);
 
-		const info = await getRepository(Comercios).save(commerce);
+		const comercioSave = await getRepository(Comercios).save(commerce);
 
-		res.status(200).json({ message: 'comercio creado', info });
+		const cxaCodAfi = `${id_commerce.id_activity.id_afiliado.id}`.split('');
+
+		while (cxaCodAfi.length < 16) cxaCodAfi.unshift('0');
+
+		await getRepository(ComerciosXafiliado).save({ cxaCodAfi: cxaCodAfi.join(''), cxaCodComer: comercioSave.id });
+
+		res.status(200).json({ message: 'comercio creado' });
 	} catch (err) {
 		next(err);
 	}

@@ -12,7 +12,7 @@ Global.route('/global/images').post(uploads, convert, createImages);
 //
 Global.route('/global/image').post(upload, convert, createImage);
 //
-Global.route('/global/image/:id').delete(createImage).get(getImageById);
+Global.route('/global/image/:id').delete(createImage).get(getImageById).put(upload, convert);
 
 //
 export default Global;

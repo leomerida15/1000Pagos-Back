@@ -21,7 +21,7 @@ import fm_valid_request from '../../../../db/models/fm_valid_request';
 import fm_quotas_calculated from '../../../../db/models/fm_quotas_calculated';
 import fm_product from '../../../../db/models/fm_product';
 import fm_commerce_constitutive_act from '../../../../db/models/fm_commerce_constitutive_act';
-import { mail } from '../../../../helpers';
+import axios from 'axios';
 
 //
 export const requestOrigin = async (
@@ -547,6 +547,43 @@ export const editStatusByIdAdmision = async (
 		}
 
 		if (id_aci) await getRepository(fm_commerce).update({ id: FM.id_commerce.id }, { id_aci });
+
+		if (id_status_request === 3) {
+			const { pagadero, id_product } = FM;
+
+			if (pagadero) {
+				if (id_product.id === 1) {
+					await axios.post(
+						'http://10.198.68.21:8000/auth/login',
+						{
+							grant_type: 'password',
+							username: 'acesso.teste',
+							password: '@ger7123',
+						},
+						{ headers: { token: req.headers.token_text } }
+					);
+
+					await axios.post(
+						'http://10.198.68.21:8000/tms7/commerce',
+						{ id_fm: FM.id, id_commerce: FM.id_commerce.id, id_client: FM.id_client.id },
+						{ headers: { token: req.headers.token_text } }
+					);
+
+					await axios.post(
+						'http://10.198.68.21:8000/app1000pagos/commerce',
+						{ id_fm: FM.id, id_commerce: FM.id_commerce.id, id_client: FM.id_client.id },
+						{ headers: { token: req.headers.token_text } }
+					);
+				} else if (id_product.id === 2) {
+					//
+					await axios.post(
+						'http://10.198.68.21:8000/app1000pagos/commerce',
+						{ id_fm: FM.id, id_commerce: FM.id_commerce.id, id_client: FM.id_client.id },
+						{ headers: { token: req.headers.token_text } }
+					);
+				}
+			}
+		}
 
 		const message: string = Msg('Status del FM').edit;
 

@@ -197,7 +197,7 @@ export const editRcByFm = async (
 
 		let valids: any = {};
 
-		console.log('--------|>');
+		console.log('--------|> info');
 
 		let info: any = {
 			rc_ident_card: id_client.rc_ident_card,
@@ -207,78 +207,106 @@ export const editRcByFm = async (
 			rc_constitutive_act: id_commerce.rc_constitutive_act,
 		};
 
-		console.log('--------|>');
+		console.log('--------|> constitutive_act');
 
-		if (files.constitutive_act) {
+		if (files.images) {
 			const stop: Promise<void>[] = files.images
 				.filter((file: Express.Multer.File): boolean => {
 					const valid: string = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
 					return description.includes(valid);
 				})
 				.map(async (file: Express.Multer.File, i: number): Promise<void> => {
-					console.log('file', file);
-
 					const descript: any = file.originalname.replace(/(.png$|.png$|.jpeg$|.pdf$|.jpg$)/g, '');
 
-					await Doc.Delete(info[descript].path);
+					if (info[descript]) {
+						await Doc.Delete(info[descript].path);
 
-					const route_ids: string = ['rc_ident_card'].includes(descript)
-						? `${id_client}`
-						: `${id_client}/${id_commerce}`;
+						if (['rc_ident_card'].includes(descript)) {
+							const route_ids: string = `${id_client.id}`;
+							//await Doc.Move(file.filename, route_ids);
 
-					//await Doc.Move(file.filename, route_ids);
+							const path = `static/${route_ids}/${file.filename}`;
 
-					const path = `static/${route_ids}/${file.filename}`;
+							// console.log('path', path);
+							console.log('');
+							console.log('--------|> constitutive_act');
+							console.log('descript', descript);
+							console.log('id_client[descript].id', id_client[descript].id);
 
-					// console.log('path', path);
+							console.log(' { path, name: file.filename }', { path, name: file.filename });
 
-					// console.log('fm[descript].id', fm[descript].id);
+							await getRepository(fm_photo).update(id_client[descript].id, { path, name: file.filename });
 
-					await getRepository(fm_photo).update(fm[descript].id, { path });
+							valids[descript.replace('rc_', 'valid_')] = '';
+						} else if (!['rc_constitutive_act'].includes(descript)) {
+							const route_ids: string = `${id_client.id}/${id_commerce.id}`;
 
-					valids[descript.replace('rc_', 'valid_')] = '';
+							//await Doc.Move(file.filename, route_ids);
+
+							const path = `static/${route_ids}/${file.filename}`;
+
+							// console.log('path', path);
+							console.log('');
+							console.log('--------|> constitutive_act');
+							console.log('descript', descript);
+							console.log('id_commerce[descript].id', id_commerce[descript].id);
+
+							await getRepository(fm_photo).update(id_commerce[descript].id, { path });
+
+							valids[descript.replace('rc_', 'valid_')] = '';
+						}
+					}
 				});
 
 			await Promise.all(stop);
 		}
 
-		console.log('--------|>');
+		// if (files.constitutive_act) {
+		// 	console.log('--------|> constitutive_act');
 
-		if (files.constitutive_act) {
-			const stop2 = files.constitutive_act.map(async (file: Express.Multer.File, i: number): Promise<void> => {
-				await Doc.Move(file.filename, `${id_client}/${id_commerce}/constitutive_act`);
-				const path = `static/${id_client}/${id_commerce}/constitutive_act/${file.filename}`;
+		// 	console.log('files.constitutive_act', files.constitutive_act);
 
-				const data = getRepository(fm_photo).create({
-					name: file.filename,
-					path,
-					descript: 'rc_constitutive_act',
-				});
-				const save = await getRepository(fm_photo).save(data);
+		// 	const stop2 = files.constitutive_act.map(async (file: Express.Multer.File, i: number): Promise<void> => {
+		// 		console.log('file', file);
 
-				info.rc_constitutive_act.push(save.id);
-			});
+		// 		await Doc.Move(file.filename, `${id_client}/${id_commerce}/constitutive_act`);
+		// 		const path = `static/${id_client}/${id_commerce}/constitutive_act/${file.filename}`;
 
-			await Promise.all(stop2);
-		}
+		// 		const data = getRepository(fm_photo).create({
+		// 			name: file.filename,
+		// 			path,
+		// 			descript: 'rc_constitutive_act',
+		// 		});
 
-		console.log('--------|>');
+		// 		console.log('data', data);
 
-		if (req.body.constitutive_act_ids) {
-			const imgs = await getRepository(fm_photo).findByIds(constitutive_act_ids);
-			//
-			const stop = imgs.map(async (file: any): Promise<number> => {
-				await fs.unlink(file.path);
+		// 		const save = await getRepository(fm_photo).save(data);
 
-				return file.id;
-			});
+		// 		console.log('save', save);
 
-			const ids = await Promise.all(stop);
+		// 		info.rc_constitutive_act.push(save.id);
+		// 	});
 
-			await getRepository(fm_photo).delete(ids);
+		// 	await Promise.all(stop2);
+		// }
 
-			await getRepository(fm_commerce_constitutive_act).delete({ id_commerce, id_photo: In(ids) });
-		}
+		// console.log('--------|> constitutive_act_ids');
+
+		// if (req.body.constitutive_act_ids) {
+		// 	const imgs = await getRepository(fm_photo).findByIds(constitutive_act_ids);
+		// 	//
+		// 	const stop = imgs.map(async (file: any): Promise<number> => {
+		// 		await fs.unlink(file.path);
+
+		// 		return file.id;
+		// 	});
+
+		// 	const ids = await Promise.all(stop);
+
+		// 	await getRepository(fm_photo).delete(ids);
+
+		// 	await getRepository(fm_commerce_constitutive_act).delete({ id_commerce, id_photo: In(ids) });
+		// }
 
 		await getRepository(fm_status).update({ id_request: fm.id, id_department: 4 }, { id_status_request: 3 });
 
