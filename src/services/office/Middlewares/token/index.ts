@@ -10,7 +10,8 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
 		console.log(req.path);
 		
-		
+		console.log('token',req.headers.token);
+
 		// define array route
 
 		// valid use
@@ -28,7 +29,6 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
 				req.headers.token = Resp;
 
-				console.log('token',req.headers.token);
 
 
 				next();

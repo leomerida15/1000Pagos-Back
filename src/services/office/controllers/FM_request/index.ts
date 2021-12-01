@@ -311,6 +311,9 @@ export const FM_create = async (
 		// validacion de data
 		validationResult(req).throw();
 
+		console.log('req.body',req.body);
+		
+
 		const {
 			number_post,
 			rc_constitutive_act,
@@ -538,9 +541,7 @@ export const editStatusByIdAdmision = async (
 			if (!valids) throw { message: 'cambio de estatus es 4, valids es requerido', code: 400 };
 
 			await getRepository(fm_valid_request).update(id, { ...valids });
-
-			mail.diferido(FM);
-		}
+		} 
 
 		if (id_aci) await getRepository(fm_commerce).update({ id: FM.id_commerce.id }, { id_aci });
 
