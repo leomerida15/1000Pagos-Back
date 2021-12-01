@@ -7,7 +7,11 @@ const Key: string = process.env.KEY || '_secreto';
 /** this middleware is for convert json web token in Objet format */
 export default (req: Request, res: Response, next: NextFunction) => {
 	try {
+
+		console.log(req.path);
 		
+		console.log('token',req.headers.token);
+
 		// define array route
 
 		// valid use
@@ -25,7 +29,6 @@ export default (req: Request, res: Response, next: NextFunction) => {
 
 				req.headers.token = Resp;
 
-				console.log('token',req.headers.token);
 
 
 				next();
