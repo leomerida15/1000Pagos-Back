@@ -127,13 +127,8 @@ export const valid_existin_client = async (
 			throw { message: 'el de docuemnto de identidad no coinside' };
 		}
 
-		const validMail = await getRepository(fm_client).findOne({ email });
-		if (validMail && validMail.ident_num != ident_num && validMail.id_ident_type != id_ident_type) {
-			throw { message: 'el correo ya esta asociado a otro documento de identidad' };
-		}
-
 		const client = await getRepository(fm_client).findOne({
-			where: { id_ident_type, ident_num, email },
+			where: { email },
 			relations: [
 				'phones',
 				'id_ident_type',
@@ -144,7 +139,11 @@ export const valid_existin_client = async (
 				'id_location.id_parroquia',
 			],
 		});
-		if (client) {
+
+		if (client && client.ident_num != ident_num && client.id_ident_type != id_ident_type) {
+			throw { message: 'el correo ya esta asociado a otro documento de identidad' };
+			//
+		} else if (client) {
 			resp = {
 				message: 'el usuario existe',
 				info: {
@@ -153,7 +152,11 @@ export const valid_existin_client = async (
 					matshImg: (await getRepository(fm_request).findOne({ id_client: client.id })) ? true : false,
 				},
 			};
-		} else if (!resp.message.length) resp.message = `ni el correo ni la ci existen`;
+			//
+		} else if (!resp.message.length) {
+			resp.message = `ni el correo ni la ci existen`;
+			//
+		}
 
 		Resp(req, res, resp);
 	} catch (err) {
