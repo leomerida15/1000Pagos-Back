@@ -71,7 +71,7 @@ export const editStatusByIdAdministration = async (
 
 		const { pagadero, id_product } = FM;
 
-		if (pagadero) {
+		if (!pagadero) {
 			if (id_product.id === 1) {
 				await axios.post(
 					'http://10.198.68.21:8000/auth/login',
