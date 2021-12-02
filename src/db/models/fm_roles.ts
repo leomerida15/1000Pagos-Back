@@ -15,7 +15,7 @@ export default class fm_roles {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
 	@ManyToMany(() => fm_worker)

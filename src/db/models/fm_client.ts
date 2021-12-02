@@ -24,10 +24,10 @@ export default class fm_client {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	last_name!: string;
 
 	@Column({ default: 1 })
@@ -43,7 +43,7 @@ export default class fm_client {
 	@JoinColumn({ name: 'id_ident_type' })
 	id_ident_type!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	ident_num!: string;
 
 	@Column({ unique: true })

@@ -65,11 +65,6 @@ export const IDs = (files: string[]) => files.map((file: string) => file.split('
 //
 export const Move = async (file: string, folder: string) => {
 	if (folder) await fileExistin(folder);
-	console.log('Mover imagen');
-
-	console.log('path.join(base, file)', path.join(base, file));
-
-	console.log(' path.join(base, folder, file)', path.join(base, folder, file));
 
 	await fs.rename(path.join(base, file), path.join(base, folder, file));
 	return `${host}/${folder}/${file}`;
@@ -203,49 +198,54 @@ export const fromConvert = (from: string): any => {};
 //
 export const Convert = async (file: any, to: string): Promise<void> => {
 	try {
-		// console.log('file', file);
+		const from: string = file.split('.')[file.split('.').length - 1];
+		const filePath: string = path.join(base, file);
+	
 
-	const from: string = file.split('.')[file.split('.').length - 1];
-	const filePath: string = path.join(base, file);
+		let remove: boolean = false;
 
-	// console.log('file', file);
+		if (from === 'pdf') {
 
-	// console.log('path.basename(filePath, path.extname(filePath))', path.basename(filePath, path.extname(filePath)));
+			const out_prefix = path.basename(filePath, path.extname(filePath));
+			let option = {
+				format: to,
+				out_dir: base,
+				out_prefix, 
+				page: 1,
+			};
 
-	let remove: boolean = false;
-	if (from === 'pdf') {
-		let option = {
-			format: to,
-			out_dir: base,
-			out_prefix: path.basename(filePath, path.extname(filePath)),
-			page: 1,
-		};
+			await pdfConverter.convert(filePath, option);
 
-		// await fs.rename();
-		// option.out_dir value is the path where the image will be saved
+			if(existsSync(path.join(base,out_prefix+'-01.jpg'))){
+				//
+				await fs.rename( path.join(base,out_prefix+'-01.jpg'), path.join(base,out_prefix+'.jpg'));
 
-		await pdfConverter.convert(filePath, option);
-		const file = `${path.basename(filePath, path.extname(filePath))}-1.jpg`;
-		await fs.rename(path.join(base, file), path.join(base, file).replace('-1.jpg', '.jpg'));
-		remove = true;
-	} else if (from === 'png') {
-		// open a file called "lenna.png"
-		const lenna = await Jimp.read(filePath);
-		lenna
-			.resize(256, 256) // resize
-			.quality(60) // set JPEG quality
-			.greyscale() // set greyscale
-			.write(filePath.replace('.png', '.' + to)); // save
-		remove = true;
-	} else if (from === 'jpeg') {
-		// open a file called "lenna.png"
+			} else if(existsSync(path.join(base,out_prefix+'-1.jpg'))) {
+				//
+				await fs.rename( path.join(base,out_prefix+'-1.jpg'), path.join(base,out_prefix+'.jpg'));
 
-		await fs.rename(path.join(base, file), path.join(base, file.replace('.jpeg', '.jpg')));
-	}
+			}
+			
 
-	if (remove) await Delete(path.join(base, file));	
+			remove = true;
+		} else if (from === 'png') {
+			// open a file called "lenna.png"
+			const lenna = await Jimp.read(filePath);
+			lenna
+				.resize(256, 256) // resize
+				.quality(60) // set JPEG quality
+				.greyscale() // set greyscale
+				.write(filePath.replace('.png', '.' + to)); // save
+			
+			remove = true;
+		} else if (from === 'jpeg') {
+			// open a file called "lenna.png"
+
+			await fs.rename(path.join(base, file), path.join(base, file.replace('.jpeg', '.jpg')));
+		}
+
+		//if (remove) await Delete(file);
 	} catch (err) {
-		console.log('err convert',err);
-		
+		console.log('err convert', err);
 	}
 };

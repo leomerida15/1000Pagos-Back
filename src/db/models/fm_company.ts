@@ -14,7 +14,7 @@ export default class fm_company {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
 	@ManyToOne(() => fm_worker, (fm_worker) => fm_worker.id_company)

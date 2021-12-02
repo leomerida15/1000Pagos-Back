@@ -17,10 +17,10 @@ export default class fm_estado {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	estado!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	iso_3166!: string;
 
 	@OneToMany(() => fm_ciudad, (fm_Ciudad) => fm_Ciudad.id_estado)

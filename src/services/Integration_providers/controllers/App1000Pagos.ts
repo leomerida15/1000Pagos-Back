@@ -2,16 +2,16 @@ import fm_request from '../../../db/models/fm_request';
 import { NextFunction, Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import { DateTime } from 'luxon';
-import fm from 'services/office/router/fm';
 import Comercios from '../../../db/models/Comercios';
 import { Api } from '../../../interfaces';
+import ComerciosXafiliado from '../../../db/models/CategoriasXafiliado';
 
 export const createCommerce = async (
 	req: Request<Api.params, Api.Resp, { id_fm: number; id_commerce: number; id_client: number }>,
 	res: Response,
 	next: NextFunction
 ): Promise<void> => {
-	try {
+	try {		
 		const fmData = await getRepository(fm_request).findOne({
 			where: { id: req.body.id_fm, id_commerce: req.body.id_commerce, id_client: req.body.id_client },
 			order: { id: 'ASC' },
@@ -33,7 +33,6 @@ export const createCommerce = async (
 				'dir_pos.id_location.id_parroquia',
 				// commerce
 				'id_commerce',
-				'id_commerce.id_aci',
 				'id_commerce.id_ident_type',
 				'id_commerce.id_activity',
 				'id_commerce.id_activity.id_afiliado',
@@ -43,10 +42,9 @@ export const createCommerce = async (
 				'id_commerce.id_location.id_ciudad',
 				'id_commerce.id_location.id_parroquia',
 				//
-				'id_product',
 			],
 		});
-		if (!fmData) throw { message: 'el commercio suministrado no existe', code: 400 };
+		if (!fmData) throw { message: 'el commercio suministrado no existe', code: 400 };		
 
 		const { id_commerce, id_client, bank_account_num, id_product, dir_pos, number_post }: any = fmData;
 
@@ -55,23 +53,22 @@ export const createCommerce = async (
 			comerTipoPer: [3, 4].includes(id_commerce.id_ident_type.id) ? 2 : 1,
 			comerCodigoBanco: bank_account_num.slice(0, 4),
 			comerCuentaBanco: bank_account_num,
-			comerPagaIva: 'SI',
+			comerPagaIva: 'SI',			
 			comerCodUsuario: null,
 			comerCodPadre: 0,
 			comerRif: id_commerce.id_ident_type.name + id_commerce.ident_num,
 			comerFreg: null,
 			comerCodTipoCont: id_commerce.special_contributor ? 2 : 1,
-			comerInicioContrato: DateTime.local().toString(),
-			comerFinContrato: DateTime.local().plus({ years: 1 }).toString(),
+			comerInicioContrato: DateTime.local().toISODate(),
+			comerFinContrato: DateTime.local().plus({ years: 1 }).toISODate(),
 			comerExcluirPago: 0,
-			comerCodCategoria: '5411',
+			comerCodCategoria: 5411,
 			comerGarantiaFianza: 1,
 			comerModalidadGarantia: 1,
 			comerMontoGarFian: 7.77,
 			comerModalidadPos: 3,
-			comerTipoPos: id_product.id,
+			comerTipoPos: id_product,
 			comerRecaudos: null,
-			//
 			comerDireccion: Object.keys(id_commerce.id_location)
 				.filter((key) => key !== 'id')
 				.map((key) => id_commerce.id_location[key][key.replace('id_', '')])
@@ -79,11 +76,11 @@ export const createCommerce = async (
 				.join(', '),
 
 			comerObservaciones: '',
-			comerCodAliado: id_commerce.id_aci.id,
+			comerCodAliado: id_commerce.id_aci,
 			comerEstatus: 5,
 			comerHorario: null,
 			comerImagen: null,
-			comerPuntoAdicional: number_post,
+			comerPuntoAdicional: 0,
 			comerCodigoBanco2: '',
 			comerCuentaBanco2: '',
 			comerCodigoBanco3: '',
@@ -105,11 +102,17 @@ export const createCommerce = async (
 			comerFechaGarFian: null,
 		};
 
-		console.log('commerce', commerce);
+		const comercioSave = await getRepository(Comercios).save(commerce);
 
-		const info = await getRepository(Comercios).save(commerce);
+		const cxaCodAfi = `${id_commerce.id_activity.id_afiliado.id}`.split('');
+		
 
-		res.status(200).json({ message: 'comercio creado', info });
+		while (cxaCodAfi.length < 15) cxaCodAfi.unshift('0');		
+		
+
+		await getRepository(ComerciosXafiliado).save({ cxaCodAfi: cxaCodAfi.join(''), cxaCodComer: comercioSave.comerCod });
+
+		res.status(200).json({ message: 'comercio creado' });
 	} catch (err) {
 		next(err);
 	}

@@ -1,8 +1,13 @@
-// import { Column } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-// export default class CategoriasXafiliado {
-// 	@Column()
-// 	catCodAfi: string;
-// 	@Column()
-// 	catCodCat: string;
-// }
+@Entity({ synchronize: true, name:'ComerciosXafiliado' })
+export default class ComerciosXafiliado {
+	@Column({ nullable: true })
+	cxaCodAfi!: string;
+
+	@Column({ nullable: true })
+	cxaCodComer!: number;
+
+	@PrimaryGeneratedColumn()
+	cxaId!: number;
+}

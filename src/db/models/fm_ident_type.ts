@@ -16,7 +16,7 @@ export default class fm_ident_type {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
 	@OneToMany(() => fm_client, (fm_client) => fm_client.id_ident_type)

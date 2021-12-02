@@ -7,7 +7,6 @@ const Key: string = process.env.KEY || '_secreto';
 /** this middleware is for convert json web token in Objet format */
 export default (req: Request, res: Response, next: NextFunction) => {
 	try {
-		
 		// define array route
 
 		// valid use
@@ -18,15 +17,12 @@ export default (req: Request, res: Response, next: NextFunction) => {
 		if (result) {
 			if (req.headers.token) {
 				const { token }: any = req.headers;
-				
 
 				const Resp: any = jwt.verify(token, Key);
 				// console.log('Resp',Resp);
 
 				req.headers.token = Resp;
-
-				console.log('token',req.headers.token);
-
+				req.headers.token_text = token;
 
 				next();
 				//

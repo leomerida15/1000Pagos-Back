@@ -1,80 +1,80 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity({ synchronize: true })
+@Entity({ synchronize: false })
 export default class Comercios {
 	@PrimaryGeneratedColumn()
 	comerCod!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	comerDesc!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerTipoPer!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	comerCodigoBanco!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerCuentaBanco!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerPagaIva!: string;
 
 	@Column({ nullable: true })
 	comerCodUsuario!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerCodPadre!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	comerRif!: string;
 
 	@Column({ nullable: true })
 	comerFreg!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerCodTipoCont!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	comerInicioContrato!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerFinContrato!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerExcluirPago!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	comerCodCategoria!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	comerGarantiaFianza!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	comerModalidadGarantia!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	comerMontoGarFian!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	comerModalidadPos!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	comerTipoPos!: number;
 
 	@Column({ nullable: true })
 	comerRecaudos!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerDireccion!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerObservaciones!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerCodAliado!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	comerEstatus!: number;
 
 	@Column({ nullable: true })
@@ -83,28 +83,28 @@ export default class Comercios {
 	@Column({ nullable: true, type: 'image' })
 	comerImagen!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerPuntoAdicional!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	comerCodigoBanco2!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerCuentaBanco2!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerCodigoBanco3!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerCuentaBanco3!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerDireccionHabitacion!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerDireccionPos!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	comerDiasOperacion!: string;
 
 	@Column({ nullable: true })

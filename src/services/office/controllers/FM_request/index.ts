@@ -3,7 +3,7 @@ import { Api } from 'interfaces';
 import Resp from '../../Middlewares/res';
 import fm_client from '../../../../db/models/fm_client';
 import Msg from '../../../../hooks/messages/index.ts';
-import { getRepository, Not } from 'typeorm';
+import { getConnection, getRepository, Not } from 'typeorm';
 import bcrypt from 'bcrypt';
 import fm_phone from '../../../../db/models/fm_phone';
 import { validationResult } from 'express-validator';
@@ -21,7 +21,7 @@ import fm_valid_request from '../../../../db/models/fm_valid_request';
 import fm_quotas_calculated from '../../../../db/models/fm_quotas_calculated';
 import fm_product from '../../../../db/models/fm_product';
 import fm_commerce_constitutive_act from '../../../../db/models/fm_commerce_constitutive_act';
-import { mail } from '../../../../helpers';
+import axios from 'axios';
 
 //
 export const requestOrigin = async (
@@ -127,13 +127,8 @@ export const valid_existin_client = async (
 			throw { message: 'el de docuemnto de identidad no coinside' };
 		}
 
-		const validMail = await getRepository(fm_client).findOne({ email });
-		if (validMail && validMail.ident_num != ident_num && validMail.id_ident_type != id_ident_type) {
-			throw { message: 'el correo ya esta asociado a otro documento de identidad' };
-		}
-
 		const client = await getRepository(fm_client).findOne({
-			where: { id_ident_type, ident_num, email },
+			where: { email },
 			relations: [
 				'phones',
 				'id_ident_type',
@@ -144,7 +139,11 @@ export const valid_existin_client = async (
 				'id_location.id_parroquia',
 			],
 		});
-		if (client) {
+
+		if (client && client.ident_num != ident_num && client.id_ident_type != id_ident_type) {
+			throw { message: 'el correo ya esta asociado a otro documento de identidad' };
+			//
+		} else if (client) {
 			resp = {
 				message: 'el usuario existe',
 				info: {
@@ -153,7 +152,11 @@ export const valid_existin_client = async (
 					matshImg: (await getRepository(fm_request).findOne({ id_client: client.id })) ? true : false,
 				},
 			};
-		} else if (!resp.message.length) resp.message = `ni el correo ni la ci existen`;
+			//
+		} else if (!resp.message.length) {
+			resp.message = `ni el correo ni la ci existen`;
+			//
+		}
 
 		Resp(req, res, resp);
 	} catch (err) {
@@ -177,6 +180,7 @@ export const valid_exitin_commerce = async (
 
 		const id_client: any = req.params.id;
 		const { id_ident_type, ident_num } = req.body;
+
 		const commerce = await getRepository(fm_commerce).findOne({
 			where: { id_ident_type, ident_num, id_client },
 			relations: [
@@ -192,15 +196,15 @@ export const valid_exitin_commerce = async (
 		});
 
 		if (!commerce) {
-			const valid_commerce_client = await getRepository(fm_commerce).findOne({ id_ident_type, ident_num });
+			const valid_commerce_client = await getRepository(fm_commerce).count({ id_ident_type, ident_num });
 			if (valid_commerce_client) {
 				throw { message: 'este comercio ya se encuentra asociado a un cliente', code: 400 };
 			} else {
 				resp = { message: 'el commercio no exite' };
 			}
 		} else {
-			const matchImg: boolean = (await getRepository(fm_request).findOne({ id_client })) ? true : false;
-			resp = { message: 'datos del comercio', info: { ...commerce, matchImg } };
+			const matchImg: boolean = (await getRepository(fm_request).count({ id_client })) ? true : false;
+			resp = { message: 'datos del comercio', info: { ...commerce, matchImg, matsh: true } };
 		}
 
 		Resp(req, res, resp);
@@ -275,13 +279,10 @@ export const valid_bank_account = async (
 		let valid_bank_commerce: any;
 		const client: any = await getRepository(fm_client).findOne({ email });
 
-		console.log('client', client);
-
 		const obj = { bank_account_num, id_bank: bank.id };
 
 		if (!client) {
 			valid_bank_commerce = await getRepository(fm_bank_commerce).findOne(obj);
-			console.log('valid_bank_commerce', valid_bank_commerce);
 
 			if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		} else {
@@ -291,7 +292,6 @@ export const valid_bank_account = async (
 				id_bank: bank.id,
 			});
 
-			console.log('valid_bank_commerce', valid_bank_commerce);
 
 			if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		}
@@ -335,7 +335,7 @@ export const FM_create = async (
 
 		await getRepository(fm_client).update(id_client, { rc_ident_card });
 
-		await getRepository(fm_commerce).update(id_client, { rc_special_contributor, rc_rif });
+		await getRepository(fm_commerce).update(id_commerce, { rc_special_contributor, rc_rif });
 
 		const constitutive_act = rc_constitutive_act.map((id_photo: any) => ({ id_commerce, id_photo }));
 		await getRepository(fm_commerce_constitutive_act).save(constitutive_act);
@@ -526,7 +526,7 @@ export const editStatusByIdAdmision = async (
 		const { id_status_request, valids, id_aci } = req.body;
 
 		const FM: any = await getRepository(fm_request).findOne(id_FM, {
-			relations: ['id_valid_request', 'id_commerce'],
+			relations: ['id_valid_request', 'id_product'],
 		});
 		if (!FM) throw { message: 'FM no existe' };
 
@@ -538,11 +538,50 @@ export const editStatusByIdAdmision = async (
 			if (!valids) throw { message: 'cambio de estatus es 4, valids es requerido', code: 400 };
 
 			await getRepository(fm_valid_request).update(id, { ...valids });
-
-			mail.diferido(FM);
 		}
 
-		if (id_aci) await getRepository(fm_commerce).update({ id: FM.id_commerce.id }, { id_aci });
+		
+
+	    const edit = await getRepository(fm_commerce).update(FM.id_commerce, { id_aci });		
+
+		if (id_status_request === 3) {
+			
+			const { pagadero, id_product } = FM;
+
+			
+			if (pagadero) {
+				if (id_product.id === 1) {
+					await axios.post(
+						'http://10.198.68.21:8000/auth/login',
+						{
+							grant_type: 'password',
+							username: 'acesso.teste',
+							password: '@ger7123',
+						},
+						{ headers: { token: req.headers.token_text } }
+					);
+
+					await axios.post(
+						'http://10.198.68.21:8000/tms7/commerce',
+						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
+						{ headers: { token: req.headers.token_text } }
+					);
+
+					await axios.post(
+						'http://10.198.68.21:8000/app1000pagos/commerce',
+						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
+						{ headers: { token: req.headers.token_text } }
+					);
+				} else if (id_product.id === 2) {
+					//
+					await axios.post(
+						'http://10.198.68.21:8000/app1000pagos/commerce',
+						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
+						{ headers: { token: req.headers.token_text } }
+					);
+				}
+			}
+		}
 
 		const message: string = Msg('Status del FM').edit;
 

@@ -73,18 +73,10 @@ export const getAllCommerce = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		console.log('req.headers.token', req.headers.token);
-
 		const { id }: any = req.headers.token;
-
-		console.log('users', users);
 
 		const usar = users.find((user) => user.id === id);
 		// if (!usar) throw { message: 'usuario no logeado', code: 401 };
-
-		console.log('usar', usar);
-
-		console.log('');
 
 		const resp = await axios.get('http://10.198.72.86/TMS7API/v1/Merchant?net_id=0002', {
 			headers: {
@@ -125,8 +117,6 @@ const createCommerceTMS7 = async (commerce: any, access_token: string): Promise<
 		return true;
 	} catch (err) {
 		let error: any = err;
-		console.log(error);
-
 		return false;
 	}
 };
@@ -173,7 +163,7 @@ export const createCommerce = async (
 				'id_commerce.id_location.id_parroquia',
 			],
 		});
-		if (!fmData) throw { message: 'el commercio suministrado no existe', code: 400 };
+		if (!fmData) throw { message: 'el commercio suministrado no existe', code: 400 };		
 
 		const { id_commerce, id_client, dir_pos, id }: any = fmData;
 		const { name, id_ident_type, ident_num, id_activity }: any = id_commerce;
@@ -191,10 +181,9 @@ export const createCommerce = async (
 			.filter((item) => item)[0];
 
 		const address_line2 = Object.keys(dir_pos[0].id_location)
-			.map((key) => {
-				console.log('key', key);
-				return dir_pos[0].id_location[key][key.replace('id_', '')];
-			})
+			.map((key) => 
+				dir_pos[0].id_location[key][key.replace('id_', '')]
+			)
 			.filter((item) => item)[0];
 
 		const merchantId = `7${id_activity.id_afiliado.id}${11000 + (id + 777)}`;
@@ -216,7 +205,7 @@ export const createCommerce = async (
 			postalcode: id_ciudad.postal_code,
 			group: { name: `${id_activity.id_afiliado.name}`, installments: '1' },
 			partner: null,
-		};
+		};		
 
 		// const commerce = {
 		// 	net_id: 2,
@@ -237,7 +226,7 @@ export const createCommerce = async (
 		// 	partner: null,
 		// };
 
-		const info = await createCommerceTMS7(commerce, usar.access_token);
+		await createCommerceTMS7(commerce, usar.access_token);		
 
 		res.status(200).json({ message: 'comercio creado', info: commerce });
 	} catch (err) {

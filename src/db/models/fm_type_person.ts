@@ -10,6 +10,6 @@ export default class fm_type_person {
 	@JoinColumn({ name: 'fm_afiliados' })
 	afiliados?: fm_afiliados[];
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 }

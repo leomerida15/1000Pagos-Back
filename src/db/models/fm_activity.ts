@@ -16,7 +16,7 @@ export default class fm_activity {
 	@PrimaryGeneratedColumn()
 	id?: string;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
 	@ManyToOne(() => fm_afiliados, (fm_afiliados) => fm_afiliados.activitys)

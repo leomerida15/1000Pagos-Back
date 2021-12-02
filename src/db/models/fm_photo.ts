@@ -16,13 +16,13 @@ export default class fm_photo {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	path!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	descript!: string;
 
 	@OneToMany(() => fm_request, (fm_request) => fm_request)
