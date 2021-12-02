@@ -7,7 +7,8 @@ import fm_request from '../../../../db/models/fm_request';
 import fm_status from '../../../../db/models/fm_status';
 import axios from 'axios';
 
-const urlApi: string = 'http://10.198.68.21';
+//const urlApi: string = 'http://10.198.68.21'; //qa
+const urlApi: string = 'http://10.198.73.15'; //qa
 const portApi: string = '8000';
 
 // responder FM por id

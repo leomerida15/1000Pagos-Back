@@ -552,7 +552,7 @@ export const editStatusByIdAdmision = async (
 			if (pagadero) {
 				if (id_product.id === 1) {
 					await axios.post(
-						'http://10.198.68.21:8000/auth/login',
+						'http://10.198.73.15:8000/auth/login',
 						{
 							grant_type: 'password',
 							username: 'acesso.teste',
@@ -562,20 +562,20 @@ export const editStatusByIdAdmision = async (
 					);
 
 					await axios.post(
-						'http://10.198.68.21:8000/tms7/commerce',
+						'http://10.198.73.15:8000/tms7/commerce',
 						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 						{ headers: { token: req.headers.token_text } }
 					);
 
 					await axios.post(
-						'http://10.198.68.21:8000/app1000pagos/commerce',
+						'http://10.198.73.15:8000/app1000pagos/commerce',
 						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 						{ headers: { token: req.headers.token_text } }
 					);
 				} else if (id_product.id === 2) {
 					//
 					await axios.post(
-						'http://10.198.68.21:8000/app1000pagos/commerce',
+						'http://10.198.73.15:8000/app1000pagos/commerce',
 						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 						{ headers: { token: req.headers.token_text } }
 					);
