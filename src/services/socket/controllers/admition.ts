@@ -69,8 +69,7 @@ export const listSolicWorking = async (id_conectado: any, user: any) => {
 	if (solictudes.length !== 0) {
 		const obj = solictudesTrabajando.find((items) => {
 			// console.log(`items.id_conectado === id_conectado`, items.id_conectado === id_conectado);
-			console.log('ITEMS ITEMS :', items);
-			console.log('ID:', user.id);
+
 			return items.id_conectado === id_conectado || items.ident_num === user.ident_num;
 		});
 		// if (obj) return obj;
@@ -335,12 +334,33 @@ export const OneSolic = async (key: any) => {
 		console.log('KEY:', key);
 
 		const client = await getRepository(fm_client).findOne({
-			where: { ident_num: '101010101' },
+			where: { ident_num: key },
 			relations: ['requests'],
 		});
 		if (!client) throw { message: 'la cedula suministrada no existe', code: 400 };
 
-		const ids_request = client.requests ? client.requests.map((id: any) => id.id_request) : [];
+		return client;
+	} catch (err) {
+		console.log('err', err);
+	}
+};
+
+export const colearOneSolic = async (key: any) => {
+	try {
+		// const query = await getConnection().query(
+		// 	/*sql*/ `SELECT * FROM [MilPagos].[dbo].[fm_status] where id_department = 1 and id_status_request = 1`
+		// );
+		console.log('KEY:', key);
+
+		const client = await getRepository(fm_client).findOne({
+			where: { ident_num: key },
+			relations: ['requests'],
+		});
+		if (!client) throw { message: 'la cedula suministrada no existe', code: 400 };
+
+		console.log('client', client);
+
+		const ids_request = client.requests ? client.requests.map((id_request: any) => id_request.id) : [];
 		console.log('ids_request', ids_request);
 
 		const query = await getRepository(fm_status).find({

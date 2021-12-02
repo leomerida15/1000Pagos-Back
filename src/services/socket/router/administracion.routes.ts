@@ -3,6 +3,7 @@ import {
 	administracion,
 	administracionTrabajndo,
 	disconectAdminis,
+	disconectsolicAdministra,
 	getFmAdministration,
 	listAdminisWorking,
 } from '../controllers/administracion';
@@ -29,35 +30,31 @@ const administra = (io: any) => {
 		socket.on('cliente:trabajandoAdministra', async (user: any, id: any) => {
 			console.log('administra trabajando');
 			console.log('');
-			// console.log('Administra antes: ', administracion);
-
-			// if (user.id === ) {
-
-			// } else {
-
-			// }
-			// console.log('administracion trabajando ;', administracionTrabajndo);
 
 			await listAdminisWorking(socket.id, user, id);
 
 			io.emit('server:loadAdministracion', administracion);
 
 			// console.log('Administra desp: ', administracion);
+		});
 
-			socket.on('disconnect', () => {
-				// console.log(socket.id, 'disconnected');
-				// console.log('FUera');
+		socket.on('disconnect', () => {
+			// console.log(socket.id, 'disconnected');
+			// console.log('FUera');
 
-				disconectAdminis(socket.id);
-				io.emit('server:loadAdministracion', administracion);
-			});
+			disconectAdminis(socket.id);
+			io.emit('server:loadAdministracion', administracion);
+		});
 
-			socket.on('cliente:disconnect', async () => {
-				// console.log(socket.id, 'disconnected');
-				// console.log('');
-				disconectAdminis(socket.id);
-				io.emit('server:loadAdministracion', administracion);
-			});
+		socket.on('cliente:disconnect', async () => {
+			// console.log(socket.id, 'disconnected');
+			// console.log('');
+			disconectAdminis(socket.id);
+			io.emit('server:loadAdministracion', administracion);
+		});
+
+		socket.on('cliente:cleansolicadminis', async () => {
+			disconectsolicAdministra(socket.id);
 		});
 	});
 };

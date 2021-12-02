@@ -57,6 +57,10 @@ export const disconectAdminis = (id_sockect: any) => {
 	// console.log('soy trabajando ', diferido);
 };
 
+export const disconectsolicAdministra = async (id_sockect: any) => {
+	administracionTrabajndo = administracionTrabajndo.filter((item) => item.id_conectado != id_sockect);
+};
+
 export const getFmAdministration = async (): Promise<void> => {
 	try {
 		const query = await getRepository(fm_status).find({
