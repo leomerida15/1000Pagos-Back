@@ -6,9 +6,7 @@ import fm_worker from '../../../../db/models/fm_worker';
 import Msg from '../../../../hooks/messages/index.ts';
 
 export const worker = async (req: Request<any, Api.Resp>, res: Response, next: NextFunction): Promise<void> => {
-	try {
-		console.log('req.headers.token',req.headers.token);
-		
+	try {		
 		const { id, type, email }: any = req.headers.token;
 
 		if (type === 1) throw { message: 'no tiene permiso de consumir enta data' };

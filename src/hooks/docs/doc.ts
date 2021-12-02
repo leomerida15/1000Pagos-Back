@@ -200,22 +200,33 @@ export const Convert = async (file: any, to: string): Promise<void> => {
 	try {
 		const from: string = file.split('.')[file.split('.').length - 1];
 		const filePath: string = path.join(base, file);
+	
 
 		let remove: boolean = false;
 
 		if (from === 'pdf') {
+
+			const out_prefix = path.basename(filePath, path.extname(filePath));
 			let option = {
 				format: to,
 				out_dir: base,
-				out_prefix: path.basename(filePath, path.extname(filePath)),
+				out_prefix, 
 				page: 1,
 			};
 
 			await pdfConverter.convert(filePath, option);
 
-			const file = `${path.basename(filePath, path.extname(filePath))}-1.jpg`;
+			if(existsSync(path.join(base,out_prefix+'-01.jpg'))){
+				//
+				await fs.rename( path.join(base,out_prefix+'-01.jpg'), path.join(base,out_prefix+'.jpg'));
 
-			await fs.rename(path.join(base, file), path.join(base, file).replace('-1.jpg', '.jpg'));
+			} else if(existsSync(path.join(base,out_prefix+'-1.jpg'))) {
+				//
+				await fs.rename( path.join(base,out_prefix+'-1.jpg'), path.join(base,out_prefix+'.jpg'));
+
+			}
+			
+
 			remove = true;
 		} else if (from === 'png') {
 			// open a file called "lenna.png"
@@ -225,6 +236,7 @@ export const Convert = async (file: any, to: string): Promise<void> => {
 				.quality(60) // set JPEG quality
 				.greyscale() // set greyscale
 				.write(filePath.replace('.png', '.' + to)); // save
+			
 			remove = true;
 		} else if (from === 'jpeg') {
 			// open a file called "lenna.png"
@@ -232,7 +244,7 @@ export const Convert = async (file: any, to: string): Promise<void> => {
 			await fs.rename(path.join(base, file), path.join(base, file.replace('.jpeg', '.jpg')));
 		}
 
-		if (remove) await Delete(file);
+		//if (remove) await Delete(file);
 	} catch (err) {
 		console.log('err convert', err);
 	}

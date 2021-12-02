@@ -53,9 +53,7 @@ export const editStatusByIdAdministration = async (
 	res: Response<Api.Resp>,
 	next: NextFunction
 ): Promise<void> => {
-	try {
-		console.log('req.body', req.body);
-		
+	try {		
 		const { id_FM }: any = req.params;
 		const { id_status_request, id_payment_method, id_type_payment } = req.body;
 

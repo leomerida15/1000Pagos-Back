@@ -31,8 +31,6 @@ export const createImages = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		console.log('files', req.files);
-
 		// const info = await getRepository(fm_photo).save(req.body);
 
 		const message: string = Msg('Imagenes').create;

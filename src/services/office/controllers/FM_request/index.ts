@@ -279,13 +279,10 @@ export const valid_bank_account = async (
 		let valid_bank_commerce: any;
 		const client: any = await getRepository(fm_client).findOne({ email });
 
-		console.log('client', client);
-
 		const obj = { bank_account_num, id_bank: bank.id };
 
 		if (!client) {
 			valid_bank_commerce = await getRepository(fm_bank_commerce).findOne(obj);
-			console.log('valid_bank_commerce', valid_bank_commerce);
 
 			if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		} else {
@@ -295,7 +292,6 @@ export const valid_bank_account = async (
 				id_bank: bank.id,
 			});
 
-			console.log('valid_bank_commerce', valid_bank_commerce);
 
 			if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		}
@@ -314,8 +310,6 @@ export const FM_create = async (
 	try {
 		// validacion de data
 		validationResult(req).throw();
-
-		console.log('req.body', req.body);
 
 		const {
 			number_post,
@@ -532,7 +526,7 @@ export const editStatusByIdAdmision = async (
 		const { id_status_request, valids, id_aci } = req.body;
 
 		const FM: any = await getRepository(fm_request).findOne(id_FM, {
-			relations: ['id_valid_request', 'id_commerce'],
+			relations: ['id_valid_request', 'id_product'],
 		});
 		if (!FM) throw { message: 'FM no existe' };
 
@@ -546,11 +540,15 @@ export const editStatusByIdAdmision = async (
 			await getRepository(fm_valid_request).update(id, { ...valids });
 		}
 
-		if (id_aci) await getRepository(fm_commerce).update({ id: FM.id_commerce.id }, { id_aci });
+		
+
+	    const edit = await getRepository(fm_commerce).update(FM.id_commerce, { id_aci });		
 
 		if (id_status_request === 3) {
+			
 			const { pagadero, id_product } = FM;
 
+			
 			if (pagadero) {
 				if (id_product.id === 1) {
 					await axios.post(
@@ -565,20 +563,20 @@ export const editStatusByIdAdmision = async (
 
 					await axios.post(
 						'http://10.198.68.21:8000/tms7/commerce',
-						{ id_fm: FM.id, id_commerce: FM.id_commerce.id, id_client: FM.id_client.id },
+						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 						{ headers: { token: req.headers.token_text } }
 					);
 
 					await axios.post(
 						'http://10.198.68.21:8000/app1000pagos/commerce',
-						{ id_fm: FM.id, id_commerce: FM.id_commerce.id, id_client: FM.id_client.id },
+						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 						{ headers: { token: req.headers.token_text } }
 					);
 				} else if (id_product.id === 2) {
 					//
 					await axios.post(
 						'http://10.198.68.21:8000/app1000pagos/commerce',
-						{ id_fm: FM.id, id_commerce: FM.id_commerce.id, id_client: FM.id_client.id },
+						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 						{ headers: { token: req.headers.token_text } }
 					);
 				}

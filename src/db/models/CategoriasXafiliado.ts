@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity({ synchronize: true })
+@Entity({ synchronize: true, name:'ComerciosXafiliado' })
 export default class ComerciosXafiliado {
 	@Column({ nullable: true })
 	cxaCodAfi!: string;
