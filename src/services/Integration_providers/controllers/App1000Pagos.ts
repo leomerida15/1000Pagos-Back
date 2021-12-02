@@ -46,6 +46,13 @@ export const createCommerce = async (
 		});
 		if (!fmData) throw { message: 'el commercio suministrado no existe', code: 400 };		
 
+		const phonesClient = await getRepository(fm_phone).find({
+			where: { id_client: req.body.id_client },
+			relations: [
+				'phone',
+			],
+		});
+
 		const { id_commerce, id_client, bank_account_num, id_product, dir_pos, number_post }: any = fmData;
 
 		const commerce: any = {
@@ -104,11 +111,27 @@ export const createCommerce = async (
 
 		const comercioSave = await getRepository(Comercios).save(commerce);
 
+		//Dimas Modifca el tlf para que use el de la lista phones porfaplis, 
+		//ya la query esta aqui phonesClient
+
+		const contacto: any ={
+			contCodComer: comercioSave.comerCod,
+			contCodUsuario: null,
+			contNombres: fmData.id_client.name,
+			contApellidos: fmData.id_client.last_name,
+			contTelefLoc: '02121234567',
+			contTelefMov: '04141234567',
+			contMail: fmData.email,
+			contFreg: null
+		};
+
+		console.log('contacto', Contacto) //new
+
+		const comercioSave = await getRepository(Contactos).save(contacto); //new
+
 		const cxaCodAfi = `${id_commerce.id_activity.id_afiliado.id}`.split('');
-		
 
 		while (cxaCodAfi.length < 15) cxaCodAfi.unshift('0');		
-		
 
 		await getRepository(ComerciosXafiliado).save({ cxaCodAfi: cxaCodAfi.join(''), cxaCodComer: comercioSave.comerCod });
 
