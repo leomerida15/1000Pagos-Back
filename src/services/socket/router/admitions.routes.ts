@@ -16,6 +16,7 @@ import {
 	allTerm,
 	listDiferidoWorking,
 	disconectsolic,
+	OneSolic,
 } from '../controllers/admition';
 
 let notes: any[] = [];
@@ -39,8 +40,8 @@ const admitions = (io: any) => {
 			//// // console.log(solictudesTrabajando.length);
 
 			socket.emit('server:Trabanjando_Solic', await listSolicWorking(socket.id, user));
-			const todos = getDash();
 			const todo = await All_Info();
+			const todos = getDash();
 
 			io.emit('server:loadDiferidos', diferido);
 			io.emit('server:dashdata', todos);
@@ -97,7 +98,8 @@ const admitions = (io: any) => {
 			disconect(socket.id);
 			const todos = getDash();
 			const todo = await All_Info();
-
+			if (diferido.length < 1) await listDiferido();
+			await listSolic();
 			io.emit('server:loadDiferidos', diferido);
 			io.emit('server:dashdata', todos);
 			io.emit('server:todos', todo);
@@ -105,18 +107,19 @@ const admitions = (io: any) => {
 
 		socket.on('cliente:cleansolic', async () => {
 			disconectsolic(socket.id);
-			const todos = getDash();
+			await listSolic();
 			const todo = await All_Info();
-
+			if (diferido.length < 1) await listDiferido();
+			const todos = getDash();
 			io.emit('server:loadDiferidos', diferido);
 			io.emit('server:dashdata', todos);
 			io.emit('server:todos', todo);
 		});
 
-		socket.on('disconnect', () => {
+		socket.on('disconnect', async () => {
 			// console.log(socket.id, 'disconnected');
 			// console.log('FUera');
-
+			await listSolic();
 			disconect(socket.id);
 		});
 
@@ -127,11 +130,13 @@ const admitions = (io: any) => {
 
 		socket.on('cliente:dashdata', async (callback: any) => {
 			await listSolic();
+			if (diferido.length < 1) await listDiferido();
 			const dash = getDash();
 			callback(dash);
 		});
 
 		socket.on('cliente:dashdatasiempre', async () => {
+			if (diferido.length < 1) await listDiferido();
 			const todos = getDash();
 			io.emit('server:dashdata', todos);
 		});
@@ -144,10 +149,17 @@ const admitions = (io: any) => {
 
 			const todos = getDash();
 			const todo = await All_Info();
+			if (diferido.length < 1) await listDiferido();
 
 			io.emit('server:loadDiferidos', diferido);
 			io.emit('server:dashdata', todos);
 			io.emit('server:todos', todo);
+		});
+
+		socket.on('cliente:coleado', async (key: any, callback: any) => {
+			const one = await OneSolic(key);
+			console.log('Coleado... :', one);
+			callback(one);
 		});
 	});
 };
