@@ -261,52 +261,52 @@ export const editRcByFm = async (
 			await Promise.all(stop);
 		}
 
-		// if (files.constitutive_act) {
-		// 	console.log('--------|> constitutive_act');
+		if (files.constitutive_act) {
+			console.log('--------|> constitutive_act');
 
-		// 	console.log('files.constitutive_act', files.constitutive_act);
+			console.log('files.constitutive_act', files.constitutive_act);
 
-		// 	const stop2 = files.constitutive_act.map(async (file: Express.Multer.File, i: number): Promise<void> => {
-		// 		console.log('file', file);
+			const stop2 = files.constitutive_act.map(async (file: Express.Multer.File, i: number): Promise<void> => {
+				console.log('file', file);
 
-		// 		await Doc.Move(file.filename, `${id_client}/${id_commerce}/constitutive_act`);
-		// 		const path = `static/${id_client}/${id_commerce}/constitutive_act/${file.filename}`;
+				await Doc.Move(file.filename, `${id_client}/${id_commerce}/constitutive_act`);
+				const path = `static/${id_client}/${id_commerce}/constitutive_act/${file.filename}`;
 
-		// 		const data = getRepository(fm_photo).create({
-		// 			name: file.filename,
-		// 			path,
-		// 			descript: 'rc_constitutive_act',
-		// 		});
+				const data = getRepository(fm_photo).create({
+					name: file.filename,
+					path,
+					descript: 'rc_constitutive_act',
+				});
 
-		// 		console.log('data', data);
+				console.log('data', data);
 
-		// 		const save = await getRepository(fm_photo).save(data);
+				const save = await getRepository(fm_photo).save(data);
 
-		// 		console.log('save', save);
+				console.log('save', save);
 
-		// 		info.rc_constitutive_act.push(save.id);
-		// 	});
+				info.rc_constitutive_act.push(save.id);
+			});
 
-		// 	await Promise.all(stop2);
-		// }
+			await Promise.all(stop2);
+		}
 
-		// console.log('--------|> constitutive_act_ids');
+		console.log('--------|> constitutive_act_ids');
 
-		// if (req.body.constitutive_act_ids) {
-		// 	const imgs = await getRepository(fm_photo).findByIds(constitutive_act_ids);
-		// 	//
-		// 	const stop = imgs.map(async (file: any): Promise<number> => {
-		// 		await fs.unlink(file.path);
+		if (req.body.constitutive_act_ids) {
+			const imgs = await getRepository(fm_photo).findByIds(constitutive_act_ids);
+			//
+			const stop = imgs.map(async (file: any): Promise<number> => {
+				await fs.unlink(file.path);
 
-		// 		return file.id;
-		// 	});
+				return file.id;
+			});
 
-		// 	const ids = await Promise.all(stop);
+			const ids = await Promise.all(stop);
 
-		// 	await getRepository(fm_photo).delete(ids);
+			await getRepository(fm_photo).delete(ids);
 
-		// 	await getRepository(fm_commerce_constitutive_act).delete({ id_commerce, id_photo: In(ids) });
-		// }
+			await getRepository(fm_commerce_constitutive_act).delete({ id_commerce, id_photo: In(ids) });
+		}
 
 		await getRepository(fm_status).update({ id_request: fm.id, id_department: 4 }, { id_status_request: 3 });
 
