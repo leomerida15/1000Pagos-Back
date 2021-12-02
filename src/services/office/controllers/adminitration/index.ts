@@ -5,6 +5,7 @@ import Msg from '../../../../hooks/messages/index.ts';
 import Resp from '../../Middlewares/res';
 import fm_request from '../../../../db/models/fm_request';
 import fm_status from '../../../../db/models/fm_status';
+import axios from 'axios';
 
 // responder FM por id
 export const getFmAdministration = async (
@@ -53,17 +54,55 @@ export const editStatusByIdAdministration = async (
 	res: Response<Api.Resp>,
 	next: NextFunction
 ): Promise<void> => {
-	try {		
+	try {
 		const { id_FM }: any = req.params;
 		const { id_status_request, id_payment_method, id_type_payment } = req.body;
 
-		const FM: any = await getRepository(fm_request).findOne(id_FM, { relations: ['id_valid_request'] });
+		const FM: any = await getRepository(fm_request).findOne(id_FM, {
+			relations: ['id_valid_request', 'id_product'],
+		});
 		if (!FM) throw { message: 'FM no existe' };
 
 		await getRepository(fm_status).update({ id_request: id_FM, id_department: 7 }, { id_status_request });
 
-		if (id_payment_method && id_type_payment)
+		if (id_payment_method && id_type_payment) {
 			await getRepository(fm_request).update({ id: id_FM }, { id_payment_method, id_type_payment });
+		}
+
+		const { pagadero, id_product } = FM;
+
+		if (pagadero) {
+			if (id_product.id === 1) {
+				await axios.post(
+					'http://10.198.68.21:8000/auth/login',
+					{
+						grant_type: 'password',
+						username: 'acesso.teste',
+						password: '@ger7123',
+					},
+					{ headers: { token: req.headers.token_text } }
+				);
+
+				await axios.post(
+					'http://10.198.68.21:8000/tms7/commerce',
+					{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
+					{ headers: { token: req.headers.token_text } }
+				);
+
+				await axios.post(
+					'http://10.198.68.21:8000/app1000pagos/commerce',
+					{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
+					{ headers: { token: req.headers.token_text } }
+				);
+			} else if (id_product.id === 2) {
+				//
+				await axios.post(
+					'http://10.198.68.21:8000/app1000pagos/commerce',
+					{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
+					{ headers: { token: req.headers.token_text } }
+				);
+			}
+		}
 
 		const message: string = Msg('Status del FM').edit;
 
