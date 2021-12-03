@@ -7,9 +7,7 @@ import fm_request from '../../../../db/models/fm_request';
 import fm_status from '../../../../db/models/fm_status';
 import axios from 'axios';
 
-//const urlApi: string = 'http://10.198.68.21'; //qa
-const urlApi: string = 'http://10.198.73.15'; //qa
-const portApi: string = '8000';
+const { HOST, PORT_PROVIDERS } = process.env;
 
 // responder FM por id
 export const getFmAdministration = async (
@@ -78,7 +76,7 @@ export const editStatusByIdAdministration = async (
 		if (!pagadero) {
 			if (id_product.id === 1) {
 				await axios.post(
-					`${urlApi}:${portApi}/auth/login`,
+					`${HOST}:${PORT_PROVIDERS}/auth/login`,
 					{
 						grant_type: 'password',
 						username: 'acesso.teste',
@@ -88,20 +86,20 @@ export const editStatusByIdAdministration = async (
 				);
 
 				await axios.post(
-					`${urlApi}:${portApi}/tms7/commerce`,
+					`${HOST}:${PORT_PROVIDERS}/tms7/commerce`,
 					{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 					{ headers: { token: req.headers.token_text } }
 				);
 
 				await axios.post(
-					`${urlApi}:${portApi}/app1000pagos/commerce`,
+					`${HOST}:${PORT_PROVIDERS}/app1000pagos/commerce`,
 					{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 					{ headers: { token: req.headers.token_text } }
 				);
 			} else if (id_product.id === 2) {
 				//
 				await axios.post(
-					`${urlApi}:${portApi}/app1000pagos/commerce`,
+					`${HOST}:${PORT_PROVIDERS}/app1000pagos/commerce`,
 					{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 					{ headers: { token: req.headers.token_text } }
 				);
