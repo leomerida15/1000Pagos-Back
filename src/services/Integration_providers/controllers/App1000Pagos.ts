@@ -1,8 +1,10 @@
 import fm_request from '../../../db/models/fm_request';
+import fm_phone from '../../../db/models/fm_phone';
 import { NextFunction, Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import { DateTime } from 'luxon';
 import Comercios from '../../../db/models/Comercios';
+import Contactos from '../../../db/models/Contactos';
 import { Api } from '../../../interfaces';
 import ComerciosXafiliado from '../../../db/models/CategoriasXafiliado';
 
@@ -24,6 +26,7 @@ export const createCommerce = async (
 				'id_client.id_location.id_ciudad',
 				'id_client.id_location.id_parroquia',
 				'id_client.id_ident_type',
+				'id_client.phones',
 				// dir_pos
 				'dir_pos',
 				'dir_pos.id_location',
@@ -104,11 +107,25 @@ export const createCommerce = async (
 
 		const comercioSave = await getRepository(Comercios).save(commerce);
 
+		//Dimas Modifca el tlf para que use el de la lista phones porfaplis, 
+		//ya la query esta aqui phonesClient
+
+		const contacto: any ={
+			contCodComer: comercioSave.comerCod,
+			contCodUsuario: null,
+			contNombres: id_client.name,
+			contApellidos: id_client.last_name,
+			contTelefLoc: id_client.phones[0].phone.slice(3, id_client.phones[0].phone.length),
+			contTelefMov:  id_client.phones[1].phone.slice(3, id_client.phones[1].phone.length),
+			contMail: id_client.email,
+			contFreg: null
+		};
+
+		const contactoSave = await getRepository(Contactos).save(contacto); //new
+
 		const cxaCodAfi = `${id_commerce.id_activity.id_afiliado.id}`.split('');
-		
 
 		while (cxaCodAfi.length < 15) cxaCodAfi.unshift('0');		
-		
 
 		await getRepository(ComerciosXafiliado).save({ cxaCodAfi: cxaCodAfi.join(''), cxaCodComer: comercioSave.comerCod });
 

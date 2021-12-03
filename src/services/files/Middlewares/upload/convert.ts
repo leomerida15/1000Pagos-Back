@@ -5,8 +5,6 @@ const convert = async (req: Request, res: Response, next: NextFunction) => {
 	let files: any = req.files;
 
 	if (files.images) {
-		//console.log('files.images',files.images);
-
 		const stop: Promise<void>[] = files.images.map(async (file: any, i: number) => {
 			const from: string = file.mimetype.split('/').pop();
 

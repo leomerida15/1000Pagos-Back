@@ -22,6 +22,11 @@ import fm_quotas_calculated from '../../../../db/models/fm_quotas_calculated';
 import fm_product from '../../../../db/models/fm_product';
 import fm_commerce_constitutive_act from '../../../../db/models/fm_commerce_constitutive_act';
 import axios from 'axios';
+const { HOST, PORT_PROVIDERS } = process.env;
+
+const urlApi: string = 'http://10.198.68.21'; //aldrin
+//const urlApi: string = 'http://10.198.73.15'; //qa
+const portApi: string = '8000';
 
 //
 export const requestOrigin = async (
@@ -292,7 +297,6 @@ export const valid_bank_account = async (
 				id_bank: bank.id,
 			});
 
-
 			if (valid_bank_commerce) throw { message: 'El numero de cuenta esta asociado a otro cliente' };
 		}
 		Resp(req, res, { message: 'OK', info: { ...bank } });
@@ -540,19 +544,15 @@ export const editStatusByIdAdmision = async (
 			await getRepository(fm_valid_request).update(id, { ...valids });
 		}
 
-		
-
-	    const edit = await getRepository(fm_commerce).update(FM.id_commerce, { id_aci });		
+		const edit = await getRepository(fm_commerce).update(FM.id_commerce, { id_aci });
 
 		if (id_status_request === 3) {
-			
 			const { pagadero, id_product } = FM;
 
-			
 			if (pagadero) {
 				if (id_product.id === 1) {
 					await axios.post(
-						'http://10.198.68.21:8000/auth/login',
+						`${HOST}:${PORT_PROVIDERS}/auth/login`,
 						{
 							grant_type: 'password',
 							username: 'acesso.teste',
@@ -562,20 +562,20 @@ export const editStatusByIdAdmision = async (
 					);
 
 					await axios.post(
-						'http://10.198.68.21:8000/tms7/commerce',
+						`${HOST}:${PORT_PROVIDERS}/tms7/commerce`,
 						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 						{ headers: { token: req.headers.token_text } }
 					);
 
 					await axios.post(
-						'http://10.198.68.21:8000/app1000pagos/commerce',
+						`${HOST}:${PORT_PROVIDERS}/app1000pagos/commerce`,
 						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 						{ headers: { token: req.headers.token_text } }
 					);
 				} else if (id_product.id === 2) {
 					//
 					await axios.post(
-						'http://10.198.68.21:8000/app1000pagos/commerce',
+						`${HOST}:${PORT_PROVIDERS}/app1000pagos/commerce`,
 						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 						{ headers: { token: req.headers.token_text } }
 					);
