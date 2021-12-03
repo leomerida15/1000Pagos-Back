@@ -30,6 +30,7 @@ const administra = (io: any) => {
 			console.log('Toy llegando aqui');
 
 			await getFmAdministration();
+			io.emit('server:loadAdministracion', administracion);
 			// console.log(administracion);
 		});
 
