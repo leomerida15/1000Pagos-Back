@@ -85,6 +85,7 @@ export const getFmAdministration = async (): Promise<void> => {
 		});
 
 		const info = query2;
+		console.log('INformacion de query Administracion', info);
 
 		if (!query2.length) throw { message: 'no existen solicitudes en espera', code: 400 };
 
