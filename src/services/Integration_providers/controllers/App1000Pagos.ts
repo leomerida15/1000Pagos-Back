@@ -26,6 +26,7 @@ export const createCommerce = async (
 				'id_client.id_location.id_ciudad',
 				'id_client.id_location.id_parroquia',
 				'id_client.id_ident_type',
+				'id_client.phones',
 				// dir_pos
 				'dir_pos',
 				'dir_pos.id_location',
@@ -47,15 +48,6 @@ export const createCommerce = async (
 			],
 		});
 		if (!fmData) throw { message: 'el commercio suministrado no existe', code: 400 };		
-
-		/*
-		const phonesClient = await getRepository(fm_phone).find({
-			where: { id_client: req.body.id_client },
-			relations: [
-				'phone',
-			],
-		});
-		*/
 
 		const { id_commerce, id_client, bank_account_num, id_product, dir_pos, number_post }: any = fmData;
 
@@ -123,13 +115,11 @@ export const createCommerce = async (
 			contCodUsuario: null,
 			contNombres: id_client.name,
 			contApellidos: id_client.last_name,
-			contTelefLoc: '02121234567',
-			contTelefMov: '04141234567',
+			contTelefLoc: id_client.phones[0].phone.slice(3, id_client.phones[0].phone.length),
+			contTelefMov:  id_client.phones[1].phone.slice(3, id_client.phones[1].phone.length),
 			contMail: id_client.email,
 			contFreg: null
 		};
-
-		//console.log('contacto', contacto) //new
 
 		const contactoSave = await getRepository(Contactos).save(contacto); //new
 

@@ -24,6 +24,10 @@ import fm_commerce_constitutive_act from '../../../../db/models/fm_commerce_cons
 import axios from 'axios';
 const { HOST, PORT_PROVIDERS } = process.env;
 
+const urlApi: string = 'http://10.198.68.21'; //aldrin
+//const urlApi: string = 'http://10.198.73.15'; //qa
+const portApi: string = '8000';
+
 //
 export const requestOrigin = async (
 	req: Request<any, Api.Resp>,
@@ -548,7 +552,11 @@ export const editStatusByIdAdmision = async (
 			if (pagadero) {
 				if (id_product.id === 1) {
 					await axios.post(
+<<<<<<< HEAD
 						`${HOST}:${PORT_PROVIDERS}/auth/login`,
+=======
+						`${urlApi}:${portApi}/auth/login`,
+>>>>>>> 5beb07c4fa6299c53faef0218f340041037534c0
 						{
 							grant_type: 'password',
 							username: 'acesso.teste',
@@ -558,20 +566,32 @@ export const editStatusByIdAdmision = async (
 					);
 
 					await axios.post(
+<<<<<<< HEAD
 						`${HOST}:${PORT_PROVIDERS}/tms7/commerce`,
+=======
+						`${urlApi}:${portApi}/tms7/commerce`,
+>>>>>>> 5beb07c4fa6299c53faef0218f340041037534c0
 						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 						{ headers: { token: req.headers.token_text } }
 					);
 
 					await axios.post(
+<<<<<<< HEAD
 						`${HOST}:${PORT_PROVIDERS}/app1000pagos/commerce`,
+=======
+						`${urlApi}:${portApi}/app1000pagos/commerce`,
+>>>>>>> 5beb07c4fa6299c53faef0218f340041037534c0
 						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 						{ headers: { token: req.headers.token_text } }
 					);
 				} else if (id_product.id === 2) {
 					//
 					await axios.post(
+<<<<<<< HEAD
 						`${HOST}:${PORT_PROVIDERS}/app1000pagos/commerce`,
+=======
+						`${urlApi}:${portApi}/app1000pagos/commerce`,
+>>>>>>> 5beb07c4fa6299c53faef0218f340041037534c0
 						{ id_fm: FM.id, id_commerce: FM.id_commerce, id_client: FM.id_client },
 						{ headers: { token: req.headers.token_text } }
 					);
