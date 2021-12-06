@@ -26,6 +26,13 @@ const administra = (io: any) => {
 			socket.emit('server:loadAdministracion', administracion);
 			// console.log(administracion);
 		});
+		socket.on('cliente:loadAdministracionTodos', async () => {
+			console.log('Toy llegando aqui');
+
+			await getFmAdministration();
+			io.emit('server:loadAdministracion', administracion);
+			// console.log(administracion);
+		});
 
 		socket.on('cliente:trabajandoAdministra', async (user: any, id: any) => {
 			console.log('administra trabajando');
