@@ -22,6 +22,7 @@ export default (req: Request, res: Response, next: NextFunction) => {
 				// console.log('Resp',Resp);
 
 				req.headers.token = Resp;
+				req.headers.token_text = token;
 
 				next();
 				//

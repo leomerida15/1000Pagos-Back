@@ -5,7 +5,7 @@ export const validFmData: ValidationChain[] = [
 	//
 	check('rc_ref_bank', 'la referencia bancaria es requerido').isNumeric().custom(NoSQL),
 	//
-	check('rc_ident_card', 'la cedula es requerido').isNumeric().custom(NoSQL),
+	check('rc_ident_card', 'el rc_ident_card es requerido').isNumeric().custom(NoSQL),
 	//
 	check('rc_rif', 'rif es requerido').isNumeric().custom(NoSQL),
 	//

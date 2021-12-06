@@ -8,9 +8,9 @@ const Resp = (req: Request<any, Api.Resp>, res: Response<Api.Resp>, msg: Api.Res
 
 	msg.token = (() => {
 		if (!msg.token) {
-			const { id, type }: any = req.headers.token;
+			const { id, type, email }: any = req.headers.token;
 
-			return jwt.sign({ id, type }, Key, { expiresIn: '1h' });
+			return jwt.sign({ id, type, email }, Key, { expiresIn: '1h' });
 		} else {
 			return msg.token;
 		}

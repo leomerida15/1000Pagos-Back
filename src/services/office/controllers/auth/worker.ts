@@ -1,16 +1,20 @@
 import { Response, Request, NextFunction } from 'express';
 import { Api } from 'interfaces';
 import Resp from '../../Middlewares/res';
-import { getRepository } from 'typeorm';
+import { getConnection, getRepository } from 'typeorm';
 import fm_worker from '../../../../db/models/fm_worker';
+import Msg from '../../../../hooks/messages/index.ts';
 
 export const worker = async (req: Request<any, Api.Resp>, res: Response, next: NextFunction): Promise<void> => {
-	try {
-		const { id, type }: any = req.headers.token;
+	try {		
+		const { id, type, email }: any = req.headers.token;
 
-		if (type === 1) throw { message: 'no esta tiene permiso de consumir enta data' };
-		const worker = await getRepository(fm_worker).findOne({ where: { id }, relations: ['roles'] });
-
+		if (type === 1) throw { message: 'no tiene permiso de consumir enta data' };
+		const worker = await getRepository(fm_worker).findOne({
+			where: { id, email },
+			relations: ['roles', 'id_department'],
+		});
+		
 		const { password, ...info }: any = worker;
 
 		Resp(req, res, { message: 'data del usuario', info });
@@ -43,7 +47,10 @@ export const getWorkerById = async (
 	try {
 		const { id }: any = req.params;
 
-		const worker = await getRepository(fm_worker).findOne({ where: { id }, relations: ['roles'] });
+		const worker = await getRepository(fm_worker).findOne({
+			where: { id },
+			relations: ['roles', 'id_department'],
+		});
 		const { password, ...data }: any = worker;
 
 		const info = data;
@@ -60,15 +67,28 @@ export const editWorkerById = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const { id }: any = req.params;
-		const { roles } = req.body;
+		const { id } = req.params;
+		const { roles, ...edit } = req.body;
 
-		const worker = await getRepository(fm_worker).update(id, { roles });
-		const { password, ...data }: any = worker;
+		if (roles) {
+			await getConnection().query(
+				'DELETE FROM [MilPagos].[dbo].[fm_worker_roles_fm_roles] WHERE fmWorkerId =' + id
+			);
 
-		const info = data;
+			const queryIds = roles
+				.map((rol) => {
+					return /*sql*/ `INSERT INTO [dbo].[fm_worker_roles_fm_roles] ([fmWorkerId] ,[fmRolesId]) VALUES (${id} ,${rol.id})`;
+				})
+				.join(' ');
 
-		Resp(req, res, { message: 'data del usuario', info });
+			await getConnection().query(queryIds);
+		}
+
+		await getRepository(fm_worker).update(id, edit);
+
+		const message: string = Msg('trabajador').edit;
+
+		Resp(req, res, { message });
 	} catch (err) {
 		next(err);
 	}

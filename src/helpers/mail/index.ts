@@ -1,10 +1,12 @@
 // modules
 import nodemailer, { SendMailOptions } from 'nodemailer';
 import jwt from 'jsonwebtoken';
-import mailMsg from './messages';
-import Mail from 'nodemailer/lib/mailer';
+import mailMsg, { digeridosMSG } from './messages';
+import { mail } from '../../helpers';
 import fm_worker from '../../db/models/fm_worker';
 import fm_client from '../../db/models/fm_client';
+import fm_request from 'db/models/fm_request';
+import Mail from 'nodemailer/lib/mailer';
 const key: string = process.env.KEY || '_secreto';
 
 /** define mailOptions */
@@ -23,7 +25,7 @@ const mailer: Mail = nodemailer.createTransport({
 });
 
 // this mail is for verify the email a user
-export const verify = async (info: fm_client) => {
+export const verify = async (info: fm_client | fm_worker) => {
 	try {
 		/** define vars */
 		const { name, last_name, email, id } = info;
@@ -58,6 +60,37 @@ export const newPass = async (info: fm_worker | fm_client) => {
 
 		/** Define conten of message */
 		const html = mailMsg(link, 'Para editar tu password haga click en el siguiente link', name, last_name);
+
+		/** options of email */
+		const mailOptions: SendMailOptions = { from, to, subject, html };
+
+		/** Shipping email */
+		await mailer.sendMail(mailOptions);
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+// this mail is for valid edition of a password
+export const diferido = async (info: fm_request) => {
+	try {
+		/** define vars */
+		const { code, id_client, id_valid_request }: any = info;
+		const { email, name, last_name } = id_client;
+		const to = `${email}`;
+		const subject = `[${code}]-dif`;
+		const msg = Object.keys(info)
+			.filter((key) => key != 'id')
+			.map(
+				(key) => /*html*/ `
+				${key}: ${id_valid_request[key]}
+				`
+			)
+			.join('<br/>');
+
+		const html = digeridosMSG(msg, name, last_name);
+
+		/** Define conten of message */
 
 		/** options of email */
 		const mailOptions: SendMailOptions = { from, to, subject, html };

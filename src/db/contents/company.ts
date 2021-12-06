@@ -4,13 +4,13 @@ import fm_company from '../models/fm_company';
 const company = async (): Promise<void> => {
 	const data: fm_company[] = [
 		{
-			name: 'tranred',
+			name: 'Tranred',
 		},
 		{
 			name: '1000pagos',
 		},
 		{
-			name: 'digoPago',
+			name: 'DigoPago',
 		},
 	];
 

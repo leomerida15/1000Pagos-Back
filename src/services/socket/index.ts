@@ -1,9 +1,11 @@
 import express from 'express';
 import { Server } from 'socket.io';
 import http from 'http';
-import Sockets from './sockets';
-import { diferido, listDiferido, listSolic, listSolicWorking, solictudes } from './modules/diferidos';
+import Sockets from './router';
+
+import { All_Info, listDiferido, listSolic } from './controllers/admition';
 import { createConnection } from 'typeorm';
+import { getFmAdministration } from './controllers/administracion';
 
 const app = express();
 const server = http.createServer(app);
@@ -21,14 +23,17 @@ Sockets(io);
 	console.log('DB OK');
 
 	//Lista de diferidos
-	if (solictudes.length <= 5) await listDiferido();
-	console.log('listDiferido OK');
+	await listDiferido();
+	console.log('listdiferidos OK');
 
 	//Lista de Solicitudes
 	await listSolic();
 	console.log('listSolic OK');
 
-	// await listMu();
+	await getFmAdministration();
+	console.log('listSolic OK');
+
+	await All_Info();
 
 	// console.log(solictudes);
 })();

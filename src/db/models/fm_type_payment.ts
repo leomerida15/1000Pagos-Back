@@ -7,7 +7,7 @@ export default class fm_type_payment {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
 	@OneToMany(() => fm_quotas_calculated, (fm_quotas_calculated) => fm_quotas_calculated.id_type_payment)

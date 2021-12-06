@@ -10,13 +10,13 @@ import { Application } from 'express';
 /** Middleware PreRoutes */
 export const preRoutes: any = (app: Application): void => {
 	app.use(cors);
-	app.use(token);
+	// app.use(token);
 };
 
 /** Middleware PostRoutes */
 export const posRoutes: any = (app: Application): void => {
-	app.use(file_files_err);
+	//app.use(file_files_err);
 	app.use(Err);
-	//app.use(staticFiles);
+	app.use(staticFiles);
 	app.use(err_404);
 };

@@ -14,7 +14,7 @@ export default class fm_payment_method {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
 	@OneToMany(() => fm_request, (fm_request) => fm_request.id_commerce)

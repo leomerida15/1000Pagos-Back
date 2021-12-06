@@ -24,10 +24,10 @@ export default class fm_client {
 	@PrimaryGeneratedColumn()
 	id?: number;
 
-	@Column()
+	@Column({ nullable: true })
 	name!: string;
 
-	@Column()
+	@Column({ nullable: true })
 	last_name!: string;
 
 	@Column({ default: 1 })
@@ -38,15 +38,27 @@ export default class fm_client {
 	@Column({ select: false })
 	password!: string;
 
+	@Column({ nullable: true, default: null })
 	@ManyToOne(() => fm_ident_type, (fm_ident_type) => fm_ident_type.clients)
 	@JoinColumn({ name: 'id_ident_type' })
 	id_ident_type!: number;
 
-	@Column()
+	@Column({ nullable: true })
 	ident_num!: string;
 
 	@Column({ unique: true })
 	email!: string;
+
+	@Column({ nullable: true, default: null })
+	@ManyToOne(() => fm_photo, (fm_photo) => fm_photo.requests)
+	@JoinColumn({ name: 'rc_ident_card' })
+	rc_ident_card!: null | number | fm_photo;
+
+	@Column({ name: 'ref_person_1' })
+	ref_person_1!: string;
+
+	@Column({ name: 'ref_person_2' })
+	ref_person_2!: string;
 
 	@OneToMany(() => fm_phone, (fm_phone) => fm_phone.id_client)
 	@JoinColumn({ name: 'phones' })

@@ -4,22 +4,16 @@ import { getRepository } from 'typeorm';
 const roles = async (): Promise<void> => {
 	const data: fm_roles[] = [
 		{
-			name: 'client',
+			name: 'base',
 		},
 		{
 			name: 'worker',
 		},
 		{
-			name: 'security',
-		},
-		{
-			name: 'applicant',
+			name: 'supervisor',
 		},
 		{
 			name: 'admin',
-		},
-		{
-			name: 'supervisor',
 		},
 	];
 	//

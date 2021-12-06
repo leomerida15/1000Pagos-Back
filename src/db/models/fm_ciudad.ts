@@ -19,15 +19,16 @@ export default class fm_ciudad {
 
 	@ManyToOne(() => fm_estado, (fm_estado) => fm_estado.ciudades)
 	@JoinColumn({ name: 'id_estado' })
-	id_estado!: number;
+	id_estado!: number | fm_estado;
 
-
-	@Column()
+	@Column({ nullable: true })
 	ciudad!: string;
 
-	@Column()
-	capital!: boolean;
+	@Column({ nullable: true })
+	area_code!: string;
 
+	@Column({ nullable: true })
+	postal_code!: string;
 
 	@OneToMany(() => fm_location, (fm_location) => fm_location.id_municipio)
 	@JoinColumn({ name: 'locations' })

@@ -20,7 +20,7 @@ const storage: StorageEngine = diskStorage({
 
 const options: Options = {
 	fileFilter: (req, file, cb) => {
-		const filetypes = /jpeg|jpg|png|svg/;
+		const filetypes = /jpeg|jpg|png|pdf/;
 		const mimetype = filetypes.test(file.mimetype);
 		const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
 		if (mimetype && extname) {
@@ -38,4 +38,7 @@ const options: Options = {
 
 export const upload = multer(options).single('image');
 
-export const uploads = multer(options).array('images', 20);
+export const uploads = multer(options).fields([
+	{ name: 'images', maxCount: 20 },
+	{ name: 'constitutive_act', maxCount: 20 },
+]);

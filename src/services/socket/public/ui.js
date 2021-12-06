@@ -31,7 +31,7 @@ const noteUI = (note) => {
 const renderNotes = (notes) => {
 	savedId = '';
 	notesList.innerHTML = '';
-	console.log(notes);
+	// console.log(notes);
 	notes.forEach((note) => {
 		notesList.append(noteUI(note));
 	});
@@ -40,12 +40,11 @@ const renderNotes = (notes) => {
 const UserMu = (notes) => {
 	// savedId = "";
 	// notesList.innerHTML = "";
-	// console.log(notes);
+	//// // console.log(notes);
 	// notes.forEach((note) => {
 	//   notesList.append(noteUI(note));
 	// });
-
-	console.log(notes);
+	// console.log(notes);
 };
 
 const appendNote = (note) => {

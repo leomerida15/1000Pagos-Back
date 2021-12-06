@@ -24,7 +24,7 @@ export default class fm_parroquia {
 	@JoinColumn({ name: 'locations' })
 	locations?: fm_location[];
 
-	@Column()
+	@Column({ nullable: true })
 	parroquia!: string;
 
 	@CreateDateColumn({ select: false })

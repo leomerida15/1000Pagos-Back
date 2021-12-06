@@ -11,11 +11,15 @@ export const createImage = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const info = await getRepository(fm_photo).save(req.body);
+		const file: any = req.file;
+
+		const { filename, path } = file;
+
+		const info = await getRepository(fm_photo).save({ name: filename, path, descript: filename });
 
 		const message: string = Msg('Imagen').create;
 
-		Resp(req, res, { message, info });
+		res.status(200).json({ message, info });
 	} catch (err) {
 		next(err);
 	}
@@ -27,11 +31,11 @@ export const createImages = async (
 	next: NextFunction
 ): Promise<void> => {
 	try {
-		const info = await getRepository(fm_photo).save(req.body);
+		// const info = await getRepository(fm_photo).save(req.body);
 
 		const message: string = Msg('Imagenes').create;
 
-		Resp(req, res, { message, info });
+		res.status(200).json({ message, info: req.files });
 	} catch (err) {
 		next(err);
 	}

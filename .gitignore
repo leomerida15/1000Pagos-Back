@@ -1,17 +1,8 @@
-# 
-/node_modules
-/dist
-/client
-/src/db/base
-/src/db/json/diferidos.json
+node_modules
 static
-/static
 yarn.lock
 package-lock.json
 ormconfig.json
-.dockerignore
-dockergile
 .env
 .vscode
 .gitlab-ci.yml
-# /src/hook`

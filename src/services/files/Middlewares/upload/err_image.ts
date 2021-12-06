@@ -4,6 +4,8 @@ import fs from 'fs/promises';
 
 export const file_files_err = async (err: any, req: Request, res: Response, next: NextFunction) => {
 	if (req.file) {
+		console.log('err', err.file);
+
 		let valid: any = 0;
 		const { path, filename } = err.file;
 		if (err.model) valid = err.model.find({ image: filename });
@@ -13,7 +15,7 @@ export const file_files_err = async (err: any, req: Request, res: Response, next
 		let valid: any = 0;
 		const files: any = req.files;
 
-		console.log('files', files);
+		//console.log('files', files);
 
 		const images = files.map((file: any) => ({ image: file.filename }));
 		if (err.model) valid = err.model.find({ $or: images });

@@ -7,6 +7,13 @@ import fs from 'fs/promises';
 import path from 'path';
 import { host } from '../host';
 import { v4 as uuidv4 } from 'uuid';
+
+// @ts-expect-error
+import { default as pdfConverter } from 'pdf-poppler';
+
+import Jimp from 'jimp';
+import { existsSync } from 'fs';
+
 // import svg2png from 'svg2png';
 
 export const base: string = path.resolve('static');
@@ -28,9 +35,7 @@ export const ToFile: any = async (file: string | string[], title: string): Promi
 };
 //
 export const fileExistin = async (folder: string) => {
-	try {
-		await fs.lstat(`${base}/${folder}`);
-	} catch (err) {
+	if (!existsSync(`${base}/${folder}`)) {
 		await fs.mkdir(`${base}/${folder}`);
 	}
 };
@@ -182,6 +187,65 @@ export const Path = (route: any) => {
 };
 //
 export const replace = async (name: any, newName: any): Promise<any> => {
-	await Delete(`${base}/${newName}`)
+	await Delete(`${base}/${newName}`);
 	await fs.rename(`${base}/${name}`, `${base}/${newName}`);
+};
+//
+
+export const toConvert = (to: string) => {};
+//
+export const fromConvert = (from: string): any => {};
+//
+export const Convert = async (file: any, to: string): Promise<void> => {
+	try {
+		const from: string = file.split('.')[file.split('.').length - 1];
+		const filePath: string = path.join(base, file);
+	
+
+		let remove: boolean = false;
+
+		if (from === 'pdf') {
+
+			const out_prefix = path.basename(filePath, path.extname(filePath));
+			let option = {
+				format: to,
+				out_dir: base,
+				out_prefix, 
+				page: 1,
+			};
+
+			await pdfConverter.convert(filePath, option);
+
+			if(existsSync(path.join(base,out_prefix+'-01.jpg'))){
+				//
+				await fs.rename( path.join(base,out_prefix+'-01.jpg'), path.join(base,out_prefix+'.jpg'));
+
+			} else if(existsSync(path.join(base,out_prefix+'-1.jpg'))) {
+				//
+				await fs.rename( path.join(base,out_prefix+'-1.jpg'), path.join(base,out_prefix+'.jpg'));
+
+			}
+			
+
+			remove = true;
+		} else if (from === 'png') {
+			// open a file called "lenna.png"
+			const lenna = await Jimp.read(filePath);
+			lenna
+				.resize(256, 256) // resize
+				.quality(60) // set JPEG quality
+				.greyscale() // set greyscale
+				.write(filePath.replace('.png', '.' + to)); // save
+			
+			remove = true;
+		} else if (from === 'jpeg') {
+			// open a file called "lenna.png"
+
+			await fs.rename(path.join(base, file), path.join(base, file.replace('.jpeg', '.jpg')));
+		}
+
+		//if (remove) await Delete(file);
+	} catch (err) {
+		console.log('err convert', err);
+	}
 };
