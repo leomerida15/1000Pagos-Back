@@ -8,6 +8,7 @@ before_script:
   - chmod 400 ~/.ssh/key.pem
   - eval "$(ssh-agent -s)"
   - cat ~/.ssh/key.pem
+  - cat ~/.ssh/config
   - echo $IP_REMOTE
   - which ssh-agent
  
