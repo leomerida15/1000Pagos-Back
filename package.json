@@ -58,7 +58,9 @@
 		"socket.io": "^4.2.0",
 		"ts-node": "^10.4.0",
 		"typeorm": "^0.2.37",
-		"uuid": "^8.3.2"
+		"uuid": "^8.3.2",
+		"fsevents": "^2.0.6"
+
 	},
 	"repository": "https://github.com/leomerida15/1000Pagos-Back.git"
 }
