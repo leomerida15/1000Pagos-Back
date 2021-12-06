@@ -1,11 +1,8 @@
-# 
-/node_modules
+node_modules
 static
 yarn.lock
 package-lock.json
 ormconfig.json
-.dockerignore
-dockerfile
 .env
 .vscode
 .gitlab-ci.yml
