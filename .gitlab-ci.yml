@@ -10,21 +10,20 @@ before_script:
   - cat ~/.ssh/key.pem
   - echo $IP_REMOTE
   - which ssh-agent
- 
-#deploy_dev: 
+
+#deploy_dev:
 #  stage: deploy
-#  script: 
-     
-  #  - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTE " cd $DOCUMENT_ROOT/ && sudo yarn "
-  #  - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTE " cd $DOCUMENT_ROOT && sudo pm2 restart backoffice  "
-#  only: 
+#  script:
+
+#  - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTE " cd $DOCUMENT_ROOT/ && sudo yarn "
+#  - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTE " cd $DOCUMENT_ROOT && sudo pm2 restart backoffice  "
+#  only:
 #    - dev
-deploy_qa: 
+deploy_qa:
   stage: deploy
-  script: 
+  script:
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo git checkout qa && sudo git pull "
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo yarn "
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT && sudo pm2 restart backoffice "
-  only: 
+  only:
     - qa
-

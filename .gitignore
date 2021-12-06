@@ -1,6 +1,5 @@
 # 
 /node_modules
-# /src/db/base
 static
 yarn.lock
 package-lock.json
@@ -10,4 +9,3 @@ dockerfile
 .env
 .vscode
 .gitlab-ci.yml
-# /src/hook`
