@@ -1,4 +1,3 @@
-
 before_script:
   - apt-get update -qq
   - apt-get install -qq git dos2unix
@@ -24,7 +23,7 @@ deploy_qa:
   stage: deploy
   script:
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo git checkout qa && sudo git pull "
-    - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo yarn "
+    - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo yarn --ignore-platform "
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT && sudo pm2 restart socket  "
   only:
     - qa
