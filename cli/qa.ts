@@ -2,8 +2,7 @@ import YAML from 'yaml';
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
-import shell from 'shelljs';
-import { exec } from 'child_process';
+import shell from 'child_process';
 
 const route = path.resolve('.gitlab-ci.yml');
 
@@ -65,13 +64,14 @@ if (fs.existsSync(route)) {
 	});
 
 	rl.question('commit name: ', (name) => {
-		if (shell.exec(`git add .gitlab-cli.yml`).code === 128) {
-			shell.exec(`git commit -m "${name}"`);
-			shell.exec(`git push lab-${scriptConsol}`);
-		}
-
-		shell.exit(1);
+		shell.exec(`git add .`, (error, stdout, stderr) => {
+			if (!error) {
+				shell.exec(`git commit -m "${name}"`, (error, stdout, stderr) => {
+					if (!error) {
+						shell.exec(`git push lab-${scriptConsol}`);
+					} else rl.on('close', () => process.exit(0));
+				});
+			} else rl.on('close', () => process.exit(0));
+		});
 	});
-
-	rl.on('close', () => process.exit(0));
 }
