@@ -88,4 +88,6 @@ if (fs.existsSync(route)) {
 			} else rl.on('close', () => process.exit(0));
 		});
 	});
+
+	rl.on('close', () => process.exit(0));
 }

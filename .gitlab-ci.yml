@@ -19,6 +19,6 @@ deploy_qa:
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT/ && sudo
       yarn "
     - ssh  -i ~/.ssh/key.pem $USUARIO@$IP_REMOTEQA " cd $DOCUMENT_ROOT && sudo
-      pm2 restart backoffice "
+      pm2 restart socket "
   only:
     - qa
