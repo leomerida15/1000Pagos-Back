@@ -76,7 +76,11 @@ if (fs.existsSync(route)) {
 					if (!error) {
 						console.log('commit activo ......................................|>');
 						console.log('');
-						exec(`git push lab-${scriptConsol}`);
+						exec(`git push lab-${scriptConsol}`, (error, stdout, stderr) => {
+							if (!error) {
+								console.log('push activo ......................................|>');
+							}
+						});
 					} else rl.on('close', () => process.exit(0));
 				});
 			} else rl.on('close', () => process.exit(0));
