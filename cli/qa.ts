@@ -2,7 +2,7 @@ import YAML from 'yaml';
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
-import { exec } from 'child_process';
+import { exec } from 'shelljs';
 
 const route = path.resolve('.gitlab-ci.yml');
 
