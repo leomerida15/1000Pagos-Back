@@ -2,7 +2,7 @@ import YAML from 'yaml';
 import fs from 'fs';
 import path from 'path';
 import readline from 'readline';
-import shell from 'child_process';
+import { exec } from 'child_process';
 
 const route = path.resolve('.gitlab-ci.yml');
 
@@ -63,12 +63,20 @@ if (fs.existsSync(route)) {
 		output: process.stdout,
 	});
 
+	console.log('question');
+	console.log('');
 	rl.question('commit name: ', (name) => {
-		shell.exec(`git add .`, (error, stdout, stderr) => {
+		console.log('name: ', name);
+		console.log('');
+		exec(`git add .`, (error, stdout, stderr) => {
 			if (!error) {
-				shell.exec(`git commit -m "${name}"`, (error, stdout, stderr) => {
+				console.log('git activo ......................................|>');
+				console.log('');
+				exec(`git commit -m "${name}"`, (error, stdout, stderr) => {
 					if (!error) {
-						shell.exec(`git push lab-${scriptConsol}`);
+						console.log('commit activo ......................................|>');
+						console.log('');
+						exec(`git push lab-${scriptConsol}`);
 					} else rl.on('close', () => process.exit(0));
 				});
 			} else rl.on('close', () => process.exit(0));
