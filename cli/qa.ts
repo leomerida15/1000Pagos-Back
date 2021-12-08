@@ -83,11 +83,9 @@ if (fs.existsSync(route)) {
 								console.log('');
 							}
 						});
-					} else rl.on('close', () => process.exit(0));
+					} else process.exit(0);
 				});
-			} else rl.on('close', () => process.exit(0));
+			} else process.exit(0);
 		});
 	});
-
-	rl.on('close', () => process.exit(0));
 }
