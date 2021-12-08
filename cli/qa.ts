@@ -63,24 +63,14 @@ if (fs.existsSync(route)) {
 		output: process.stdout,
 	});
 
-	console.log('question');
-	console.log('');
 	rl.question('commit name: ', (name) => {
-		console.log('name: ', name);
-		console.log('');
-		exec(`git add .`, (error, stdout, stderr) => {
+		exec(`git add .gitlab-ci.yml`, (error, stdout, stderr) => {
 			if (!error) {
-				console.log('git activo ......................................|>');
-				console.log('');
 				exec(`git commit -m "${name}"`, (error, stdout, stderr) => {
 					if (!error) {
-						console.log('commit activo ......................................|>');
-						console.log('');
 						exec(`git push lab-${scriptConsol}`, (error, stdout, stderr) => {
 							if (!error) {
-								console.log('push activo ......................................|>');
-								console.log(`git push lab-${scriptConsol}`);
-								console.log('');
+								process.exit(0);
 							}
 						});
 					} else process.exit(0);
